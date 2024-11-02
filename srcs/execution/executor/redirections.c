@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static int	handle_input_redirection(t_cmd *cmd)
+static int	handle_input_redirection(t_command *cmd)
 {
 	int	fd;
 
@@ -19,7 +19,7 @@ static int	handle_input_redirection(t_cmd *cmd)
 	return (1);
 }
 
-static int	handle_output_redirection(t_cmd *cmd)
+static int	handle_output_redirection(t_command *cmd)
 {
 	int	fd;
 	int	flags;
@@ -40,7 +40,7 @@ static int	handle_output_redirection(t_cmd *cmd)
 	return (1);
 }
 
-int	setup_redirections(t_cmd *cmd)
+int	setup_redirections(t_command *cmd)
 {
 	if (cmd->infile && !handle_input_redirection(cmd))
 		return (0);

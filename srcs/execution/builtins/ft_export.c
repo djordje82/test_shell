@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_shell.h"
+#include "minishell.h"
 
-static int	is_valid_identifier(char *name)
+/*int	is_valid_identifier(char *name)
 {
 	int	i;
 
@@ -26,36 +26,36 @@ static int	is_valid_identifier(char *name)
 		i++;
 	}
 	return (1);
-}
+}*/
 
-static void	print_export_error(char *arg)
+void	print_export_error(char *arg)
 {
 	ft_putstr_fd("minishell: export: `", STDERR_FILENO);
 	ft_putstr_fd(arg, STDERR_FILENO);
 	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 }
 
-static void	print_sorted_env(char **env)
+void	print_sorted_env(char **envp)
 {
 	int		i;
 	int		j;
 	char	*temp;
 
 	i = 0;
-	while (env[i])
+	while (envp[i])
 		i++;
 	temp = NULL;
 	i = 0;
-	while (env[i])
+	while (envp[i])
 	{
 		j = i + 1;
-		while (env[j])
+		while (envp[j])
 		{
-			if (ft_strcmp(env[i], env[j]) > 0)
+			if (ft_strncmp(envp[i], envp[j], ft_strlen(envp[i])) > 0)
 			{
-				temp = env[i];
-				env[i] = env[j];
-				env[j] = temp;
+				temp = envp[i];
+				envp[i] = envp[j];
+				envp[j] = temp;
 			}
 			j++;
 		}
@@ -63,7 +63,7 @@ static void	print_sorted_env(char **env)
 	}
 }
 
-static void	print_exported_var(char *var)
+void	print_exported_var(char *var)
 {
 	int	i;
 	int	found_equals;
@@ -86,21 +86,21 @@ static void	print_exported_var(char *var)
 	ft_putchar_fd('\n', STDOUT_FILENO);
 }
 
-static char	**copy_env(char **env)
+char	**copy_env(char **envp)
 {
 	char	**new_env;
 	int		i;
 
 	i = 0;
-	while (env[i])
+	while (envp[i])
 		i++;
 	new_env = malloc(sizeof(char *) * (i + 1));
 	if (!new_env)
 		return (NULL);
 	i = 0;
-	while (env[i])
+	while (envp[i])
 	{
-		new_env[i] = ft_strdup(env[i]);
+		new_env[i] = ft_strdup(envp[i]);
 		if (!new_env[i])
 		{
 			while (--i >= 0)
@@ -114,17 +114,17 @@ static char	**copy_env(char **env)
 	return (new_env);
 }
 
-static int	get_env_size(char **env)
+int	get_env_size(char **envp)
 {
 	int	i;
 
 	i = 0;
-	while (env[i])
+	while (envp[i])
 		i++;
 	return (i);
 }
 
-static char	*get_var_name(char *arg)
+char	*get_var_name(char *arg)
 {
 	int		i;
 	char	*name;
@@ -136,7 +136,7 @@ static char	*get_var_name(char *arg)
 	return (name);
 }
 
-static int	update_existing_var(char *arg, t_shell *shell)
+int	update_existing_var(char *arg, t_shell *shell)
 {
 	char	*name;
 	int		i;
@@ -147,14 +147,14 @@ static int	update_existing_var(char *arg, t_shell *shell)
 		return (0);
 	name_len = ft_strlen(name);
 	i = 0;
-	while (shell->env[i])
+	while (shell->envp[i])
 	{
-		if (ft_strncmp(shell->env[i], name, name_len) == 0
-			&& (shell->env[i][name_len] == '='
-			|| shell->env[i][name_len] == '\0'))
+		if (ft_strncmp(shell->envp[i], name, name_len) == 0
+			&& (shell->envp[i][name_len] == '='
+			|| shell->envp[i][name_len] == '\0'))
 		{
-			free(shell->env[i]);
-			shell->env[i] = ft_strdup(arg);
+			free(shell->envp[i]);
+			shell->envp[i] = ft_strdup(arg);
 			free(name);
 			return (1);
 		}
@@ -164,26 +164,26 @@ static int	update_existing_var(char *arg, t_shell *shell)
 	return (0);
 }
 
-static int	add_new_var(char *arg, t_shell *shell)
+int	add_new_var(char *arg, t_shell *shell)
 {
 	char	**new_env;
 	int		size;
 	int		i;
 
-	size = get_env_size(shell->env);
+	size = get_env_size(shell->envp);
 	new_env = malloc(sizeof(char *) * (size + 2));
 	if (!new_env)
 		return (0);
 	i = 0;
-	while (shell->env[i])
+	while (shell->envp[i])
 	{
-		new_env[i] = shell->env[i];
+		new_env[i] = shell->envp[i];
 		i++;
 	}
 	new_env[i] = ft_strdup(arg);
 	new_env[i + 1] = NULL;
-	free(shell->env);
-	shell->env = new_env;
+	free(shell->envp);
+	shell->envp = new_env;
 	return (1);
 }
 
@@ -195,7 +195,7 @@ int	ft_export(char **args, t_shell *shell)
 
 	if (!args[1])
 	{
-		sorted_env = copy_env(shell->env);
+		sorted_env = copy_env(shell->envp);
 		if (!sorted_env)
 			return (1);
 		print_sorted_env(sorted_env);

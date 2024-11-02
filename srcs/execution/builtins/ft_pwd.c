@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_shell.h"
+#include "minishell.h"
 
 static void	print_pwd_error(void)
 {

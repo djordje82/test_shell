@@ -67,15 +67,21 @@ void	cleanup_shell(t_shell *shell)
 {
 	if (shell)
 	{
-		free_list(&shell->cmnd_lst);
-		free_meta(shell);
-		free_envp(shell);
-		free_tokens(shell->tokens);
+		if (shell->cmnd_lst)
+			free_cmd_list(shell->cmnd_lst);
+		if (shell->envp)
+			free_array((void **)shell->envp, -1);
+		if (shell->tokens)
+			free_tokens(shell->tokens);
+		if (shell->pipe)
+			free_array((void **)shell->pipe, shell->n_cmnds);
+		if (shell->pid)
+			free(shell->pid);
 	}
 	rl_clear_history();
 }
 
-void	free_list(t_list **cmnd_list)
+/*void	free_list(t_command **cmnd_list)
 {
 	t_list	*temp;
 
@@ -88,4 +94,22 @@ void	free_list(t_list **cmnd_list)
 		free(*cmnd_list);
 		*cmnd_list = temp;
 	}
+}*/
+
+void    free_cmd_list(t_command *cmd)
+{
+    t_command *temp;
+
+    while (cmd)
+    {
+        temp = cmd->next;
+        if (cmd->args)
+            free_array((void **)cmd->args, -1);
+        if (cmd->infile)
+            free(cmd->infile);
+        if (cmd->outfile)
+            free(cmd->outfile);
+        free(cmd);
+        cmd = temp;
+    }
 }

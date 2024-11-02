@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_shell.c"
+#include "minishell.h"
 
 char	*get_env_value(char *name, t_shell *shell)
 {
@@ -18,16 +18,16 @@ char	*get_env_value(char *name, t_shell *shell)
 	int		len;
 	char	*env_str;
 
-	if (!name || !shell->env)
+	if (!name || !shell->envp)
 		return (NULL);
 	len = ft_strlen(name);
 	i = 0;
-	while (shell->env[i])
+	while (shell->envp[i])
 	{
-		if (ft_strncmp(shell->env[i], name, len) == 0
-			&& shell->env[i][len] == '=')
+		if (ft_strncmp(shell->envp[i], name, len) == 0
+			&& shell->envp[i][len] == '=')
 		{
-			env_str = shell->env[i] + len + 1;
+			env_str = shell->envp[i] + len + 1;
 			return (env_str);
 		}
 		i++;
@@ -35,23 +35,23 @@ char	*get_env_value(char *name, t_shell *shell)
 	return (NULL);
 }
 
-static int	find_env_index(char *name, char **env)
+int	find_env_index(char *name, char **envp)
 {
 	int	i;
 	int	len;
 
 	len = ft_strlen(name);
 	i = 0;
-	while (env[i])
+	while (envp[i])
 	{
-		if (ft_strncmp(env[i], name, len) == 0 && env[i][len] == '=')
+		if (ft_strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
 			return (i);
 		i++;
 	}
 	return (-1);
 }
 
-static char	*create_env_string(char *name, char *value)
+char	*create_env_string(char *name, char *value)
 {
 	char	*temp;
 	char	*result;
@@ -69,27 +69,26 @@ int	update_env_value(char *name, char *value, t_shell *shell)
 	int		index;
 	char	*new_str;
 
-	if (!name || !value || !shell->env)
+	if (!name || !value || !shell->envp)
 		return (1);
 	new_str = create_env_string(name, value);
 	if (!new_str)
 		return (1);
-	index = find_env_index(name, shell->env);
+	index = find_env_index(name, shell->envp);
 	if (index >= 0)
 	{
-		free(shell->env[index]);
-		shell->env[index] = new_str;
+		free(shell->envp[index]);
+		shell->envp[index] = new_str;
 	}
 	else
 	{
-		// TODO: Implement adding new environment variable
 		free(new_str);
 		return (1);
 	}
 	return (0);
 }
 
-static int	check_env_args(char **args)
+int	check_env_args(char **args)
 {
 	int	i;
 
@@ -106,7 +105,7 @@ static int	check_env_args(char **args)
 	return (1);
 }
 
-static int	has_equals_sign(char *str)
+int	has_equals_sign(char *str)
 {
 	while (*str)
 	{
@@ -117,7 +116,7 @@ static int	has_equals_sign(char *str)
 	return (0);
 }
 
-static void	print_env_var(char *env_var)
+void	print_env_var(char *env_var)
 {
 	if (has_equals_sign(env_var))
 		ft_putendl_fd(env_var, STDOUT_FILENO);
@@ -129,15 +128,15 @@ int	ft_env(char **args, t_shell *shell)
 
 	if (!check_env_args(args))
 		return (127);
-	if (!shell->env)
+	if (!shell->envp)
 	{
 		ft_putendl_fd("env: environment not available", STDERR_FILENO);
 		return (1);
 	}
 	i = 0;
-	while (shell->env[i])
+	while (shell->envp[i])
 	{
-		print_env_var(shell->env[i]);
+		print_env_var(shell->envp[i]);
 		i++;
 	}
 	return (0);

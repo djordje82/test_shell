@@ -1,10 +1,10 @@
 #include "minishell.h"
 
-t_cmd	*create_cmd_node(void)
+t_command	*create_cmd_node(void)
 {
-	t_cmd	*cmd;
+	t_command	*cmd;
 
-	cmd = malloc(sizeof(t_cmd));
+	cmd = malloc(sizeof(t_command));
 	if (!cmd)
 		return (NULL);
 	cmd->args = NULL;
@@ -16,9 +16,9 @@ t_cmd	*create_cmd_node(void)
 	return (cmd);
 }
 
-void	add_cmd_node(t_cmd **cmd_list, t_cmd *new_cmd)
+void	add_cmd_node(t_command **cmd_list, t_command *new_cmd)
 {
-	t_cmd	*current;
+	t_command	*current;
 
 	if (!*cmd_list)
 	{
@@ -31,9 +31,9 @@ void	add_cmd_node(t_cmd **cmd_list, t_cmd *new_cmd)
 	current->next = new_cmd;
 }
 
-void	free_cmd_list(t_cmd *cmd)
+/*void	free_cmd_list(t_command *cmd)
 {
-	t_cmd	*temp;
+	t_command	*temp;
 	int		i;
 
 	while (cmd)
@@ -53,4 +53,4 @@ void	free_cmd_list(t_cmd *cmd)
 		free(cmd);
 		cmd = temp;
 	}
-}
+}*/

@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_shell.h"
+#include "minishell.h"
 
-static int	is_n_flag(char *arg)
+int	is_n_flag(char *arg)
 {
 	int	i;
 
@@ -28,7 +28,7 @@ static int	is_n_flag(char *arg)
 	return (i > 1);
 }
 
-static int	count_args(char **args)
+/*static int	count_args(char **args)
 {
 	int	i;
 
@@ -36,9 +36,9 @@ static int	count_args(char **args)
 	while (args && args[i])
 		i++;
 	return (i);
-}
+}*/
 
-static void	print_args(char **args, int start, int n_flag)
+void	print_args(char **args, int start, int n_flag)
 {
 	int	i;
 

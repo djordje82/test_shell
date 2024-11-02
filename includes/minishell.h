@@ -14,6 +14,7 @@
 # define MINI_SHELL_H
 
 # include <stdio.h>
+# include <stdbool.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <string.h>
@@ -61,7 +62,7 @@
 # define ERR_PIPE "minishell: pipe error"
 # define ERR_FORK "minishell: fork error"
 # define ERR_QUOTE "minishell: unclosed quote"
-# define ERR_TOKEN "minishell: syntax error near unexpe
+# define ERR_TOKEN "minishell: syntax error near unexpected token"
 # define ERR_SYNTAX_PIPE "minishell: syntax error near unexpected token `|'"
 # define ERR_SYNTAX_NEWLINE "minishell: syntax error near unexpected token `newline'"
 # define ERR_SYNTAX_REDIR "minishell: syntax error near unexpected token `redirection'"
@@ -122,13 +123,13 @@ typedef struct s_command
 typedef struct s_shell
 {
 	char	**envp;
-	t_list	*cmnd_lst;
-	t_token	*tokens;
-	int		**pipe;
-	pid_t	*pid;
-	int		n_cmnds;
-	int		exit_status;
-	bool	running;
+	t_command	*cmnd_lst;
+	t_token		*tokens;
+	int			**pipe;
+	pid_t		*pid;
+	int			n_cmnds;
+	int			exit_status;
+	bool		running;
 }			t_shell;
 
 /*INITIALIZATION*/
@@ -157,14 +158,17 @@ void			free_cmd_list(t_command *cmd);
 int				parse_arguments(t_token **token, t_command *cmd);
 int				parse_redirections(t_token **token, t_command *cmd);
 
+/*EXECUTOR*/
+int				execute_commands(t_shell *shell);
+
 /*BUILTINS*/
 int				ft_cd(char **args, t_shell *shell);
 int				ft_pwd(void);
-void			ft_echo(char **args);
-void			ft_export(char **args);
-void			ft_unset(char **args);
-void			ft_env(void);
-void			ft_exit(char **args);
+int				ft_echo(char **args);
+int				ft_export(char **args, t_shell *shell);
+int				ft_unset(char **args, t_shell *shell);
+int				ft_env(char **args, t_shell *shell);
+int				ft_exit(char **args, t_shell *shell);
 
 /*ERROR HANDLING*/
 int				exit_error(char *err_msg, char *src, int err_code, t_shell *shell);
@@ -178,16 +182,21 @@ void			free_envp(t_shell *shell);
 void			free_tokens(t_token *tokens);
 void			close_files(t_node *node);
 void			free_files(t_node *node);
-void			free_list(t_list **cmnd_list);
+//void			free_list(t_list **cmnd_list);
 void			clean_node(t_node *node);
 void			free_array(void **arr, int size);
 void			ft_close(int fd);
 void			cleanup_shell(t_shell *shell);
+void			free_cmd_list(t_command *cmd);
 
 /*UTILS*/
 int				count_args(char **args);
 int				is_numeric(const char *str);
 int				is_whitespace(char c);
+int				is_metacharacter(char c);
+int				is_operator(char c);
+int				is_quote(char c);
+int				is_valid_identifier(char *name);
 
 /*UTILS /ERRORS*/
 int				exit_error(char *err_msg, char *src, int err_code, t_shell *shell);	
@@ -199,5 +208,79 @@ void			handle_eof(t_shell *shell);
 void			disable_ctrl_chars(void);
 void			signal_handler(int signum);
 void			signal_handler_child(int signum);
+
+/*ENVIRONMENT*/
+char			*get_env_value(char *name, t_shell *shell);
+int				update_env_value(char *name, char *value, t_shell *shell);
+
+/*ENVIRONMENT /UTILS*/
+int				count_envp(char **envp);
+
+/*ENVIRONMENT /ERRORS*/
+int				exit_error(char *err_msg, char *src, int err_code, t_shell *shell);
+
+/*ENVIRONMENT /UTILS*/
+char			*get_home_dir(t_shell *shell);
+int				update_pwd_vars(t_shell *shell);
+int				find_env_index(char *name, char **env);
+char			*create_env_string(char *name, char *value);
+int				has_equals_sign(char *str);
+int				check_env_args(char **args);
+void			print_env_var(char *env_var);
+
+/*BUILTINS /UTILS*/
+int				is_n_flag(char *arg);
+void			print_args(char **args, int start, int n_flag);
+
+/*BUILTINS /ERRORS*/
+int				exit_error(char *err_msg, char *src, int err_code, t_shell *shell);
+
+/*BUILTINS /EXECUTION*/
+int				execute_builtin(t_command *cmd, t_shell *shell);
+
+/*BUILTINS /CD*/
+char			*get_home_dir(t_shell *shell);
+char			*expand_path(char *path, t_shell *shell);
+int				update_pwd_vars(t_shell *shell);
+char			*expand_path(char *path, t_shell *shell);
+
+/*BUILTINS /EXIT*/
+int				is_numeric_arg(char *str);
+long long		ft_atoll(const char *str);
+int				count_args(char **args);
+
+/*BUILTINS /EXPORT*/
+int				is_valid_identifier(char *name);
+void			print_export_error(char *arg);
+char			*get_var_name(char *arg);
+int				update_existing_var(char *arg, t_shell *shell);
+int				add_new_var(char *arg, t_shell *shell);
+
+/*BUILTINS /UNSET*/
+int				is_valid_identifier(char *name);
+void			print_identifier_error(char *arg);
+int				remove_env_var(char *name, t_shell *shell);
+
+/*EXECUTOR /REDIRECTIONS*/
+int				setup_redirections(t_command *cmd);
+void			reset_redirections(int stdin_fd, int stdout_fd);
+
+
+/*EXECUTOR /UTILS*/
+int				is_builtin(char *cmd);
+int				execute_builtin(t_command *cmd, t_shell *shell);
+char			*get_cmd_path(char *cmd, char **paths);
+char			*find_command_path(char *cmd, t_shell *shell);
+
+
+/*EXECUTOR /ERRORS*/
+int				exit_error(char *err_msg, char *src, int err_code, t_shell *shell);
+
+
+/*EXECUTOR /EXEC*/
+int				execute_command(t_command *cmd, t_shell *shell);
+
+/*EXECUTOR /EXTERNAL*/
+int				execute_external(t_command *cmd, t_shell *shell);
 
 #endif

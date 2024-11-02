@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	execute_external(t_cmd *cmd, t_shell *shell)
+int	execute_external(t_command *cmd, t_shell *shell)
 {
 	char	*cmd_path;
 	pid_t	pid;
@@ -17,7 +17,7 @@ int	execute_external(t_cmd *cmd, t_shell *shell)
 		handle_signals_child();
 		if (!setup_redirections(cmd))
 			exit(1);
-		execve(cmd_path, cmd->args, shell->env);
+		execve(cmd_path, cmd->args, shell->envp);
 		exit_error(ERR_CMD, cmd->args[0], 127, shell);
 		exit(127);
 	}

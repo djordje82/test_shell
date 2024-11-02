@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static int	execute_single_command(t_cmd *cmd, t_shell *shell)
+static int	execute_single_command(t_command *cmd, t_shell *shell)
 {
 	int	stdin_fd;
 	int	stdout_fd;
@@ -18,7 +18,7 @@ static int	execute_single_command(t_cmd *cmd, t_shell *shell)
 	return (status);
 }
 
-static int	execute_pipeline(t_cmd *cmd, t_shell *shell)
+static int	execute_pipeline(t_command *cmd, t_shell *shell)
 {
 	int		pipe_fd[2];
 	pid_t	pid;
@@ -56,14 +56,14 @@ static void	wait_for_children(pid_t last_pid)
 
 int	execute_commands(t_shell *shell)
 {
-	t_cmd	*current;
-	pid_t	last_pid;
-	int		stdin_fd;
+	t_command	*current;
+	pid_t		last_pid;
+	int			stdin_fd;
 
-	if (!shell->cmd_list)
+	if (!shell->cmnd_lst)
 		return (1);
 	stdin_fd = dup(STDIN_FILENO);
-	current = shell->cmd_list;
+	current = shell->cmnd_lst;
 	while (current && current->next)
 	{
 		if (execute_pipeline(current, shell) == -1)

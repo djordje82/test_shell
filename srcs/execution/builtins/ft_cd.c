@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_shell.h"
+#include "minishell.h"
 
-static char	*get_home_dir(t_shell *shell)
+char	*get_home_dir(t_shell *shell)
 {
 	char	*home;
 
@@ -22,7 +22,7 @@ static char	*get_home_dir(t_shell *shell)
 	return (ft_strdup(home));
 }
 
-static int	update_pwd_vars(t_shell *shell)
+int	update_pwd_vars(t_shell *shell)
 {
 	char	*old_pwd;
 	char	*new_pwd;
@@ -48,7 +48,7 @@ static int	update_pwd_vars(t_shell *shell)
 	return (0);
 }
 
-static char	*expand_path(char *path, t_shell *shell)
+char	*expand_path(char *path, t_shell *shell)
 {
 	char	*expanded;
 	char	*home;

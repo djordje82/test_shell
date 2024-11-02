@@ -23,7 +23,7 @@ static char	**add_argument(char **args, char *new_arg)
 	return (new_args);
 }
 
-int	parse_arguments(t_token **token, t_cmd *cmd)
+int	parse_arguments(t_token **token, t_command *cmd)
 {
 	char	**new_args;
 
@@ -34,7 +34,7 @@ int	parse_arguments(t_token **token, t_cmd *cmd)
 	return (1);
 }
 
-int	parse_redirections(t_token **token, t_cmd *cmd)
+int	parse_redirections(t_token **token, t_command *cmd)
 {
 	t_token_type	type;
 

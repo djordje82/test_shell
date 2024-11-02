@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	exit_error(char *err_msg, char *src, int err_code, t_shell *meta)
+int	exit_error(char *err_msg, char *src, int err_code, t_shell *shell)
 {
 	char	*result;
 
@@ -17,12 +17,17 @@ int	exit_error(char *err_msg, char *src, int err_code, t_shell *meta)
 	}
 	else if (err_msg)
 		ft_putendl_fd(err_msg, STDERR_FILENO);
-	if (meta)
+	if (shell)
 	{
-		free_list(meta->cmnd_lst);
-		free_meta(meta);
-		free_envp(meta);
-		meta->exit_code = err_code;
+		if (shell->cmnd_lst)
+			free_cmd_list(shell->cmnd_lst);
+		if (shell->envp)
+			free_array((void **)shell->envp, -1);
+		if (shell->tokens)
+			free_tokens(shell->tokens);
+		if (shell->pipe)
+			free_array((void **)shell->pipe, shell->n_cmnds);
+		shell->exit_status = err_code;
 	}
 	rl_clear_history();
 	exit(err_code);

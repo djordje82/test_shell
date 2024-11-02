@@ -1,9 +1,10 @@
-static void	init_shell(t_shell *shell, char **envp)
+#include "minishell.h"
+
+void	init_shell(t_shell *shell, char **envp)
 {
-	shell->env = env;
-	shell->commands = NULL;
-	shell->tokens = NULL;
 	shell->envp = envp;
+	shell->cmnd_lst = NULL;
+	shell->tokens = NULL;
 	shell->exit_status = 0;
 	shell->running = true;
 }
@@ -32,9 +33,9 @@ int	main(int argc, char **argv, char **env)
 			shell.tokens = tokenize_input(input, &shell);
 			if (shell.tokens && parse_tokens(&shell))
 			{
-				execute_commans(&shell);
-				free_cmd_list(shell.cmnd_list);
-				shell.cmnd_list = NULL;
+				execute_commands(&shell);
+				free_cmd_list(shell.cmnd_lst);
+				shell.cmnd_lst = NULL;
 			}
 			free_tokens(shell.tokens);
 			shell.tokens = NULL;

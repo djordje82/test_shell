@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_shell.h"
+#include "minishell.h"
 
-static int	is_numeric_arg(char *str)
+int	is_numeric_arg(char *str)
 {
 	int	i;
 
@@ -28,7 +28,7 @@ static int	is_numeric_arg(char *str)
 	return (1);
 }
 
-static int	count_args(char **args)
+int	count_args(char **args)
 {
 	int	i;
 
@@ -38,7 +38,7 @@ static int	count_args(char **args)
 	return (i);
 }
 
-static long long	ft_atoll(const char *str)
+long long	ft_atoll(const char *str)
 {
 	long long	result;
 	int			sign;

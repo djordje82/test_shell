@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_shell.h"
+#include "minishell.h"
 
-static int	is_valid_identifier(char *name)
+/*int	is_valid_identifier(char *name)
 {
 	int	i;
 
@@ -26,38 +26,38 @@ static int	is_valid_identifier(char *name)
 		i++;
 	}
 	return (1);
-}
+}*/
 
-static void	print_identifier_error(char *arg)
+void	print_identifier_error(char *arg)
 {
 	ft_putstr_fd("minishell: unset: `", STDERR_FILENO);
 	ft_putstr_fd(arg, STDERR_FILENO);
 	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 }
 
-static int	remove_env_var(char *name, t_shell *shell)
+int	remove_env_var(char *name, t_shell *shell)
 {
 	int		i;
 	int		j;
 	int		name_len;
-	char	**new_env;
+	//char	**new_env;
 
 	name_len = ft_strlen(name);
 	i = 0;
-	while (shell->env[i])
+	while (shell->envp[i])
 	{
-		if (ft_strncmp(shell->env[i], name, name_len) == 0
-			&& (shell->env[i][name_len] == '='
-			|| shell->env[i][name_len] == '\0'))
+		if (ft_strncmp(shell->envp[i], name, name_len) == 0
+			&& (shell->envp[i][name_len] == '='
+			|| shell->envp[i][name_len] == '\0'))
 		{
-			free(shell->env[i]);
+			free(shell->envp[i]);
 			j = i;
-			while (shell->env[j + 1])
+			while (shell->envp[j + 1])
 			{
-				shell->env[j] = shell->env[j + 1];
+				shell->envp[j] = shell->envp[j + 1];
 				j++;
 			}
-			shell->env[j] = NULL;
+			shell->envp[j] = NULL;
 			return (1);
 		}
 		i++;

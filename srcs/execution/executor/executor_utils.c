@@ -2,32 +2,32 @@
 
 int	is_builtin(char *cmd)
 {
-	return (!ft_strcmp(cmd, "echo") || !ft_strcmp(cmd, "cd") ||
-			!ft_strcmp(cmd, "pwd") || !ft_strcmp(cmd, "export") ||
-			!ft_strcmp(cmd, "unset") || !ft_strcmp(cmd, "env") ||
-			!ft_strcmp(cmd, "exit"));
+	return (!ft_strncmp(cmd, "echo", 4) || !ft_strncmp(cmd, "cd", 2) ||
+			!ft_strncmp(cmd, "pwd", 3) || !ft_strncmp(cmd, "export", 6) ||
+			!ft_strncmp(cmd, "unset", 4) || !ft_strncmp(cmd, "env", 3) ||
+			!ft_strncmp(cmd, "exit", 4));
 }
 
-int	execute_builtin(t_cmd *cmd, t_shell *shell)
+int	execute_builtin(t_command *cmd, t_shell *shell)
 {
-	if (!ft_strcmp(cmd->args[0], "echo"))
+	if (!ft_strncmp(cmd->args[0], "echo", 4))
 		return (ft_echo(cmd->args));
-	if (!ft_strcmp(cmd->args[0], "cd"))
+	if (!ft_strncmp(cmd->args[0], "cd", 2))
 		return (ft_cd(cmd->args, shell));
-	if (!ft_strcmp(cmd->args[0], "pwd"))
+	if (!ft_strncmp(cmd->args[0], "pwd", 3))
 		return (ft_pwd());
-	if (!ft_strcmp(cmd->args[0], "export"))
+	if (!ft_strncmp(cmd->args[0], "export", 6))
 		return (ft_export(cmd->args, shell));
-	if (!ft_strcmp(cmd->args[0], "unset"))
+	if (!ft_strncmp(cmd->args[0], "unset", 4))
 		return (ft_unset(cmd->args, shell));
-	if (!ft_strcmp(cmd->args[0], "env"))
-		return (ft_env(shell));
-	if (!ft_strcmp(cmd->args[0], "exit"))
+	if (!ft_strncmp(cmd->args[0], "env", 3))
+		return (ft_env(cmd->args, shell));
+	if (!ft_strncmp(cmd->args[0], "exit", 4))
 		return (ft_exit(cmd->args, shell));
 	return (1);
 }
 
-static char	*get_cmd_path(char *cmd, char **paths)
+char	*get_cmd_path(char *cmd, char **paths)
 {
 	char	*temp;
 	char	*command;

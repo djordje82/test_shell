@@ -49,13 +49,13 @@ static int	build_command_list(t_token *tokens, t_shell *shell)
 	t_token		*current;
 
 	current = tokens;
-	shell->cmd_list = NULL;
+	shell->cmnd_lst = NULL;
 	while (current)
 	{
 		cmd = parse_command(&current);
 		if (!cmd)
 			return (0);
-		add_cmd_node(&shell->cmd_list, cmd);
+		add_cmd_node(&shell->cmnd_lst, cmd);
 		if (current && current->type == TOKEN_PIPE)
 			current = current->next;
 	}
