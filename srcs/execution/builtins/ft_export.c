@@ -40,27 +40,38 @@ void	print_sorted_env(char **envp)
 	int		i;
 	int		j;
 	char	*temp;
+	char	**sorted;
 
+	// Create a copy of environment to sort
+	sorted = copy_env(envp);
+	if (!sorted)
+		return;
+
+	// Bubble sort the environment variables
 	i = 0;
-	while (envp[i])
-		i++;
-	temp = NULL;
-	i = 0;
-	while (envp[i])
+	while (sorted[i])
 	{
 		j = i + 1;
-		while (envp[j])
+		while (sorted[j])
 		{
-			if (ft_strncmp(envp[i], envp[j], ft_strlen(envp[i])) > 0)
+			if (ft_strncmp(sorted[i], sorted[j], ft_strlen(sorted[i])) > 0)
 			{
-				temp = envp[i];
-				envp[i] = envp[j];
-				envp[j] = temp;
+				temp = sorted[i];
+				sorted[i] = sorted[j];
+				sorted[j] = temp;
 			}
 			j++;
 		}
 		i++;
 	}
+
+	// Print sorted environment
+	i = 0;
+	while (sorted[i])
+		print_exported_var(sorted[i++]);
+
+	// Clean up
+	free_array((void **)sorted, -1);
 }
 
 void	print_exported_var(char *var)
@@ -86,33 +97,83 @@ void	print_exported_var(char *var)
 	ft_putchar_fd('\n', STDOUT_FILENO);
 }
 
-char	**copy_env(char **envp)
+char **copy_env(char **envp)
+{
+    char **new_env;
+    int i;
+    int size;
+
+    // Count environment variables
+    size = 0;
+    while (envp && envp[size])
+        size++;
+
+    // Allocate array of pointers
+    new_env = (char **)malloc(sizeof(char *) * (size + 1));
+    if (!new_env)
+        return (NULL);
+
+    // Copy each environment variable
+    i = 0;
+    while (i < size)
+    {
+        new_env[i] = ft_strdup(envp[i]);
+        if (!new_env[i])
+        {
+            // Free all previously allocated strings and the array
+            while (--i >= 0)
+                free(new_env[i]);
+            free(new_env);
+            return (NULL);
+        }
+        i++;
+    }
+    new_env[i] = NULL;  // Null terminate the array
+    return (new_env);
+}
+
+/*char	**copy_env(char **envp)
 {
 	char	**new_env;
 	int		i;
+	int		size;
 
-	i = 0;
-	while (envp[i])
-		i++;
-	new_env = malloc(sizeof(char *) * (i + 1));
+	//printf("Debug: Copying environment\n");
+	// Count environment variables
+	size = 0;
+	while (envp && envp[size])
+		size++;
+
+	new_env = malloc(sizeof(char *) * (size + 1));
 	if (!new_env)
 		return (NULL);
+
 	i = 0;
+	//while (i < size)
 	while (envp[i])
 	{
 		new_env[i] = ft_strdup(envp[i]);
 		if (!new_env[i])
+        {
+            // Free all previous allocations if strdup fails
+            while (--i >= 0)
+                free(new_env[i]);
+            free(new_env);
+            return (NULL);
+        }
+		if (!new_env[i])
 		{
-			while (--i >= 0)
-				free(new_env[i]);
-			free(new_env);
+			//printf("Debug: Failed to copy env var %d\n", i);
+			free_array((void **)new_env, i);
 			return (NULL);
 		}
+		//printf("Debug: Copied env[%d]: %s\n", i, new_env[i]);
 		i++;
 	}
 	new_env[i] = NULL;
+	//printf("Debug: Environment copy complete\n");
 	return (new_env);
-}
+}*/
 
 int	get_env_size(char **envp)
 {
@@ -124,7 +185,7 @@ int	get_env_size(char **envp)
 	return (i);
 }
 
-char	*get_var_name(char *arg)
+/*char	*get_var_name(char *arg)
 {
 	int		i;
 	char	*name;
@@ -134,33 +195,62 @@ char	*get_var_name(char *arg)
 		i++;
 	name = ft_substr(arg, 0, i);
 	return (name);
+}*/
+
+char *get_var_value(char *arg)
+{
+    char *equals;
+    
+    equals = ft_strchr(arg, '=');
+    if (!equals)
+        return (ft_strdup(""));
+    return (ft_strdup(equals + 1));
 }
 
 int	update_existing_var(char *arg, t_shell *shell)
 {
 	char	*name;
-	int		i;
-	int		name_len;
+	char	*value;
+	char	*equals;
+	int		index;
 
-	name = get_var_name(arg);
+	//printf("Debug: Updating existing var: %s\n", arg);
+	equals = ft_strchr(arg, '=');
+	if (!equals)
+		return (0);  // Not an assignment
+
+	// Get variable name
+	name = ft_substr(arg, 0, equals - arg);
 	if (!name)
 		return (0);
-	name_len = ft_strlen(name);
-	i = 0;
-	while (shell->envp[i])
+
+	// Get variable value
+	value = ft_strdup(equals + 1);
+	if (!value)
 	{
-		if (ft_strncmp(shell->envp[i], name, name_len) == 0
-			&& (shell->envp[i][name_len] == '='
-			|| shell->envp[i][name_len] == '\0'))
-		{
-			free(shell->envp[i]);
-			shell->envp[i] = ft_strdup(arg);
-			free(name);
-			return (1);
-		}
-		i++;
+		free(name);
+		return (0);
 	}
+
+	// Update the variable
+	index = find_env_index(name, shell->envp);
+	if (index >= 0)
+	{
+		//printf("Debug: Found existing variable at index %d\n", index);
+		char *new_value = create_env_string(name, value);
+		if (new_value)
+		{
+			free(shell->envp[index]);
+			shell->envp[index] = new_value;
+			//printf("Debug: Updated variable: %s\n", new_value);
+		}
+		free(name);
+		free(value);
+		return (1);
+	}
+
 	free(name);
+	free(value);
 	return (0);
 }
 
@@ -174,50 +264,70 @@ int	add_new_var(char *arg, t_shell *shell)
 	new_env = malloc(sizeof(char *) * (size + 2));
 	if (!new_env)
 		return (0);
+
+	// Copy existing environment
 	i = 0;
 	while (shell->envp[i])
 	{
-		new_env[i] = shell->envp[i];
+		new_env[i] = ft_strdup(shell->envp[i]);  // Make copies instead of moving pointers
+		if (!new_env[i])
+		{
+			free_array((void **)new_env, i);
+			return (0);
+		}
 		i++;
 	}
+
+	// Add new variable
 	new_env[i] = ft_strdup(arg);
+	if (!new_env[i])
+	{
+		free_array((void **)new_env, i);
+		return (0);
+	}
 	new_env[i + 1] = NULL;
-	free(shell->envp);
+
+	// Free old environment and update
+	free_array((void **)shell->envp, -1);
 	shell->envp = new_env;
 	return (1);
 }
 
-int	ft_export(char **args, t_shell *shell)
+int ft_export(char **args, t_shell *shell)
 {
-	int		i;
-	int		status;
-	char	**sorted_env;
-
-	if (!args[1])
-	{
-		sorted_env = copy_env(shell->envp);
-		if (!sorted_env)
-			return (1);
-		print_sorted_env(sorted_env);
-		i = 0;
-		while (sorted_env[i])
-			print_exported_var(sorted_env[i++]);
-		free_array((void **)sorted_env, -1);
-		return (0);
-	}
-	status = 0;
-	i = 1;
-	while (args[i])
-	{
-		if (!is_valid_identifier(args[i]))
-		{
-			print_export_error(args[i]);
-			status = 1;
-		}
-		else if (!update_existing_var(args[i], shell))
-			if (!add_new_var(args[i], shell))
-				status = 1;
-		i++;
-	}
-	return (status);
+    int i;
+    int status;
+    char *name;
+    char *value;
+    
+    if (!args[1])
+    {
+        print_sorted_env(shell->envp);
+        return (0);
+    }
+    
+    status = 0;
+    i = 1;
+    while (args[i])
+    {
+        if (!is_valid_identifier(args[i]))
+        {
+            ft_putstr_fd("minishell: export: `", 2);
+            ft_putstr_fd(args[i], 2);
+            ft_putstr_fd("': not a valid identifier\n", 2);
+            status = 1;
+        }
+        else
+        {
+            name = get_var_name(args[i]);
+            value = get_var_value(args[i]);
+            if (!update_env_value(name, value, shell))
+                status = 1;
+            free(name);
+            free(value);
+        }
+        i++;
+    }
+    
+    return (status);
 }

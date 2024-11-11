@@ -13,13 +13,19 @@ void	free_array(void **arr, int size)
 {
 	int	i;
 
-	i = 0;
+	//printf("Debug: free_array called with size %d\n", size);
 	if (!arr)
-		return ;
+	{
+		//printf("Debug: arr is NULL, returning\n");
+		return;
+	}
+	
+	i = 0;
 	if (size == -1)
 	{
 		while (arr[i])
 		{
+			//printf("Debug: Freeing arr[%d]: '%s'\n", i, (char *)arr[i]);
 			free(arr[i]);
 			i++;
 		}
@@ -28,11 +34,14 @@ void	free_array(void **arr, int size)
 	{
 		while (i < size)
 		{
+			//printf("Debug: Freeing arr[%d]\n", i);
 			free(arr[i]);
 			i++;
 		}
 	}
+	//printf("Debug: Freeing arr itself\n");
 	free(arr);
+	//printf("Debug: free_array complete\n");
 }
 
 void	free_shell(t_shell *shell)
@@ -65,7 +74,8 @@ void	free_tokens(t_token *tokens)
 	while (current)
 	{
 		next = current->next;
-		free(current->value);
+		if (current->value)
+			free(current->value);
 		free(current);
 		current = next;
 	}

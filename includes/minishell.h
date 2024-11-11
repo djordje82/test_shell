@@ -28,13 +28,15 @@
 # include <fcntl.h>
 # include <errno.h>
 # include <termios.h>
+# include <limits.h>
 
 # define SHELL_NAME "minishell"
-# define TOKEN_DELIMITERS " \t\n\r\a"
-# define REDIR_DELIMITERS ">>"
-# define PIPE_DELIMITERS "|"
+//# define TOKEN_DELIMITERS " \t\n\r\a"
+//# define REDIR_DELIMITERS ">>"
+//# define PIPE_DELIMITERS "|"
 # define PROMPT "minishell> "
-# define SPECIAL "<>|;"
+//# define SPECIAL "<>|;"
+//# define OPERATORS "><"
 
 /*ERROR CODES*/
 # define EXIT_SUCCESS 0
@@ -72,6 +74,33 @@
 /*GLOBAL VARIABLE*/
 extern int	g_exit_status;
 
+typedef enum e_char_type
+{
+    CHAR_NORMAL,     // Regular characters
+    CHAR_WHITESPACE, // Space, tab, newline
+    CHAR_PIPE,       // |
+    CHAR_REDIR_IN,   // <
+    CHAR_REDIR_OUT,  // >
+    CHAR_QUOTE,      // '
+    CHAR_DQUOTE,     // "
+    CHAR_SEMICOLON,  // ; (for future implementation)
+    CHAR_ESCAPE      // \ (for future implementation)
+} t_char_type;
+
+typedef enum e_token_type
+{
+	TOKEN_WORD,
+	TOKEN_PIPE,
+	TOKEN_REDIRECT_IN,	// <
+	TOKEN_REDIRECT_OUT,	// >
+	TOKEN_APPEND,		// >>
+	TOKEN_HEREDOC,		// <<
+	TOKEN_SPACE,
+	TOKEN_QUOTE,		// '
+	TOKEN_DQUOTE,		// "
+	TOKEN_ENV			// $
+}	t_token_type;
+
 /*STRUCTS*/
 typedef struct s_node
 {
@@ -89,19 +118,6 @@ typedef struct s_node
 	int		n_output;
 }	t_node;
 
-typedef enum e_token_type
-{
-	TOKEN_WORD,
-	TOKEN_PIPE,
-	TOKEN_REDIRECT_IN,	// <
-	TOKEN_REDIRECT_OUT,	// >
-	TOKEN_APPEND,		// >>
-	TOKEN_HEREDOC,		// <<
-	TOKEN_SPACE,
-	TOKEN_QUOTE,		// '
-	TOKEN_DQUOTE,		// "
-	TOKEN_ENV			// $
-}	t_token_type;
 
 typedef struct s_token
 {
@@ -132,24 +148,34 @@ typedef struct s_shell
 	bool		running;
 }			t_shell;
 
-/*INITIALIZATION*/
-void			init_shell(t_shell *shell, char **envp);
+/*MAIN*/
+void			init_shell_struct(t_shell *shell, char **envp);
+int				init_minishell(t_shell *shell, char **env, int argc, char **argv);
+void			shell_loop(t_shell *shell);
+void			handle_input_line(char *input, t_shell *shell);
+void			cleanup_command_data(t_shell *shell);
 
 
 /*TOKENIZER*/
-t_token			*tokenize_input(char *input, t_shell *shell);
-t_token			*create_token(char *value, t_token_type type);
+char			*get_var_name(const char *str);
+char			*ft_strjoin_free(char *s1, char *s2);
+t_token *create_token(char *value, t_token_type type);  // Swap parameters order
+t_token	*tokenize_input(const char *input, t_shell *shell);
+t_token	*handle_word(const char *input, int *i, t_shell *shell);
+t_token *handle_pipe(const char *input, int *pos);
+t_token	*handle_quote(char *input, int *i, t_shell *shell);
+t_token *get_next_token(const char *input, int *pos, t_shell *shell);
 void			add_token(t_token **tokens, t_token *new_token);
 t_token_type	get_token_type(char c);
-char			*extract_word(char *input, int *i);
-char			*extract_quoted(char *input, int *i, char quote_type);
-t_token			*handle_operator(char *input, int *i);
+char			*extract_word(const char *input, int *pos);
+char			*extract_quoted(char *input, int *pos, char quote_type);
+t_token *handle_operator(const char *input, int *i);
 int				handle_quotes(char *input, int *i, char quote_type);
+char			*expand_env_vars(char *str, t_shell *shell);
 
 /*PARSER*/
 t_command		*parse_command(t_token **token);
 int				parse_tokens(t_shell *shell);
-t_token			*tokenize_input(char *input, t_shell *shell);
 
 /*PARSER /UTILS*/
 t_command		*create_cmd_node(void);
@@ -163,8 +189,8 @@ int				execute_commands(t_shell *shell);
 
 /*BUILTINS*/
 int				ft_cd(char **args, t_shell *shell);
-int				ft_pwd(void);
-int				ft_echo(char **args);
+int				ft_pwd(char **args, t_shell *shell);
+int				ft_echo(char **args, t_shell *shell);
 int				ft_export(char **args, t_shell *shell);
 int				ft_unset(char **args, t_shell *shell);
 int				ft_env(char **args, t_shell *shell);
@@ -190,10 +216,12 @@ void			cleanup_shell(t_shell *shell);
 void			free_cmd_list(t_command *cmd);
 
 /*UTILS*/
+t_char_type		get_char_type(char c);
+int				is_special_char(char c);
 int				count_args(char **args);
 int				is_numeric(const char *str);
 int				is_whitespace(char c);
-int				is_metacharacter(char c);
+//int				is_metacharacter(char c);
 int				is_operator(char c);
 int				is_quote(char c);
 int				is_valid_identifier(char *name);
@@ -232,8 +260,9 @@ void			print_env_var(char *env_var);
 int				is_n_flag(char *arg);
 void			print_args(char **args, int start, int n_flag);
 
-/*BUILTINS /ERRORS*/
+/*ERRORS*/
 int				exit_error(char *err_msg, char *src, int err_code, t_shell *shell);
+int				syntax_error(char *err_msg, char *src);
 
 /*BUILTINS /EXECUTION*/
 int				execute_builtin(t_command *cmd, t_shell *shell);
@@ -252,9 +281,12 @@ int				count_args(char **args);
 /*BUILTINS /EXPORT*/
 int				is_valid_identifier(char *name);
 void			print_export_error(char *arg);
-char			*get_var_name(char *arg);
+//char			*get_var_name(char *arg);
+char			*get_var_value(char *arg);
 int				update_existing_var(char *arg, t_shell *shell);
 int				add_new_var(char *arg, t_shell *shell);
+char			**copy_env(char **envp);
+void			print_exported_var(char *var);
 
 /*BUILTINS /UNSET*/
 int				is_valid_identifier(char *name);

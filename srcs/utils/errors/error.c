@@ -1,5 +1,17 @@
 #include "minishell.h"
 
+// New function for syntax errors
+int syntax_error(char *err_msg, char *src)
+{
+    if (src)
+        ft_putstr_fd(src, STDERR_FILENO);
+    if (err_msg)
+        ft_putendl_fd(err_msg, STDERR_FILENO);
+    
+    g_exit_status = 2;  // Set syntax error exit status
+    return (0);
+}
+
 int	exit_error(char *err_msg, char *src, int err_code, t_shell *shell)
 {
 	char	*result;

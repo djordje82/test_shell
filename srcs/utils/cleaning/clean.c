@@ -65,20 +65,62 @@ void	clean_node(t_node *node)
 
 void	cleanup_shell(t_shell *shell)
 {
-	if (shell)
+	//printf("Debug: Starting shell cleanup\n");
+	if (!shell)
+		return;
+
+	// Clean command list first
+	if (shell->cmnd_lst)
 	{
-		if (shell->cmnd_lst)
-			free_cmd_list(shell->cmnd_lst);
-		if (shell->envp)
-			free_array((void **)shell->envp, -1);
-		if (shell->tokens)
-			free_tokens(shell->tokens);
-		if (shell->pipe)
-			free_array((void **)shell->pipe, shell->n_cmnds);
-		if (shell->pid)
-			free(shell->pid);
+		//printf("Debug: Cleaning command list\n");
+		free_cmd_list(shell->cmnd_lst);
+		shell->cmnd_lst = NULL;
 	}
+
+	// Clean tokens
+	if (shell->tokens)
+	{
+		//printf("Debug: Cleaning tokens\n");
+		free_tokens(shell->tokens);
+		shell->tokens = NULL;
+	}
+
+	// Clean pipes
+	if (shell->pipe)
+	{
+		//printf("Debug: Cleaning pipes\n");
+		free_array((void **)shell->pipe, shell->n_cmnds);
+		shell->pipe = NULL;
+	}
+
+	// Clean PIDs
+	if (shell->pid)
+	{
+		//printf("Debug: Cleaning PIDs\n");
+		free(shell->pid);
+		shell->pid = NULL;
+	}
+
+	// Environment variables should be the last to be cleaned
+	// and might not need to be freed depending on how they were allocated
+	if (shell->envp)
+	{
+		//printf("Debug: Setting environment to NULL\n");
+		//shell->envp = NULL;  // Don't free envp as it might be the original environment
+		char **tmp = shell->envp;
+        while (*tmp)
+        {
+            free(*tmp);
+            tmp++;
+        }
+        free(shell->envp);
+        shell->envp = NULL;
+	}
+
+	//printf("Debug: Cleaning readline history\n");
 	rl_clear_history();
+	
+	//printf("Debug: Shell cleanup complete\n");
 }
 
 /*void	free_list(t_command **cmnd_list)

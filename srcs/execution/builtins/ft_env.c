@@ -56,11 +56,23 @@ char	*create_env_string(char *name, char *value)
 	char	*temp;
 	char	*result;
 
+	//printf("Debug: Creating env string for %s=%s\n", name, value);
+	
+	// Create "name=" string
 	temp = ft_strjoin(name, "=");
 	if (!temp)
+	{
+		//printf("Debug: Failed to create temp string\n");
 		return (NULL);
+	}
+	
+	// Add the value
 	result = ft_strjoin(temp, value);
+	//printf("Debug: Created env string: %s\n", result ? result : "NULL");
+	
+	// Free temporary string
 	free(temp);
+	
 	return (result);
 }
 
@@ -69,22 +81,39 @@ int	update_env_value(char *name, char *value, t_shell *shell)
 	int		index;
 	char	*new_str;
 
+	//printf("Debug: Updating env value: %s=%s\n", name, value);
 	if (!name || !value || !shell->envp)
+	{
+		//printf("Debug: Invalid parameters in update_env_value\n");
 		return (1);
+	}
+	
+	// Find the existing variable first
+	index = find_env_index(name, shell->envp);
+	//printf("Debug: Found index: %d\n", index);
+	
+	if (index < 0)
+	{
+		//printf("Debug: Environment variable not found\n");
+		return (1);
+	}
+
+	// Create the new environment string
 	new_str = create_env_string(name, value);
 	if (!new_str)
-		return (1);
-	index = find_env_index(name, shell->envp);
-	if (index >= 0)
 	{
-		free(shell->envp[index]);
-		shell->envp[index] = new_str;
-	}
-	else
-	{
-		free(new_str);
+		//printf("Debug: Failed to create env string\n");
 		return (1);
 	}
+	
+	//printf("Debug: Replacing env string at index %d\n", index);
+	//printf("Debug: Old string: '%s'\n", shell->envp[index]);
+	//printf("Debug: New string: '%s'\n", new_str);
+	
+	// Replace the string directly without freeing the old one
+	shell->envp[index] = new_str;
+	
+	//printf("Debug: Successfully updated env variable\n");
 	return (0);
 }
 

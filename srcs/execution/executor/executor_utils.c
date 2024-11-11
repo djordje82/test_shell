@@ -1,30 +1,33 @@
 #include "minishell.h"
 
-int	is_builtin(char *cmd)
+int is_builtin(char *cmd)
 {
-	return (!ft_strncmp(cmd, "echo", 4) || !ft_strncmp(cmd, "cd", 2) ||
-			!ft_strncmp(cmd, "pwd", 3) || !ft_strncmp(cmd, "export", 6) ||
-			!ft_strncmp(cmd, "unset", 4) || !ft_strncmp(cmd, "env", 3) ||
-			!ft_strncmp(cmd, "exit", 4));
+    return (ft_strncmp(cmd, "cd", 3) == 0 ||
+            ft_strncmp(cmd, "pwd", 4) == 0 ||
+            ft_strncmp(cmd, "echo", 5) == 0 ||
+            ft_strncmp(cmd, "export", 7) == 0 ||
+            ft_strncmp(cmd, "unset", 6) == 0 ||
+            ft_strncmp(cmd, "env", 4) == 0 ||
+            ft_strncmp(cmd, "exit", 5) == 0);
 }
 
-int	execute_builtin(t_command *cmd, t_shell *shell)
+int execute_builtin(t_command *cmd, t_shell *shell)
 {
-	if (!ft_strncmp(cmd->args[0], "echo", 4))
-		return (ft_echo(cmd->args));
-	if (!ft_strncmp(cmd->args[0], "cd", 2))
-		return (ft_cd(cmd->args, shell));
-	if (!ft_strncmp(cmd->args[0], "pwd", 3))
-		return (ft_pwd());
-	if (!ft_strncmp(cmd->args[0], "export", 6))
-		return (ft_export(cmd->args, shell));
-	if (!ft_strncmp(cmd->args[0], "unset", 4))
-		return (ft_unset(cmd->args, shell));
-	if (!ft_strncmp(cmd->args[0], "env", 3))
-		return (ft_env(cmd->args, shell));
-	if (!ft_strncmp(cmd->args[0], "exit", 4))
-		return (ft_exit(cmd->args, shell));
-	return (1);
+    if (ft_strncmp(cmd->args[0], "echo", 5) == 0)
+        return (ft_echo(cmd->args, shell));
+    else if (ft_strncmp(cmd->args[0], "cd", 3) == 0)
+        return (ft_cd(cmd->args, shell));
+    else if (ft_strncmp(cmd->args[0], "pwd", 4) == 0)
+        return (ft_pwd(cmd->args, shell));
+    else if (ft_strncmp(cmd->args[0], "export", 7) == 0)
+        return (ft_export(cmd->args, shell));
+    else if (ft_strncmp(cmd->args[0], "unset", 6) == 0)
+        return (ft_unset(cmd->args, shell));
+    else if (ft_strncmp(cmd->args[0], "env", 4) == 0)
+        return (ft_env(cmd->args, shell));
+    else if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
+        return (ft_exit(cmd->args, shell));
+    return (1);
 }
 
 char	*get_cmd_path(char *cmd, char **paths)
