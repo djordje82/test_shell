@@ -12,6 +12,19 @@ int syntax_error(char *err_msg, char *src)
     return (0);
 }
 
+/*int redir_error(char *filename)
+{
+    ft_putstr_fd("minishell: ", STDERR_FILENO);
+    ft_putstr_fd(filename, STDERR_FILENO);
+    if (errno == ENOENT)  // No such file or directory
+        ft_putendl_fd(": No such file or directory", STDERR_FILENO);
+    else if (errno == EACCES)  // Permission denied
+        ft_putendl_fd(": Permission denied", STDERR_FILENO);
+    else
+        ft_putendl_fd(": Error opening file", STDERR_FILENO);
+    return (0);
+}*/
+
 int	exit_error(char *err_msg, char *src, int err_code, t_shell *shell)
 {
 	char	*result;

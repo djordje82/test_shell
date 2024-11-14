@@ -310,7 +310,7 @@ int ft_export(char **args, t_shell *shell)
     i = 1;
     while (args[i])
     {
-        if (!is_valid_identifier(args[i]))
+        if (args[i][0] == '=' || !is_valid_identifier(args[i]))
         {
             ft_putstr_fd("minishell: export: `", 2);
             ft_putstr_fd(args[i], 2);

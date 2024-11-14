@@ -65,6 +65,16 @@ int	is_valid_identifier(char *name)
 	return (1);
 }
 
+int	count_args(char **args)
+{
+	int	i;
+
+	i = 0;
+	while (args &&args[i])
+		i++;
+	return (i);
+}
+
 /*int	is_whitespace(char c)
 {
 	return (ft_strchr(TOKEN_DELIMITERS, c) != NULL);

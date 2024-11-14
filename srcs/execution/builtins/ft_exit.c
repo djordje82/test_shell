@@ -28,16 +28,6 @@ int	is_numeric_arg(char *str)
 	return (1);
 }
 
-int	count_args(char **args)
-{
-	int	i;
-
-	i = 0;
-	while (args[i])
-		i++;
-	return (i);
-}
-
 long long	ft_atoll(const char *str)
 {
 	long long	result;
@@ -69,8 +59,8 @@ int ft_exit(char **args, t_shell *shell)
     
     //printf("Debug: Executing exit command\n");
     
-    // Print "exit" to stderr as per bash behavior
-    ft_putendl_fd("exit", STDERR_FILENO);
+    // Print "exit" to stdout (not stderr) as per bash behavior
+    ft_putendl_fd("exit", STDOUT_FILENO);
     
     if (!args[1])
     {

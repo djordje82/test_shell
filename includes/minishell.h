@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mini_shell.h                                       :+:      :+:    :+:   */
+/*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/10/25 13:37:12 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/14 17:10:36 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include <errno.h>
 # include <termios.h>
 # include <limits.h>
+# include <glob.h> //for wildcard expansion
 
 # define SHELL_NAME "minishell"
 //# define TOKEN_DELIMITERS " \t\n\r\a"
@@ -69,7 +70,7 @@
 # define ERR_SYNTAX_NEWLINE "minishell: syntax error near unexpected token `newline'"
 # define ERR_SYNTAX_REDIR "minishell: syntax error near unexpected token `redirection'"
 # define ERR_CMD "minishell: command not found"
-# define ERR_PERM "minishell: permission denied"
+# define ERR_PERM "minishell: Permission denied"
 
 /*GLOBAL VARIABLE*/
 extern int	g_exit_status;
@@ -134,6 +135,7 @@ typedef struct s_command
 	int			in_type;
 	int			out_type;
 	struct s_command	*next;
+	struct s_command	*prev;
 }			t_command;
 
 typedef struct s_shell
@@ -172,7 +174,8 @@ char			*extract_quoted(char *input, int *pos, char quote_type);
 t_token *handle_operator(const char *input, int *i);
 int				handle_quotes(char *input, int *i, char quote_type);
 char			*expand_env_vars(char *str, t_shell *shell);
-
+char			**expand_wildcards(char *pattern);
+char			**merge_args(char **orig_args, int pos, char **expanded);
 /*PARSER*/
 t_command		*parse_command(t_token **token);
 int				parse_tokens(t_shell *shell);
@@ -201,6 +204,7 @@ int				exit_error(char *err_msg, char *src, int err_code, t_shell *shell);
 int				minishell_clean(t_shell *shell, int exit_code);
 void			minishell_reset(t_shell *shell);
 void			print_syntax_error(const char *msg);
+//int				redir_error(char *filename);
 
 /*CLEANING*/
 void			free_shell(t_shell *shell);
@@ -276,7 +280,7 @@ char			*expand_path(char *path, t_shell *shell);
 /*BUILTINS /EXIT*/
 int				is_numeric_arg(char *str);
 long long		ft_atoll(const char *str);
-int				count_args(char **args);
+//int				count_args(char **args);
 
 /*BUILTINS /EXPORT*/
 int				is_valid_identifier(char *name);
@@ -311,6 +315,11 @@ int				exit_error(char *err_msg, char *src, int err_code, t_shell *shell);
 
 /*EXECUTOR /EXEC*/
 int				execute_command(t_command *cmd, t_shell *shell);
+int				execute_single_command(t_command *cmd, t_shell *shell);
+int				is_parent_only_builtin(char *cmd);
+int				handle_pipeline(t_command *current, int *prev_pipe, 
+        pid_t *last_pid, t_shell *shell);
+
 
 /*EXECUTOR /EXTERNAL*/
 int				execute_external(t_command *cmd, t_shell *shell);

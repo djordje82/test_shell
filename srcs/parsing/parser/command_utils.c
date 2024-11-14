@@ -23,34 +23,13 @@ void	add_cmd_node(t_command **cmd_list, t_command *new_cmd)
 	if (!*cmd_list)
 	{
 		*cmd_list = new_cmd;
+		new_cmd->prev = NULL;
 		return ;
 	}
 	current = *cmd_list;
 	while (current->next)
 		current = current->next;
 	current->next = new_cmd;
+	new_cmd->prev = current;
 }
 
-/*void	free_cmd_list(t_command *cmd)
-{
-	t_command	*temp;
-	int		i;
-
-	while (cmd)
-	{
-		temp = cmd->next;
-		if (cmd->args)
-		{
-			i = 0;
-			while (cmd->args[i])
-				free(cmd->args[i++]);
-			free(cmd->args);
-		}
-		if (cmd->infile)
-			free(cmd->infile);
-		if (cmd->outfile)
-			free(cmd->outfile);
-		free(cmd);
-		cmd = temp;
-	}
-}*/

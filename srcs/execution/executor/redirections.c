@@ -45,6 +45,7 @@ static int	handle_input_redirection(t_command *cmd)
 		fd = open(cmd->infile, O_RDONLY);
 		if (fd == -1)
 			return (exit_error(ERR_PERM, cmd->infile, 1, NULL));
+			//return (redir_error(cmd->infile));
 		dup2(fd, STDIN_FILENO);
 		close(fd);
 	}
@@ -71,6 +72,7 @@ static int	handle_output_redirection(t_command *cmd)
 		fd = open(cmd->outfile, flags, 0644);
 		if (fd == -1)
 			return (exit_error(ERR_PERM, cmd->outfile, 1, NULL));
+			//return (redir_error(cmd->outfile));
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 	}

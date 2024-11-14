@@ -95,7 +95,7 @@ static char *process_token_value(char *value, t_token_type type)
     else
     {
         result = ft_strdup(value);
-    }*/
+    }*///add comment out here in case you need to reactivate this function
     result = ft_strdup(value);
     //printf("Debug: Processed result: '%s'\n", result);
 
@@ -110,6 +110,7 @@ int	parse_arguments(t_token **token, t_command *cmd)
     //printf("Debug: Parsing argument token: '%s' of type %d\n", (*token)->value, (*token)->type);
     
     processed_value = process_token_value((*token)->value, (*token)->type);
+    //processed_value = ft_strdup((*token)->value);
     if (!processed_value)
         return (0);
     

@@ -74,55 +74,77 @@ t_token_type	get_token_type(char c)
 
 char *extract_word(const char *input, int *pos)
 {
-    char *word;
+    //char *word;
+    char *temp;
+    char *result;
     int start = *pos;
     int len = 0;
     
-    //printf("Debug: extract_word starting at position %d with char '%c'\n", start, input[start]);
+    result = ft_strdup("");
+    if (!result)
+        return NULL;
     
-    // Count length of word
-    while (input[start + len] && 
-           !is_whitespace(input[start + len]) && 
-           !is_special_char(input[start + len]) &&
-           input[start + len] != '"' &&
-           input[start + len] != '\'')
+    while (input[start + len])
     {
-        //printf("Debug: Adding char '%c' to word\n", input[start + len]);
+        // Handle quotes within word
+        if (input[start + len] == '\'' || input[start + len] == '"')
+        {
+            // First, add any accumulated normal characters
+            if (len > 0)
+            {
+                temp = ft_substr(input, start, len);
+                result = ft_strjoin_free(result, temp);
+                free(temp);
+                start += len;
+                len = 0;
+            }
+            
+            // Extract quoted content
+            char quote_type = input[start + len];
+            int quote_pos = start + len;
+            temp = extract_quoted((char *)input, &quote_pos, quote_type);
+            if (!temp)
+            {
+                free(result);
+                return NULL;
+            }
+            result = ft_strjoin_free(result, temp);
+            free(temp);
+            len = quote_pos - start - len;
+            start += len;
+            continue;
+        }
+        
+        // Stop at whitespace or special characters (except quotes)
+        if (is_whitespace(input[start + len]) || 
+            (is_special_char(input[start + len]) && 
+             input[start + len] != '\'' && 
+             input[start + len] != '"'))
+            break;
+            
         len++;
     }
     
-    // Allocate and copy
-    //word = malloc(sizeof(char) * (len + 1));
-	word = ft_substr(input, start, len);
-    if (!word)
-        return NULL;
-    *pos = start + len;
-    // Copy the complete word
-    //ft_strncpy(word, input + start, len + 1);
-    //word[len] = '\0';
+    // Add any remaining normal characters
+    if (len > 0)
+    {
+        temp = ft_substr(input, start, len);
+        result = ft_strjoin_free(result, temp);
+        free(temp);
+        start += len;
+    }
     
-    // Update position
-    //*pos += len - 1;  // -1 because loop will increment
-
-    //printf("Debug: Extracted word: '%s', new position: %d\n", word, *pos);
-    return word;
+    *pos = start;
+    
+    // If result is empty, free it and return NULL
+    if (!*result)
+    {
+        free(result);
+        return NULL;
+    }
+    
+    return result;
 }
-
-/*char	*extract_word(char *input, int *i)
-{
-	int		start;
-	int		len;
-
-	start = *i;
-	len = 0;
-	while (input[*i] && !is_metacharacter(input[*i]))
-	{
-		len++;
-		(*i)++;
-	}
-	(*i)--;
-	return (ft_substr(input, start, len));
-}*/
 
 char	*extract_quoted(char *input, int *i, char quote_type)
 {
@@ -149,10 +171,11 @@ char	*extract_quoted(char *input, int *i, char quote_type)
 	if (!input[*i])
 	{
 		//printf("Debug: No closing quote found\n");
-		(*i)--;  // Move back to the opening quote position
+		//(*i)--;  // Move back to the opening quote position
 		return (NULL);
 	}
 	result = ft_substr(input, start, len);
+	(*i)++; // Move past closing quote
 	//*i = start + len;
 	//printf("Debug: Extracted content: '%s'\n", result ? result : "NULL");
 	return (result);
@@ -176,6 +199,11 @@ char *expand_env_vars(char *str, t_shell *shell)
                 temp = ft_itoa(shell->exit_status);
                 i += 2;
             }
+			else if (is_whitespace(str[i + 1]))
+			{
+				temp = ft_strdup("$");
+				i++;
+			}
             else
             {
                 char *var_name = get_var_name(&str[i + 1]);

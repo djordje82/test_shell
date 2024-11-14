@@ -42,6 +42,7 @@ t_token *handle_pipe(const char *input, int *pos)
 t_token *handle_quote(char *input, int *i, t_shell *shell)
 {
     char    *value;
+    char    *expanded;
     t_token *token;
     char    quote_type;
 
@@ -51,10 +52,18 @@ t_token *handle_quote(char *input, int *i, t_shell *shell)
     value = extract_quoted(input, i, quote_type);
     if (!value)
         return (exit_error(ERR_QUOTE, NULL, 1, shell), NULL);
-
+    
+    // Only expand environment variables in double quotes
+    if (quote_type == '"')
+    {
+        expanded = expand_env_vars(value, shell);
+        free(value);
+        value = expanded;
+    }
     // Create token with the content without quotes
     //printf("Debug: handle_quote: Extracted value: '%s'\n", value);
-    token = create_token(value, (quote_type == '"') ? TOKEN_DQUOTE : TOKEN_QUOTE);
+    //token = create_token(value, (quote_type == '"') ? TOKEN_DQUOTE : TOKEN_QUOTE);
+    token = create_token(value, TOKEN_WORD);
     free(value);
     
     if (input[*i] == quote_type)

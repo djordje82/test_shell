@@ -46,6 +46,7 @@ SRCS =	main.c \
 		parsing/tokenizer/tokenizer.c \
 		parsing/tokenizer/tokenizer_utils.c \
 		parsing/tokenizer/tokenizer_operators.c \
+		parsing/tokenizer/wildcards.c \
 		execution/executor/redirections.c \
 		execution/executor/executor_utils.c \
 		execution/executor/external.c
