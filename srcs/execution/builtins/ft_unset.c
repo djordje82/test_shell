@@ -12,22 +12,6 @@
 
 #include "minishell.h"
 
-/*int	is_valid_identifier(char *name)
-{
-	int	i;
-
-	if (!name || !*name || ft_isdigit(name[0]))
-		return (0);
-	i = 0;
-	while (name[i])
-	{
-		if (!ft_isalnum(name[i]) && name[i] != '_')
-			return (0);
-		i++;
-	}
-	return (1);
-}*/
-
 void	print_identifier_error(char *arg)
 {
 	ft_putstr_fd("minishell: unset: `", STDERR_FILENO);
@@ -76,7 +60,7 @@ int	ft_unset(char **args, t_shell *shell)
 	i = 1;
 	while (args[i])
 	{
-		if (!is_valid_identifier(args[i]))
+		if (!is_valid_shell_var(args[i]))
 		{
 			print_identifier_error(args[i]);
 			status = 1;

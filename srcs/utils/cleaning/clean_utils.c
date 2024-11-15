@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   clean_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/15 17:59:39 by dodordev          #+#    #+#             */
+/*   Updated: 2024/11/15 18:00:45 by dodordev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	ft_close(int fd)
@@ -9,23 +21,22 @@ void	ft_close(int fd)
 	}
 }
 
-void	free_array(void **arr, int size)
+void	ft_free_array(void **arr, int size)
 {
 	int	i;
 
-	//printf("Debug: free_array called with size %d\n", size);
+	// printf("Debug: free_array called with size %d\n", size);
 	if (!arr)
 	{
-		//printf("Debug: arr is NULL, returning\n");
-		return;
+		// printf("Debug: arr is NULL, returning\n");
+		return ;
 	}
-	
 	i = 0;
 	if (size == -1)
 	{
 		while (arr[i])
 		{
-			//printf("Debug: Freeing arr[%d]: '%s'\n", i, (char *)arr[i]);
+			// printf("Debug: Freeing arr[%d]: '%s'\n", i, (char *)arr[i]);
 			free(arr[i]);
 			i++;
 		}
@@ -34,14 +45,14 @@ void	free_array(void **arr, int size)
 	{
 		while (i < size)
 		{
-			//printf("Debug: Freeing arr[%d]\n", i);
+			// printf("Debug: Freeing arr[%d]\n", i);
 			free(arr[i]);
 			i++;
 		}
 	}
-	//printf("Debug: Freeing arr itself\n");
+	// printf("Debug: Freeing arr itself\n");
 	free(arr);
-	//printf("Debug: free_array complete\n");
+	// printf("Debug: free_array complete\n");
 }
 
 void	free_shell(t_shell *shell)
@@ -53,7 +64,7 @@ void	free_shell(t_shell *shell)
 	}
 	if (shell->pipe)
 	{
-		free_array((void **)shell->pipe, shell->n_cmnds + 1);
+		ft_free_array((void **)shell->pipe, shell->n_cmnds + 1);
 		shell->pipe = NULL;
 	}
 }
@@ -61,14 +72,14 @@ void	free_shell(t_shell *shell)
 void	free_envp(t_shell *shell)
 {
 	if (shell->envp)
-		free_array((void **)shell->envp, -1);
+		ft_free_array((void **)shell->envp, -1);
 	shell->envp = NULL;
 }
 
 void	free_tokens(t_token *tokens)
 {
-	t_token	*current;
-	t_token	*next;
+	t_token *current;
+	t_token *next;
 
 	current = tokens;
 	while (current)

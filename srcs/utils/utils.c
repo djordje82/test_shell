@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/15 18:01:04 by dodordev          #+#    #+#             */
+/*   Updated: 2024/11/15 18:01:06 by dodordev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_char_type get_char_type(char c)
@@ -16,15 +28,17 @@ t_char_type get_char_type(char c)
         return (CHAR_DQUOTE);
     if (c == ';')
         return (CHAR_SEMICOLON);
-    if (c == '\\')
-        return (CHAR_ESCAPE);
+    //if (c == '$')
+        //return (CHAR_ENV);
     return (CHAR_NORMAL);
 }
 
 // Replace multiple is_* functions with one function
 int is_special_char(char c)
 {
-    t_char_type type = get_char_type(c);
+    t_char_type type; 
+    
+    type = get_char_type(c);
     return (type != CHAR_NORMAL);
 }
 
@@ -39,59 +53,3 @@ int is_quote(char c)
     t_char_type type = get_char_type(c);
     return (type == CHAR_QUOTE || type == CHAR_DQUOTE);
 }
-
-int	is_valid_identifier(char *name)
-{
-	int	i;
-	int	has_equals;
-
-	if (!name || !*name || ft_isdigit(name[0]))
-		return (0);
-
-	has_equals = 0;
-	i = 0;
-	while (name[i])
-	{
-		if (name[i] == '=')
-		{
-			has_equals = 1;
-			break;
-		}
-		if (!ft_isalnum(name[i]) && name[i] != '_')
-			return (0);
-		i++;
-	}
-
-	return (1);
-}
-
-int	count_args(char **args)
-{
-	int	i;
-
-	i = 0;
-	while (args &&args[i])
-		i++;
-	return (i);
-}
-
-/*int	is_whitespace(char c)
-{
-	return (ft_strchr(TOKEN_DELIMITERS, c) != NULL);
-}
-
-int	is_metacharacter(char c)
-{
-	return (ft_strchr(SPECIAL, c) != NULL || is_whitespace(c) || 
-			c == '\'' || c == '\"');
-}
-
-int	is_operator(char c)
-{
-	return (ft_strchr(OPERATORS, c) != NULL);
-}
-
-int	is_quote(char c)
-{
-	return (c == '\'' || c == '\"');
-}*/

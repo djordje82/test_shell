@@ -32,12 +32,7 @@
 # include <glob.h> //for wildcard expansion
 
 # define SHELL_NAME "minishell"
-//# define TOKEN_DELIMITERS " \t\n\r\a"
-//# define REDIR_DELIMITERS ">>"
-//# define PIPE_DELIMITERS "|"
 # define PROMPT "minishell> "
-//# define SPECIAL "<>|;"
-//# define OPERATORS "><"
 
 /*ERROR CODES*/
 # define EXIT_SUCCESS 0
@@ -85,7 +80,7 @@ typedef enum e_char_type
     CHAR_QUOTE,      // '
     CHAR_DQUOTE,     // "
     CHAR_SEMICOLON,  // ; (for future implementation)
-    CHAR_ESCAPE      // \ (for future implementation)
+    //CHAR_ENV      // \ (for future implementation)
 } t_char_type;
 
 typedef enum e_token_type
@@ -214,7 +209,7 @@ void			close_files(t_node *node);
 void			free_files(t_node *node);
 //void			free_list(t_list **cmnd_list);
 void			clean_node(t_node *node);
-void			free_array(void **arr, int size);
+void			ft_free_array(void **arr, int size);
 void			ft_close(int fd);
 void			cleanup_shell(t_shell *shell);
 void			free_cmd_list(t_command *cmd);
@@ -222,24 +217,40 @@ void			free_cmd_list(t_command *cmd);
 /*UTILS*/
 t_char_type		get_char_type(char c);
 int				is_special_char(char c);
-int				count_args(char **args);
+int				ft_count_args(char **args);
 int				is_numeric(const char *str);
 int				is_whitespace(char c);
 //int				is_metacharacter(char c);
 int				is_operator(char c);
 int				is_quote(char c);
-int				is_valid_identifier(char *name);
+int				is_equals(char *name);
+
+/*UTILS /ARGS*/
+int				ft_count_args(char **args);
+char			**merge_args(char **orig_args, int pos, char **expanded);
+int				process_expanded_args(t_command *cmd, char **expanded, int i,
+		t_shell *shell);
 
 /*UTILS /ERRORS*/
 int				exit_error(char *err_msg, char *src, int err_code, t_shell *shell);	
+void			print_command_error(char *cmd, char *error_msg);
+int				syntax_error(char *err_msg, char *src);
 
 /*UTILS /SIGNALS*/
 void			setup_signals(void);
-void			handle_signals_child(void);
+void			setup_child_signals(void);
 void			handle_eof(t_shell *shell);
 void			disable_ctrl_chars(void);
 void			signal_handler(int signum);
 void			signal_handler_child(int signum);
+void	setup_execution_signals(struct sigaction *sa_old_int,
+		struct sigaction *sa_old_quit);
+
+/*UTILS /SHELL*/
+void			shell_loop(t_shell *shell);
+int				init_minishell(t_shell *shell, char **env, int argc, char **argv);
+void			init_shell_struct(t_shell *shell, char **envp);
+int				is_valid_shell_var(char *name);
 
 /*ENVIRONMENT*/
 char			*get_env_value(char *name, t_shell *shell);
@@ -247,9 +258,6 @@ int				update_env_value(char *name, char *value, t_shell *shell);
 
 /*ENVIRONMENT /UTILS*/
 int				count_envp(char **envp);
-
-/*ENVIRONMENT /ERRORS*/
-int				exit_error(char *err_msg, char *src, int err_code, t_shell *shell);
 
 /*ENVIRONMENT /UTILS*/
 char			*get_home_dir(t_shell *shell);
@@ -264,10 +272,6 @@ void			print_env_var(char *env_var);
 int				is_n_flag(char *arg);
 void			print_args(char **args, int start, int n_flag);
 
-/*ERRORS*/
-int				exit_error(char *err_msg, char *src, int err_code, t_shell *shell);
-int				syntax_error(char *err_msg, char *src);
-
 /*BUILTINS /EXECUTION*/
 int				execute_builtin(t_command *cmd, t_shell *shell);
 
@@ -280,10 +284,10 @@ char			*expand_path(char *path, t_shell *shell);
 /*BUILTINS /EXIT*/
 int				is_numeric_arg(char *str);
 long long		ft_atoll(const char *str);
-//int				count_args(char **args);
+//int				ft_count_args(char **args);
 
 /*BUILTINS /EXPORT*/
-int				is_valid_identifier(char *name);
+int				is_valid_shell_var(char *name);
 void			print_export_error(char *arg);
 //char			*get_var_name(char *arg);
 char			*get_var_value(char *arg);
@@ -293,7 +297,7 @@ char			**copy_env(char **envp);
 void			print_exported_var(char *var);
 
 /*BUILTINS /UNSET*/
-int				is_valid_identifier(char *name);
+int				is_valid_shell_var(char *name);
 void			print_identifier_error(char *arg);
 int				remove_env_var(char *name, t_shell *shell);
 
@@ -309,19 +313,29 @@ char			*get_cmd_path(char *cmd, char **paths);
 char			*find_command_path(char *cmd, t_shell *shell);
 
 
-/*EXECUTOR /ERRORS*/
-int				exit_error(char *err_msg, char *src, int err_code, t_shell *shell);
-
-
 /*EXECUTOR /EXEC*/
 int				execute_command(t_command *cmd, t_shell *shell);
 int				execute_single_command(t_command *cmd, t_shell *shell);
 int				is_parent_only_builtin(char *cmd);
 int				handle_pipeline(t_command *current, int *prev_pipe, 
         pid_t *last_pid, t_shell *shell);
+void			handle_child_process(t_command *cmd, int *prev_pipe, 
+        int *pipe_fd, t_shell *shell);
+void			handle_parent_process(int *prev_pipe, int *pipe_fd);
+void			wait_for_children(pid_t last_pid);
 
 
-/*EXECUTOR /EXTERNAL*/
+/*EXECUTOR /EXTERNAL AND UTILS*/
 int				execute_external(t_command *cmd, t_shell *shell);
+void			handle_wait_status(int status);
+int				handle_wildcard_expansion(t_command *cmd, t_shell *shell);
+int	execute_external_command(t_command *cmd, char *cmd_path,
+		t_shell *shell);
+int				handle_command_not_found(t_command *cmd);
+void			setup_pipeline_execution(t_command *cmd, char *cmd_path, 
+        t_shell *shell);
+void			handle_execution_errors(char *cmd_path, char *cmd_name);
+void	execute_child_process(t_command *cmd, char *cmd_path, t_shell *shell);
+
 
 #endif

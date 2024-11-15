@@ -89,7 +89,7 @@ int ft_cd(char **args, t_shell *shell)
     int ret;
 
     // Check argument count
-    if (count_args(args) > 2)
+    if (ft_count_args(args) > 2)
     {
         ft_putendl_fd("minishell: cd: too many arguments", STDERR_FILENO);
         return (1);
@@ -125,79 +125,3 @@ int ft_cd(char **args, t_shell *shell)
     
     return (ret);
 }
-/*int ft_cd(char **args, t_shell *shell)
-{
-    char *path;
-    char *expanded_path;
-    char *oldpwd;
-    int ret;
-
-    //printf("Debug: ft_cd called\n");
-    
-    if (count_args(args) > 2)
-    {
-        ft_putendl_fd("minishell: cd: too many arguments", STDERR_FILENO);
-        return (1);
-    }
-    
-    // Handle cd - (change to previous directory)
-    if (args[1] && ft_strncmp(args[1], "-", 2) == 0)
-    {
-        oldpwd = get_env_value("OLDPWD", shell);
-        if (!oldpwd)
-        {
-            ft_putendl_fd("minishell: cd: OLDPWD not set", STDERR_FILENO);
-            return (1);
-        }
-        path = ft_strdup(oldpwd);
-        if (!path)
-            return (1);
-        ft_putendl_fd(path, STDOUT_FILENO);
-    }
-    else if (!args[1] || !ft_strncmp(args[1], "~", 2))
-    {
-        path = get_home_dir(shell);
-        if (!path)
-        {
-            ft_putendl_fd("minishell: cd: HOME not set", STDERR_FILENO);
-            return (1);
-        }
-    }
-    else
-        path = args[1];
-    
-    expanded_path = expand_path(path, shell);
-    if (!expanded_path)
-    {
-        if (args[1] && ft_strncmp(args[1], "-", 2) == 0)
-            free(path);
-        return (1);
-    }
-    
-    //printf("Debug: Changing directory to: '%s'\n", expanded_path);
-    if (chdir(expanded_path) == -1)
-    {
-        ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
-        ft_putstr_fd(args[1], STDERR_FILENO);
-        ft_putstr_fd(": ", STDERR_FILENO);
-        
-        if (errno == ENOENT)
-            ft_putendl_fd("No such file or directory", STDERR_FILENO);
-        else if (errno == EACCES)
-            ft_putendl_fd("Permission denied", STDERR_FILENO);
-        else if (errno == ENOTDIR)
-            ft_putendl_fd("Not a directory", STDERR_FILENO);
-        else
-            ft_putendl_fd("Error changing directory", STDERR_FILENO);
-
-        ret = 1;
-    }
-    else
-        ret = update_pwd_vars(shell);
-    
-    if (expanded_path != path)
-        free(expanded_path);
-    if (args[1] && ft_strncmp(args[1], "-", 2) == 0)
-        free(path);
-    return (ret);
-}*/

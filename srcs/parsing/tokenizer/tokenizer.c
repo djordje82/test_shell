@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/15 17:59:16 by dodordev          #+#    #+#             */
+/*   Updated: 2024/11/15 17:59:18 by dodordev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_token *handle_word(const char *input, int *i, t_shell *shell)
@@ -95,34 +107,6 @@ t_token *get_next_token(const char *input, int *pos, t_shell *shell)
     }
     return (handle_word(input, pos, shell));
 }
-
-/*t_token *get_next_token(const char *input, int *pos, t_shell *shell)
-{
-    while (input[*pos] && is_whitespace(input[*pos]))
-        (*pos)++;
-    
-    if (!input[*pos])
-        return NULL;
-        
-    //printf("Debug: Processing character '%c' at position %d\n", input[*pos], *pos);
-
-    // Handle special characters
-    if (input[*pos] == ';')
-    {
-        //printf("Debug: Found semicolon - not supported\n");
-        return NULL;  // Or handle error differently
-    }
-
-    if (is_operator(input[*pos]))  // Added this condition here CHECK IF IT WORKS
-        return handle_operator(input, pos);
-    else if (input[*pos] == '|')
-        return handle_pipe(input, pos);
-    else if (input[*pos] == '\'' || input[*pos] == '\"')
-        return handle_quote((char *)input, pos, shell);  // Cast is safe here as we don't modify input
-    else
-        return handle_word(input, pos, shell);
-}*/
-
 
 t_token *tokenize_input(const char *input, t_shell *shell)
 {

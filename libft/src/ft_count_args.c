@@ -1,38 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free_array.c                                    :+:      :+:    :+:   */
+/*   ft_count_args.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/24 13:20:55 by dodordev          #+#    #+#             */
-/*   Updated: 2024/10/24 13:21:11 by dodordev         ###   ########.fr       */
+/*   Created: 2024/11/15 18:18:35 by dodordev          #+#    #+#             */
+/*   Updated: 2024/11/15 18:19:32 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_free_array(void **array, int len)
+int	ft_count_args(char **args)
 {
-	int	i;
+	int i;
 
-	if (!array)
-		return ;
-	if (len < 0)
-		free_no_len(array);
-	else
-	{
-		i = 0;
-		while (i < len)
-		{
-			if (array[i])
-			{
-				free(array[i]);
-				array[i] = NULL;
-			}
-			i++;
-		}
-	}
-	free(array);
-	array = NULL;
+	i = 0;
+	while (args && args[i])
+		i++;
+	return (i);
 }

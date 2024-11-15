@@ -36,7 +36,7 @@ OBJS_DIR = objs/
 
 LIBFT_FILES = isalpha isdigit isalnum \
 		isascii isprint atoi \
-		bzero calloc itoa \
+		bzero calloc itoa count_args \
 		memchr memcmp memcpy \
 		memmove memset \
 		putchar_fd putendl_fd putnbr_fd \

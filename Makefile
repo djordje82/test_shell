@@ -39,6 +39,8 @@ SRCS =	main.c \
 		utils/errors/error.c \
 		utils/signals/signals.c \
 		utils/signals/sig_utils.c \
+		utils/args_utils.c \
+		utils/shell_utils.c \
 		utils/utils.c \
 		parsing/parser/parser.c \
 		parsing/parser/parser_utils.c \
@@ -49,7 +51,9 @@ SRCS =	main.c \
 		parsing/tokenizer/wildcards.c \
 		execution/executor/redirections.c \
 		execution/executor/executor_utils.c \
-		execution/executor/external.c
+		execution/executor/external.c \
+		execution/executor/external_utils.c \
+		execution/executor/pipeline.c
 
 # Object files
 OBJS = $(SRCS:%.c=$(OBJS_DIR)/%.o)

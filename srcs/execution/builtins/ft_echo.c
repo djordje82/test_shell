@@ -28,7 +28,7 @@ int	is_n_flag(char *arg)
     return (1);
 }
 
-/*static int	count_args(char **args)
+/*static int	ft_count_args(char **args)
 {
 	int	i;
 

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   wildcards.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/15 17:59:24 by dodordev          #+#    #+#             */
+/*   Updated: 2024/11/15 17:59:26 by dodordev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char **expand_wildcards(char *pattern)
@@ -33,7 +45,7 @@ char **expand_wildcards(char *pattern)
         result[i] = ft_strdup(globbuf.gl_pathv[i]);
         if (!result[i])
         {
-            free_array((void **)result, i);
+            ft_free_array((void **)result, i);
             globfree(&globbuf);
             return (NULL);
         }

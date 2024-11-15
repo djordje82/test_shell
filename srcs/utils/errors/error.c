@@ -1,33 +1,38 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/15 18:00:33 by dodordev          #+#    #+#             */
+/*   Updated: 2024/11/15 18:00:38 by dodordev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 // New function for syntax errors
-int syntax_error(char *err_msg, char *src)
+int	syntax_error(char *err_msg, char *src)
 {
-    if (src)
-        ft_putstr_fd(src, STDERR_FILENO);
-    if (err_msg)
-        ft_putendl_fd(err_msg, STDERR_FILENO);
-    
-    g_exit_status = 2;  // Set syntax error exit status
-    return (0);
+	if (src)
+		ft_putstr_fd(src, STDERR_FILENO);
+	if (err_msg)
+		ft_putendl_fd(err_msg, STDERR_FILENO);
+	g_exit_status = 2; // Set syntax error exit status
+	return (0);
 }
 
-/*int redir_error(char *filename)
+void	print_command_error(char *cmd, char *error_msg)
 {
-    ft_putstr_fd("minishell: ", STDERR_FILENO);
-    ft_putstr_fd(filename, STDERR_FILENO);
-    if (errno == ENOENT)  // No such file or directory
-        ft_putendl_fd(": No such file or directory", STDERR_FILENO);
-    else if (errno == EACCES)  // Permission denied
-        ft_putendl_fd(": Permission denied", STDERR_FILENO);
-    else
-        ft_putendl_fd(": Error opening file", STDERR_FILENO);
-    return (0);
-}*/
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(cmd, STDERR_FILENO);
+	ft_putendl_fd(error_msg, STDERR_FILENO);
+}
 
 int	exit_error(char *err_msg, char *src, int err_code, t_shell *shell)
 {
-	char	*result;
+	char *result;
 
 	if (src)
 	{
@@ -47,11 +52,11 @@ int	exit_error(char *err_msg, char *src, int err_code, t_shell *shell)
 		if (shell->cmnd_lst)
 			free_cmd_list(shell->cmnd_lst);
 		if (shell->envp)
-			free_array((void **)shell->envp, -1);
+			ft_free_array((void **)shell->envp, -1);
 		if (shell->tokens)
 			free_tokens(shell->tokens);
 		if (shell->pipe)
-			free_array((void **)shell->pipe, shell->n_cmnds);
+			ft_free_array((void **)shell->pipe, shell->n_cmnds);
 		shell->exit_status = err_code;
 	}
 	rl_clear_history();

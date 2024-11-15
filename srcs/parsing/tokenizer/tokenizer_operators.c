@@ -1,13 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer_operators.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/15 17:58:42 by dodordev          #+#    #+#             */
+/*   Updated: 2024/11/15 17:58:44 by dodordev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-
-/*static t_token	*create_double_token(char *value, t_token_type type, int *i)
-{
-	t_token	*token;
-
-	token = create_token(value, type);
-	(*i)++;
-	return (token);
-}*/
 
 t_token *handle_operator(const char *input, int *i)
 {

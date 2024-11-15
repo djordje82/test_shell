@@ -1,63 +1,61 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signals.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/15 18:05:42 by dodordev          #+#    #+#             */
+/*   Updated: 2024/11/15 18:05:44 by dodordev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int	g_exit_status;
+int		g_exit_status;
 
-void setup_signals(void)
+void	setup_signals(void)
 {
-    struct sigaction sa;
-    
-    // Initialize sigaction struct
-    sa.sa_flags = 0; // Remove SA_RESTART;
-    sigemptyset(&sa.sa_mask);
-    
-    // Interactive mode handler
-    sa.sa_handler = signal_handler;
-    sigaction(SIGINT, &sa, NULL);
-    
-    // Ignore SIGQUIT (Ctrl+\)
-    sa.sa_handler = SIG_IGN;
-    sigaction(SIGQUIT, &sa, NULL);
-    
-    // Disable ctrl character echoing
-    //disable_ctrl_chars();
+	struct sigaction	sa;
+
+	// Initialize sigaction struct
+	sa.sa_flags = 0; // Remove SA_RESTART;
+	sigemptyset(&sa.sa_mask);
+	// Interactive mode handler
+	sa.sa_handler = signal_handler;
+	sigaction(SIGINT, &sa, NULL);
+	// Ignore SIGQUIT (Ctrl+\)
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
+	// Disable ctrl character echoing
+	// disable_ctrl_chars();
 }
 
-/*void setup_signals_heredoc(void)
+void	setup_execution_signals(struct sigaction *sa_old_int,
+		struct sigaction *sa_old_quit)
 {
-    struct sigaction sa;
-    
-    sa.sa_flags = 0;  // No SA_RESTART for heredoc
-    sigemptyset(&sa.sa_mask);
-    
-    sa.sa_handler = signal_handler_heredoc;
-    sigaction(SIGINT, &sa, NULL);
-    
-    sa.sa_handler = SIG_IGN;
-    sigaction(SIGQUIT, &sa, NULL);
-}*/
+	struct sigaction	sa;
 
-void handle_signals_child(void)
-{
-    struct sigaction sa;
-    
-    sa.sa_flags = 0; // Remove SA_RESTART for child processes
-    sigemptyset(&sa.sa_mask);
-    
-    // Set default handlers for child processes
-    sa.sa_handler = SIG_DFL;  // Use default handler instead of custom
-    sigaction(SIGINT, &sa, NULL);
-    sigaction(SIGQUIT, &sa, NULL);
+	// Save old handlers
+	sigaction(SIGINT, NULL, sa_old_int);
+	sigaction(SIGQUIT, NULL, sa_old_quit);
+	// Set parent process to ignore signals during command execution
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
 }
 
-/*void	setup_signals(void)
+void	setup_child_signals(void)
 {
-	disable_ctrl_chars();
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, SIG_IGN);
-}
+	struct sigaction sa;
 
-void	handle_signals_child(void)
-{
-	signal(SIGINT, signal_handler_child);
-	signal(SIGQUIT, signal_handler_child);
-}*/
+	sa.sa_flags = 0; // Remove SA_RESTART for child processes
+	sigemptyset(&sa.sa_mask);
+
+	// Set default handlers for child processes
+	sa.sa_handler = SIG_DFL; // Use default handler instead of custom
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
+}

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer_utils.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/15 17:58:51 by dodordev          #+#    #+#             */
+/*   Updated: 2024/11/15 17:58:53 by dodordev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char *get_var_name(const char *str)
@@ -226,96 +238,3 @@ char *expand_env_vars(char *str, t_shell *shell)
     
     return result;
 }
-
-/*char	*extract_quoted(char *input, int *i, char quote_type)
-{
-	int		start;
-	int		len;
-	char	*result;
-
-	//printf("Debug: Entering extract_quoted at position %d\n", *i);
-	(*i)++;
-	start = *i;
-	len = 0;
-	while (input[*i] && input[*i] != quote_type)
-	{
-		len++;
-		(*i)++;
-	}
-	if (!input[*i])
-	{
-		//printf("Debug: No closing quote found\n");
-		return (NULL);
-	}
-	result = ft_substr(input, start, len);
-	//printf("Debug: Extracted content: '%s'\n", result ? result : "NULL");
-	(*i)++;
-	(*i)--;
-	return (result);
-}*/
-
-/*char	*extract_quoted(char *input, int *i, char quote_type)
-{
-	int		start;
-	int		len;
-	char	*result;
-
-	(*i)++;  // moves past opening quote
-	start = *i;
-	len = 0;
-	while (input[*i] && input[*i] != quote_type)
-	{
-		len++;
-		(*i)++;
-	}
-	if (!input[*i])
-		return (NULL);
-	result = ft_substr(input, start, len);
-	(*i)++;  // move past closing quote
-	(*i)--;  // decrement because tokenizer will increment
-	return (result);
-}*/
-
-/*char	*extract_quoted(char *input, int *i, char quote_type)
-{
-	int		start;
-	int		len;
-
-	(*i)++;
-	start = *i;
-	len = 0;
-	while (input[*i] && input[*i] != quote_type)
-	{
-		len++;
-		(*i)++;
-	}
-	if (!input[*i])
-		return (NULL);
-	return (ft_substr(input, start, len));
-}*/
-
-/*char	*extract_quoted(char *input, int *i, char quote_type)
-{
-	int		start;
-	int		len;
-	char	*content;
-	char	*quoted_str;
-
-	(*i)++;
-	start = *i;
-	len = 0;
-	while (input[*i] && input[*i] != quote_type)
-	{
-		len++;
-		(*i)++;
-	}
-	if (!input[*i])
-		return (NULL);
-	content = ft_substr(input, start, len);
-	if (!content)
-		return (NULL);
-	// Preserve quotes in the token value
-	quoted_str = ft_strjoin3(&quote_type, content, &quote_type);
-	free(content);
-	return (quoted_str);
-}*/
