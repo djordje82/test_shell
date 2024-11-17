@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:00:33 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/15 18:00:38 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/17 19:07:59 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,32 @@ void	print_command_error(char *cmd, char *error_msg)
 	ft_putendl_fd(error_msg, STDERR_FILENO);
 }
 
+void	print_redir_error(char *msg, char *file)
+{
+	ft_putstr_fd(file, STDERR_FILENO);
+	ft_putendl_fd(msg, STDERR_FILENO);
+}
+
+/*int	print_redir_error(char *err_msg, char *src)
+{
+	char	*result;
+
+	if (src)
+	{
+		result = ft_strjoin(src, err_msg);
+		if (!result)
+		{
+			ft_putendl_fd(ERR_MEM, STDERR_FILENO);
+			return (1);
+		}
+		ft_putendl_fd(result, STDERR_FILENO);
+		free(result);
+	}
+	else if (err_msg)
+		ft_putendl_fd(err_msg, STDERR_FILENO);
+	return (1);
+}*/
+
 int	exit_error(char *err_msg, char *src, int err_code, t_shell *shell)
 {
 	char *result;
@@ -50,11 +76,11 @@ int	exit_error(char *err_msg, char *src, int err_code, t_shell *shell)
 	if (shell)
 	{
 		if (shell->cmnd_lst)
-			free_cmd_list(shell->cmnd_lst);
+			cleanup_cmd_list(shell->cmnd_lst);
 		if (shell->envp)
 			ft_free_array((void **)shell->envp, -1);
 		if (shell->tokens)
-			free_tokens(shell->tokens);
+			cleanup_token_list(shell->tokens);
 		if (shell->pipe)
 			ft_free_array((void **)shell->pipe, shell->n_cmnds);
 		shell->exit_status = err_code;

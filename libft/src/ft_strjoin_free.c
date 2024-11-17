@@ -1,43 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free_array.c                                    :+:      :+:    :+:   */
+/*   ft_strjoin_free.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/24 13:20:55 by dodordev          #+#    #+#             */
-/*   Updated: 2024/10/24 13:21:11 by dodordev         ###   ########.fr       */
+/*   Created: 2024/11/17 14:06:31 by dodordev          #+#    #+#             */
+/*   Updated: 2024/11/17 14:07:59 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_free_array(void **arr, int size)
+// Joins two strings and frees the first one
+char	*ft_strjoin_free(char *s1, char *s2)
 {
-	int	i;
+	char	*result;
 
-	if (!arr)
-	{
-		return ;
-	}
-
-	i = 0;
-	if (size == -1)
-	{
-		while (arr[i])
-		{
-			free(arr[i]);
-			i++;
-		}
-	}
-	else
-	{
-		while (i < size)
-		{
-			free(arr[i]);
-			i++;
-		}
-	}
-
-	free(arr);
+	result = ft_strjoin(s1, s2);
+	free(s1);
+	return (result);
 }

@@ -1,43 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free_array.c                                    :+:      :+:    :+:   */
+/*   ft_atoll.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/24 13:20:55 by dodordev          #+#    #+#             */
-/*   Updated: 2024/10/24 13:21:11 by dodordev         ###   ########.fr       */
+/*   Created: 2024/11/17 17:42:26 by dodordev          #+#    #+#             */
+/*   Updated: 2024/11/17 17:42:32 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_free_array(void **arr, int size)
+long long	ft_atoll(const char *str)
 {
-	int	i;
+	long long result;
+	int sign;
+	int i;
 
-	if (!arr)
-	{
-		return ;
-	}
-
+	result = 0;
+	sign = 1;
 	i = 0;
-	if (size == -1)
+	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
 	{
-		while (arr[i])
-		{
-			free(arr[i]);
-			i++;
-		}
+		if (str[i] == '-')
+			sign = -1;
+		i++;
 	}
-	else
+	while (str[i] >= '0' && str[i] <= '9')
 	{
-		while (i < size)
-		{
-			free(arr[i]);
-			i++;
-		}
+		result = result * 10 + (str[i] - '0');
+		i++;
 	}
-
-	free(arr);
+	return (result * sign);
 }

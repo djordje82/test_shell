@@ -34,26 +34,36 @@ SRCS =	main.c \
 		execution/builtins/ft_pwd.c \
 		execution/builtins/ft_unset.c \
 		execution/executor/executor.c \
-		utils/cleaning/clean.c \
-		utils/cleaning/clean_utils.c \
+		utils/cleanup/cleanup_shell.c \
+		utils/cleanup/cleanup_cmd_node.c \
+		utils/cleanup/cleanup_utils.c \
+		utils/env/env_modify.c \
+		utils/env/env_utils.c \
 		utils/errors/error.c \
 		utils/signals/signals.c \
 		utils/signals/sig_utils.c \
 		utils/args_utils.c \
 		utils/shell_utils.c \
 		utils/utils.c \
-		parsing/parser/parser.c \
-		parsing/parser/parser_utils.c \
-		parsing/parser/command_utils.c \
-		parsing/tokenizer/tokenizer.c \
-		parsing/tokenizer/tokenizer_utils.c \
-		parsing/tokenizer/tokenizer_operators.c \
-		parsing/tokenizer/wildcards.c \
+		utils/checkers.c \
+		parsing/parser.c \
+		parsing/parser_utils.c \
+		parsing/parse_redirections.c \
+		parsing/command_utils.c \
+		parsing/wildcards.c \
+		parsing/wildcards_utils.c \
+		parsing/env_expansion.c \
+		tokenizer/tokenizer.c \
+		tokenizer/tokenize_handlers.c \
+		tokenizer/tokenizer_utils.c \
+		tokenizer/tokenize_operators.c \
+		tokenizer/tokenize_word.c \
 		execution/executor/redirections.c \
 		execution/executor/executor_utils.c \
 		execution/executor/external.c \
 		execution/executor/external_utils.c \
-		execution/executor/pipeline.c
+		execution/executor/pipeline.c \
+		execution/executor/processes.c
 
 # Object files
 OBJS = $(SRCS:%.c=$(OBJS_DIR)/%.o)

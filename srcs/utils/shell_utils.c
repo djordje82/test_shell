@@ -1,76 +1,83 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   shell_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/17 17:48:09 by dodordev          #+#    #+#             */
+/*   Updated: 2024/11/17 19:07:36 by dodordev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void	init_shell_struct(t_shell *shell, char **envp)
+/*This function initializes the shell struct. It sets the command list and tokens to NULL. It also copies the environment variables to the shell struct.*/
+void	initialize_shell(t_shell *shell, char **envp)
 {
-	//printf("Debug: Initializing shell struct\n");
 	shell->cmnd_lst = NULL;
 	shell->tokens = NULL;
 	shell->pipe = NULL;
 	shell->pid = NULL;
+	shell->envp = NULL;
 	shell->n_cmnds = 0;
 	shell->exit_status = 0;
 	shell->running = true;
-	
-	// Create a copy of the environment
 	shell->envp = copy_env(envp);
 	if (!shell->envp)
-	{
-		//printf("Debug: Failed to copy environment\n");
 		exit(EXIT_FAILURE);
-	}
-	
-	//printf("Debug: Shell struct initialization complete\n");
 }
 
-int	is_valid_shell_var(char *name)
+/*This function checks if a variable name is valid. It checks if the name is not empty | if the first character is a digit | if the name contains an equal sign.*/
+int	validate_shell_var(char *name)
 {
 	int	i;
 
 	if (!name || !*name || ft_isdigit(name[0]))
 		return (0);
-
 	i = 0;
 	while (name[i])
 	{
 		if (name[i] == '=')
 		{
-			break;
+			break ;
 		}
 		if (!ft_isalnum(name[i]) && name[i] != '_')
 			return (0);
 		i++;
 	}
-
 	return (1);
 }
 
-void shell_loop(t_shell *shell)
+/*This function starts the shell loop. It reads input from the user | processes the input | and frees the input.*/
+void	run_shell_loop(t_shell *shell)
 {
-    char *input;
+	char	*input;
 
-    while (shell->running)
-    {
-        input = readline(PROMPT);
-        if (!input)
-        {
-            write(STDOUT_FILENO, "exit\n", 5);
-            break;
-        }
-        handle_input_line(input, shell);
-        free(input);
-    }
+	while (shell->running)
+	{
+		input = readline(PROMPT);
+		if (!input)
+		{
+			write(STDOUT_FILENO, "exit\n", 5);
+			break ;
+		}
+		process_shell_input(input, shell);
+		free(input);
+	}
 }
 
-int  init_minishell(t_shell *shell, char **env, int argc, char **argv)
+/*This function initializes entire minishell program. It checks if the number of arguments is not 1 | Sets all fields to NULL/0 | Initializes the shell struct | Sets up the signals | and sets the running flag to true.*/
+int	setup_minishell(t_shell *shell, char **env, int argc, char **argv)
 {
-    if (argc != 1)
-        return (exit_error("minishell: too many arguments\n", NULL, 1, NULL));
-    (void)argv;
+	if (argc != 1)
+		return (exit_error("minishell: too many arguments\n", NULL, 1, NULL));
+	(void)argv;
 
-    ft_memset(shell, 0, sizeof(t_shell));  // Initialize all fields to NULL/0
-    init_shell_struct(shell, env);
+	ft_memset(shell, 0, sizeof(t_shell));
+	initialize_shell(shell, env);
 
-    setup_signals();
-    shell->running = true;
-    return (0);
+	setup_signals();
+	shell->running = true;
+	return (0);
 }

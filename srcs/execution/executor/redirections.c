@@ -47,22 +47,32 @@ static int	handle_heredoc(t_command *cmd)
 static int	handle_input_redirection(t_command *cmd)
 {
 	int	fd;
+	int	had_error;
 
-	if (cmd->in_type == 1) // Regular input redirection (<)
+	had_error = 0;
+	if (cmd->in_type == 1)
 	{
 		fd = open(cmd->infile, O_RDONLY);
 		if (fd == -1)
-			return (exit_error(ERR_PERM, cmd->infile, 1, NULL));
-		// return (redir_error(cmd->infile));
-		dup2(fd, STDIN_FILENO);
-		close(fd);
+		{
+			g_exit_status = 1;
+			had_error = 1;
+			if (errno == ENOENT)
+				exit_error(ERR_NOFILE, cmd->infile, 1, NULL);
+			else if (errno == EACCES)
+				exit_error(ERR_PERM, cmd->infile, 1, NULL);
+			else
+				exit_error(ERR_NOFILE, cmd->infile, 1, NULL);
+		}
+		else
+		{
+			dup2(fd, STDIN_FILENO);
+			close(fd);
+		}
 	}
-	else if (cmd->in_type == 2) // Heredoc redirection (<<)
-	{
-		if (!handle_heredoc(cmd))
-			return (0);
-	}
-	return (1);
+	else if (cmd->in_type == 2)
+		return (handle_heredoc(cmd));
+	return (!had_error);
 }
 
 static int	handle_output_redirection(t_command *cmd)
@@ -79,8 +89,10 @@ static int	handle_output_redirection(t_command *cmd)
 	{
 		fd = open(cmd->outfile, flags, 0644);
 		if (fd == -1)
-			return (exit_error(ERR_PERM, cmd->outfile, 1, NULL));
-		// return (redir_error(cmd->outfile));
+		{
+			exit_error(ERR_PERM, cmd->outfile, 1, NULL);
+			return (1);  // Continue pipeline but mark command as failed
+		}
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 	}
@@ -89,12 +101,34 @@ static int	handle_output_redirection(t_command *cmd)
 
 int	setup_redirections(t_command *cmd)
 {
+	int	status;
+	int	had_error;
+
+	had_error = 0;
+	if (cmd->infile)
+	{
+		status = handle_input_redirection(cmd);
+		if (!status)
+			had_error = 1;
+	}
+	if (cmd->outfile)
+	{
+		status = handle_output_redirection(cmd);
+		if (!status)
+			had_error = 1;
+	}
+	if (had_error)
+		g_exit_status = 1;
+	return (1);  // Always return 1 to allow command execution
+}
+/*int	setup_redirections(t_command *cmd)
+{
 	if (cmd->infile && !handle_input_redirection(cmd))
 		return (0);
 	if (cmd->outfile && !handle_output_redirection(cmd))
 		return (0);
 	return (1);
-}
+}*/
 
 void	reset_redirections(int stdin_fd, int stdout_fd)
 {

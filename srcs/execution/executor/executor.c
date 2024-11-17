@@ -27,7 +27,10 @@ static int	handle_single_builtin(t_command *cmd, t_shell *shell)
 	stdin_fd = dup(STDIN_FILENO);
 	stdout_fd = dup(STDOUT_FILENO);
 	if (!setup_redirections(cmd))
-		return (0);
+	{
+		reset_redirections(stdin_fd, stdout_fd);
+		return (g_exit_status);  // Return global exit status like execute_single_command
+	}
 	status = execute_builtin(cmd, shell);
 	reset_redirections(stdin_fd, stdout_fd);
 	if (ft_strncmp(cmd->args[0], "exit", 5) == 0 && status != 1)
@@ -38,66 +41,51 @@ static int	handle_single_builtin(t_command *cmd, t_shell *shell)
 	return (status);
 }
 
-void	handle_child_process(t_command *cmd, int *prev_pipe, int *pipe_fd,
-		t_shell *shell)
-{
-	int	status;
-
-	if (prev_pipe[0] != -1)
-	{
-		dup2(prev_pipe[0], STDIN_FILENO);
-		close(prev_pipe[0]);
-		close(prev_pipe[1]);
-	}
-	if (pipe_fd[1] != -1)
-	{
-		dup2(pipe_fd[1], STDOUT_FILENO);
-		close(pipe_fd[0]);
-		close(pipe_fd[1]);
-	}
-	setup_child_signals(); // Use your existing function
-	status = execute_single_command(cmd, shell);
-	exit(status); // Always exit with the command's status
-}
-
-void	handle_parent_process(int *prev_pipe, int *pipe_fd)
-{
-	if (prev_pipe[0] != -1)
-	{
-		close(prev_pipe[0]);
-		close(prev_pipe[1]);
-	}
-	if (pipe_fd[1] != -1)
-	{
-		prev_pipe[0] = pipe_fd[0];
-		prev_pipe[1] = pipe_fd[1];
-	}
-}
-
-void	wait_for_children(pid_t last_pid)
-{
-	int		status;
-	pid_t	wpid;
-
-	while ((wpid = wait(&status)) > 0)
-	{
-		if (WIFSIGNALED(status))
-		{
-			g_exit_status = 128 + WTERMSIG(status);
-			if (WTERMSIG(status) == SIGQUIT)
-				write(STDERR_FILENO, "Quit (core dumped)\n", 18);
-			else if (WTERMSIG(status) == SIGINT)
-				write(STDERR_FILENO, "\n", 1);
-		}
-		else if (WIFEXITED(status))
-		{
-			if (wpid == last_pid)
-				g_exit_status = WEXITSTATUS(status);
-		}
-	}
-}
-
 int	execute_single_command(t_command *cmd, t_shell *shell)
+{
+	int	stdin_fd;
+	int	stdout_fd;
+	int	status;
+	int	i;
+
+	if (!cmd->args)
+		return (0);
+	if (cmd->args[0] && !cmd->args[0][0])
+	{
+		i = 0;
+		while (cmd->args[i + 1])
+		{
+			cmd->args[i] = cmd->args[i + 1];
+			i++;
+		}
+		cmd->args[i] = NULL;
+	}
+	if (!cmd->args[0])
+		return (0);
+	stdin_fd = dup(STDIN_FILENO);
+	stdout_fd = dup(STDOUT_FILENO);
+	if (!setup_redirections(cmd))
+	{
+		reset_redirections(stdin_fd, stdout_fd);
+		return (g_exit_status);  // Return the global exit status
+		//return (1);  // Return 1 for redirection errors
+	}
+	if (is_builtin(cmd->args[0]))
+	{
+		status = execute_builtin(cmd, shell);
+		if (ft_strncmp(cmd->args[0], "exit", 5) == 0 && status != 1)
+		{
+			reset_redirections(stdin_fd, stdout_fd);
+			exit(status);
+		}
+	}
+	else
+		status = execute_external(cmd, shell);
+	reset_redirections(stdin_fd, stdout_fd);
+	return (status);
+}
+
+/*int	execute_single_command(t_command *cmd, t_shell *shell)
 {
 	int	stdin_fd;
 	int	stdout_fd;
@@ -144,7 +132,7 @@ int	execute_single_command(t_command *cmd, t_shell *shell)
 	}
 	reset_redirections(stdin_fd, stdout_fd);
 	return (status);
-}
+}*/
 
 int	execute_commands(t_shell *shell)
 {

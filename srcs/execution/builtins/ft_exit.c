@@ -12,47 +12,6 @@
 
 #include "minishell.h"
 
-int	is_numeric_arg(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (str[i] == '+' || str[i] == '-')
-		i++;
-	while (str[i])
-	{
-		if (!ft_isdigit(str[i]))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-long long	ft_atoll(const char *str)
-{
-	long long	result;
-	int			sign;
-	int			i;
-
-	result = 0;
-	sign = 1;
-	i = 0;
-	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
-		i++;
-	if (str[i] == '-' || str[i] == '+')
-	{
-		if (str[i] == '-')
-			sign = -1;
-		i++;
-	}
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		result = result * 10 + (str[i] - '0');
-		i++;
-	}
-	return (result * sign);
-}
-
 int ft_exit(char **args, t_shell *shell)
 {
     int exit_code;
@@ -67,7 +26,7 @@ int ft_exit(char **args, t_shell *shell)
         //printf("Debug: No arguments, using current exit status: %d\n", g_exit_status);
         exit_code = g_exit_status;
     }
-    else if (!is_numeric_arg(args[1]))
+    else if (!(ft_isnumber(args[1])))
     {
         ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
         ft_putstr_fd(args[1], STDERR_FILENO);
@@ -87,7 +46,7 @@ int ft_exit(char **args, t_shell *shell)
     
     // Only reach here if we should actually exit
     //printf("Debug: Exiting with code: %d\n", exit_code);
-    cleanup_shell(shell);
+    cleanup_shell_data(shell);
     exit(exit_code);
     
     return exit_code;  // Never reached

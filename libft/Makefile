@@ -34,14 +34,16 @@ SRC_DIR = src/
 
 OBJS_DIR = objs/
 
-LIBFT_FILES = isalpha isdigit isalnum \
-		isascii isprint atoi \
+LIBFT_FILES = isalpha isdigit isalnum isnumber \
+		isascii isprint atoi atoll \
 		bzero calloc itoa count_args \
+		close_fd \
 		memchr memcmp memcpy \
 		memmove memset \
+		free_array \
 		putchar_fd putendl_fd putnbr_fd \
 		putstr_fd split strchr \
-		strdup striteri strjoin \
+		strdup striteri strjoin strjoin_free \
 		strlcat strlcpy strlen \
 		strmapi strncmp strnstr \
 		strrchr strtrim substr \

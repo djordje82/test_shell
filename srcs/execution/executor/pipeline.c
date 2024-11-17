@@ -23,12 +23,20 @@ static int	init_pipeline(t_command *current, int *pipe_fd, t_shell *shell)
 	return (1);
 }
 
-static int	create_process(pid_t *pid, t_shell *shell)
+void	setup_pipe_redirections(int *prev_pipe, int *pipe_fd)
 {
-	*pid = fork();
-	if (*pid == -1)
-		return (exit_error("fork failed", NULL, 1, shell));
-	return (1);
+	if (prev_pipe[0] != -1)
+	{
+		dup2(prev_pipe[0], STDIN_FILENO);
+		close(prev_pipe[0]);
+		close(prev_pipe[1]);
+	}
+	if (pipe_fd[1] != -1)
+	{
+		dup2(pipe_fd[1], STDOUT_FILENO);
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+	}
 }
 
 int	handle_pipeline(t_command *current, int *prev_pipe, pid_t *last_pid,

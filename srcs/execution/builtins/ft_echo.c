@@ -54,7 +54,37 @@ void	print_args(char **args, int start, int n_flag)
 		ft_putchar_fd('\n', STDOUT_FILENO);
 }
 
-int ft_echo(char **args, t_shell *shell)
+int	ft_echo(char **args, t_shell *shell)
+{
+	int	i;
+	int	n_flag;
+
+	(void)shell;
+	if (!args[1])
+	{
+		ft_putchar_fd('\n', STDOUT_FILENO);
+		return (g_exit_status);  // Return existing status
+	}
+	n_flag = 0;
+	i = 1;
+	if (is_n_flag(args[1]))
+	{
+		n_flag = 1;
+		i = 2;
+	}
+	while (args[i])
+	{
+		ft_putstr_fd(args[i], STDOUT_FILENO);
+		if (args[i + 1])
+			ft_putchar_fd(' ', STDOUT_FILENO);
+		i++;
+	}
+	if (!n_flag)
+		ft_putchar_fd('\n', STDOUT_FILENO);
+	return (g_exit_status);  // Return existing status instead of 0
+}
+
+/*int ft_echo(char **args, t_shell *shell)
 {
     int i;
     int n_flag;
@@ -89,4 +119,4 @@ int ft_echo(char **args, t_shell *shell)
         ft_putchar_fd('\n', STDOUT_FILENO);
     
     return (0);
-}
+}*/

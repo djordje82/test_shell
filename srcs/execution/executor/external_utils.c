@@ -40,7 +40,7 @@ int	handle_wildcard_expansion(t_command *cmd, t_shell *shell)
 			expanded_args = expand_wildcards(cmd->args[i]);
 			if (expanded_args)
 			{
-				expanded_count = process_expanded_args(cmd, expanded_args, i,
+				expanded_count = update_command_args(cmd, expanded_args, i,
 						shell);
 				if (expanded_count < 0)
 					return (0);
@@ -85,6 +85,27 @@ void	handle_execution_errors(char *cmd_path, char *cmd_name)
 {
 	struct stat	path_stat;
 
+	if (stat(cmd_path, &path_stat) == 0)  // If stat succeeds
+	{
+		if (S_ISDIR(path_stat.st_mode))
+		{
+			print_command_error(cmd_name, ": Is a directory");
+			exit(126);
+		}
+		if (access(cmd_path, X_OK) != 0)  // Check execute permission
+		{
+			print_command_error(cmd_name, ": Permission denied");
+			exit(126);
+		}
+	}
+	print_command_error(cmd_name, ": No such file or directory");
+	exit(127);
+}
+
+/*void	handle_execution_errors(char *cmd_path, char *cmd_name)
+{
+	struct stat	path_stat;
+
 	stat(cmd_path, &path_stat);
 	if (S_ISDIR(path_stat.st_mode))
 	{
@@ -97,7 +118,7 @@ void	handle_execution_errors(char *cmd_path, char *cmd_name)
 		exit(126);
 	}
 	exit(127);
-}
+}*/
 
 void	execute_child_process(t_command *cmd, char *cmd_path, t_shell *shell)
 {
@@ -110,7 +131,7 @@ void	execute_child_process(t_command *cmd, char *cmd_path, t_shell *shell)
 
 int	handle_command_not_found(t_command *cmd)
 {
-	if (!cmd->prev && !cmd->next && cmd->args[0][0]) // Only print if not in a pipeline
+	if (!cmd->prev && cmd->args[0][0])  // Only check if it's first in pipeline
 	{
 		if (ft_strchr(cmd->args[0], '/'))
 			print_command_error(cmd->args[0], ": No such file or directory");
@@ -119,3 +140,15 @@ int	handle_command_not_found(t_command *cmd)
 	}
 	return (127);
 }
+
+/*int	handle_command_not_found(t_command *cmd)
+{
+	if (!cmd->prev && !cmd->next && cmd->args[0][0]) // Only print if not in a pipeline
+	{
+		if (ft_strchr(cmd->args[0], '/'))
+			print_command_error(cmd->args[0], ": No such file or directory");
+		else
+			print_command_error(cmd->args[0], ": command not found");
+	}
+	return (127);
+}*/

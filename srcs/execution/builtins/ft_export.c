@@ -229,7 +229,7 @@ int	ft_export(char **args, t_shell *shell)
 	i = 1;
 	while (args[i])
 	{
-		if (args[i][0] == '=' || !is_valid_shell_var(args[i]))
+		if (args[i][0] == '=' || !validate_shell_var(args[i]))
 		{
 			ft_putstr_fd("minishell: export: `", 2);
 			ft_putstr_fd(args[i], 2);
@@ -238,7 +238,7 @@ int	ft_export(char **args, t_shell *shell)
 		}
 		else
 		{
-			name = get_var_name(args[i]);
+			name = extract_env_var_name(args[i]);
 			value = get_var_value(args[i]);
 			if (!update_env_value(name, value, shell))
 				status = 1;
