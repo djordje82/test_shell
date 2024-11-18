@@ -12,63 +12,67 @@
 
 #include "minishell.h"
 
-static char	**add_argument(char **args, char *new_arg)
+/*This function is used to copy existing arguments to the new array.*/
+static char	**copy_existing_args(char **new_args, char **args, int *i)
+{
+	while (args && args[*i])
+	{
+		new_args[*i] = ft_strdup(args[*i]);
+		if (!new_args[*i])
+		{
+			ft_free_array((void **)new_args, *i);
+			ft_free_array((void **)args, -1);
+			return (NULL);
+		}
+		(*i)++;
+	}
+	return (new_args);
+}
+
+/*This function is used to create a new array with the given count.*/
+static char	**create_new_array(char **args, int count)
+{
+	char	**new_args;
+
+	new_args = malloc(sizeof(char *) * (count + 2));
+	if (!new_args)
+	{
+		ft_free_array((void **)args, -1);
+		return (NULL);
+	}
+	return (new_args);
+}
+
+/*This function is used to add a new argument to the command's argument list.*/
+static char	**add_cmd_argument(char **args, char *new_arg)
 {
 	char	**new_args;
 	int		i;
 
 	if (!new_arg)
 		return (args);
-	//printf("Debug: add_argument called with new_arg: '%s'\n", new_arg);
 	i = 0;
 	while (args && args[i])
 		i++;
-	//printf("Debug: Current arg count: %d\n", i);
-	
-	new_args = malloc(sizeof(char *) * (i + 2));
+	new_args = create_new_array(args, i);
 	if (!new_args)
-    {
-        if (args)
-            ft_free_array((void **)args, -1);
-        return (NULL);
-    }
-
+		return (NULL);
 	i = 0;
-	while (args && args[i])
-	{
-		new_args[i] = ft_strdup(args[i]);
-		if (!new_args[i])
-		{
-			//printf("Debug: Failed to duplicate arg %d\n", i);
-			ft_free_array((void **)new_args, i);
-			if (args)
-				ft_free_array((void **)args, -1);
-			return (NULL);
-		}
-		//printf("Debug: Copied arg[%d]: '%s'\n", i, new_args[i]);
-		i++;
-	}
+	if (!copy_existing_args(new_args, args, &i))
+		return (NULL);
 	new_args[i] = ft_strdup(new_arg);
 	if (!new_args[i])
 	{
-		//printf("Debug: Failed to duplicate new_arg\n");
 		ft_free_array((void **)new_args, i);
-		if (args)
-			ft_free_array((void **)args, -1);
+		ft_free_array((void **)args, -1);
 		return (NULL);
 	}
-	//printf("Debug: Added new arg[%d]: '%s'\n", i, new_args[i]);
 	new_args[i + 1] = NULL;
-	
-	if (args)
-	{
-		//printf("Debug: Freeing old args array\n");
-		ft_free_array((void **)args, -1);
-	}
-	//printf("Debug: Successfully created new args array\n");
+	ft_free_array((void **)args, -1);
 	return (new_args);
 }
 
+/*This function is used to process the value of a token.*/
 static char *process_token_value(char *value, t_token_type type)
 {
     char *result;
@@ -91,27 +95,20 @@ static char *process_token_value(char *value, t_token_type type)
     return result;
 }
 
-int	parse_arguments(t_token **token, t_command *cmd)
+/*This function is used to parse the arguments of a command.*/
+int	parse_cmd_arguments(t_token **token, t_command *cmd)
 {
-	char    **new_args;
-    char    *processed_value;
-    
-    //printf("Debug: Parsing argument token: '%s' of type %d\n", (*token)->value, (*token)->type);
-    
-    processed_value = process_token_value((*token)->value, (*token)->type);
-    //processed_value = ft_strdup((*token)->value);
-    if (!processed_value)
-        return (0);
-    
-    //printf("Debug: Adding processed value: '%s'\n", processed_value);
-    
-    new_args = add_argument(cmd->args, processed_value);
-    free(processed_value);
-    
-    if (!new_args)
-        return (0);
-    
-    cmd->args = new_args;
-    *token = (*token)->next;
-    return (1);
+	char	**new_args;
+	char	*processed_value;
+
+	processed_value = process_token_value((*token)->value, (*token)->type);
+	if (!processed_value)
+		return (0);
+	new_args = add_cmd_argument(cmd->args, processed_value);
+	free(processed_value);
+	if (!new_args)
+		return (0);
+	cmd->args = new_args;
+	*token = (*token)->next;
+	return (1);
 }

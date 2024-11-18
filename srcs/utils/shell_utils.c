@@ -71,7 +71,7 @@ void	run_shell_loop(t_shell *shell)
 int	setup_minishell(t_shell *shell, char **env, int argc, char **argv)
 {
 	if (argc != 1)
-		return (exit_error("minishell: too many arguments\n", NULL, 1, NULL));
+		return (cleanup_and_exit("minishell: too many arguments\n", NULL, 1, NULL));
 	(void)argv;
 
 	ft_memset(shell, 0, sizeof(t_shell));

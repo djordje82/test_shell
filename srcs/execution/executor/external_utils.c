@@ -62,7 +62,7 @@ int	execute_external_command(t_command *cmd, char *cmd_path, t_shell *shell)
 	if (pid == -1)
 	{
 		free(cmd_path);
-		return (exit_error(ERR_FORK, NULL, 1, shell));
+		return (cleanup_and_exit(ERR_FORK, NULL, 1, shell));
 	}
 	if (pid == 0)
 		execute_child_process(cmd, cmd_path, shell);

@@ -43,6 +43,7 @@ int	is_valid_match(char *name, char *pattern)
 	return (name[0] != '.' && match_pattern(name, pattern));
 }
 
+/*This function is used to initialize the result array.*/
 char	**init_result_array(size_t count, DIR **dir)
 {
 	char	**result;
@@ -59,6 +60,7 @@ char	**init_result_array(size_t count, DIR **dir)
 	return (result);
 }
 
+/*This function is used to count the number of matches for a given pattern.*/
 size_t	count_matches(char *pattern)
 {
 	DIR				*dir;

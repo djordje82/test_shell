@@ -68,20 +68,25 @@
 # define ERR_CMD "minishell: command not found"
 # define ERR_PERM "minishell: Permission denied"
 # define ERR_NOFILE "minishell: No such file or directory"
+
+//# define IS_CTRL(c) ((c > 0 && c < 32) && \
+//	(c != ' ' && c != '\t' && c != '\n' && c != '\r'))
+//# define IS_SPACE(c) (c == ' ' || c == '\t' || c == '\n' || c == '\r')
 /*GLOBAL VARIABLE*/
 extern int	g_exit_status;
 
 typedef enum e_char_type
 {
-    CHAR_NORMAL,     // Regular characters
-    CHAR_WHITESPACE, // Space, tab, newline
-    CHAR_PIPE,       // |
-    CHAR_REDIR_IN,   // <
-    CHAR_REDIR_OUT,  // >
-    CHAR_QUOTE,      // '
-    CHAR_DQUOTE,     // "
-    CHAR_SEMICOLON,  // ; (for future implementation)
-    //CHAR_ENV      // \ (for future implementation)
+	//CHAR_INVALID,   // Invalid characters
+	CHAR_WHITESPACE, // Space, tab, newline
+	CHAR_PIPE,       // |
+	CHAR_REDIR_IN,   // <
+	CHAR_REDIR_OUT,  // >
+	CHAR_QUOTE,      // '
+	CHAR_DQUOTE,     // "
+	CHAR_SEMICOLON,  // ; (for future implementation)
+    //CHAR_ENV,      // \ (for future implementation)
+	CHAR_NORMAL     // Regular characters
 } t_char_type;
 
 typedef enum e_token_type
@@ -159,13 +164,21 @@ char			*ft_strjoin_free(char *s1, char *s2);
 t_token *create_token(char *value, t_token_type type);  // Swap parameters order
 t_token	*tokenize_input(const char *input, t_shell *shell);
 t_token	*tokenize_word(const char *input, int *i, t_shell *shell);
-t_token *handle_pipe(const char *input, int *pos);
+t_token *tokenize_pipe(const char *input, int *pos);
 t_token	*tokenize_quoted_str(char *input, int *i, t_shell *shell);
 t_token *get_next_token(const char *input, int *pos, t_shell *shell);
-void			add_token(t_token **tokens, t_token *new_token);
+
+/*TOKENIZER /EXTRACT WORD*/
+char	*append_word_part(char *result, const char *input, int start, int len);
+char	*process_quoted_segment(char *result, const char *input, int *start, int *len);
+char	*extract_quoted(char *input, int *pos, char quote_type);
+char	*extract_word(const char *input, int *pos);
+
+
+/*TOKENIZER /UTILS*/
 t_token_type	get_token_type(char c);
-char			*extract_word(const char *input, int *pos);
-char			*extract_quoted(char *input, int *pos, char quote_type);
+
+
 t_token *tokenize_operator(const char *input, int *i);
 int				handle_quotes(char *input, int *i, char quote_type);
 char			**insert_arg_array(char **orig_args, int pos, char **expanded);
@@ -179,7 +192,7 @@ int				parse_tokens(t_shell *shell);
 t_command		*create_cmd_node(void);
 void			add_cmd_node(t_command **cmd_list, t_command *new_cmd);
 void			cleanup_cmd_list(t_command *cmd);
-int				parse_arguments(t_token **token, t_command *cmd);
+int				parse_cmd_arguments(t_token **token, t_command *cmd);
 int				parse_redirections(t_token **token, t_command *cmd);
 
 /*PARSING /WILDCARDS*/
@@ -204,16 +217,16 @@ int				ft_echo(char **args, t_shell *shell);
 int				ft_export(char **args, t_shell *shell);
 int				ft_unset(char **args, t_shell *shell);
 int				ft_env(char **args, t_shell *shell);
+int				check_env_args(char **args);
 int				ft_exit(char **args, t_shell *shell);
 
 /*ERROR HANDLING*/
-int				exit_error(char *err_msg, char *src, int err_code, t_shell *shell);
 int				minishell_clean(t_shell *shell, int exit_code);
 void			minishell_reset(t_shell *shell);
-void			print_syntax_error(const char *msg);
+//void			print_syntx_err(const char *msg);
 //int				redir_error(char *filename);
 
-/*CLEANING*/
+/*CLEANUP*/
 void			cleanup_execution_data(t_shell *shell);
 void			cleanup_envp(t_shell *shell);
 void			cleanup_token_list(t_token *tokens);
@@ -223,6 +236,7 @@ void			cleanup_file_resources(t_node *node);
 void			cleanup_cmd_node(t_node *node);
 void			cleanup_shell_data(t_shell *shell);
 void			cleanup_cmd_list(t_command *cmd);
+int				cleanup_and_exit(char *err_msg, char *src, int err_code, t_shell *shell);
 
 /*UTILS*/
 t_char_type		identify_shell_char(char c);
@@ -233,17 +247,18 @@ int				has_equals_sign(char *str);
 int				is_whitespace(char c);
 int				is_quote(char c);
 int				is_special_char(char c);
+int				is_word_delimiter(char c);
 
 /*UTILS /ARGS*/
 //int				is_numeric_arg(char *str);
 char			**insert_arg_array(char **orig_args, int pos, char **to_insert);
 int				update_command_args(t_command *cmd, char **expanded, int pos, t_shell *shell);
 
-/*UTILS /ERRORS*/
-int				exit_error(char *err_msg, char *src, int err_code, t_shell *shell);	
+/*UTILS /ERRORS*/	
 void			print_command_error(char *cmd, char *error_msg);
 void			print_redir_error(char *msg, char *file);
-int				syntax_error(char *err_msg, char *src);
+int				print_syntx_err(char *err_msg, char *src);
+void			print_error(char *err_msg, char *src);
 
 
 /*UTILS /SIGNALS*/
@@ -264,6 +279,7 @@ int				validate_shell_var(char *name);
 
 /*ENVIRONMENT*/
 char			*get_env_value(char *name, t_shell *shell);
+int				get_env_size(char **envp);
 int				update_env_value(char *name, char *value, t_shell *shell);
 
 /*ENVIRONMENT /UTILS*/
@@ -273,18 +289,19 @@ int				count_envp(char **envp);
 char			*get_home_dir(t_shell *shell);
 int				update_pwd_vars(t_shell *shell);
 //int				has_equals_sign(char *str);
-int				check_env_args(char **args);
 char			*get_env_value(char *name, t_shell *shell);
 int				find_env_index(char *name, char **envp);
 char			*create_env_string(char *name, char *value);
 int				update_env_value(char *name, char *value, t_shell *shell);
+char			**copy_env(char **envp);
+int				add_env_var(char *arg, t_shell *shell);
 //void			print_env_var(char *env_var);
 
 /*BUILTINS /ENV*/
 int				ft_env(char **args, t_shell *shell);
 
 /*BUILTINS /UTILS*/
-int				is_n_flag(char *arg);
+int				is_valid_n_flag(char *arg);
 void			print_args(char **args, int start, int n_flag);
 
 /*BUILTINS /EXECUTION*/

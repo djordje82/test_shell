@@ -12,13 +12,18 @@
 
 #include "minishell.h"
 
-static t_token	*handle_double_operator(const char *input, int *pos,
-	const char *op_str, t_token_type type)
+/*This function creates a token for a double-character operators (>> or <<)*/
+static t_token	*tokenize_double_operator(const char *input,
+		int *pos,
+		const char *op_str,
+		t_token_type type)
 {
 	t_token	*token;
 	char	*value;
 
-	(void)input;  // Silence unused parameter warning
+	(void)input;
+	if (!pos || !op_str)
+		return (NULL);
 	value = ft_strdup(op_str);
 	if (!value)
 		return (NULL);
@@ -30,12 +35,15 @@ static t_token	*handle_double_operator(const char *input, int *pos,
 	return (token);
 }
 
-static t_token	*handle_single_operator(const char *input, int *i)
+/*This function creates a token for a single-character operator (>, <, |, etc.)*/
+static t_token	*tokenize_single_operator(const char *input, int *i)
 {
 	char		*value;
 	t_token		*token;
 	t_token_type	type;
 
+	if (!input || !i)
+		return (NULL);
 	value = ft_substr(input, *i, 1);
 	if (!value)
 		return (NULL);
@@ -48,11 +56,13 @@ static t_token	*handle_single_operator(const char *input, int *i)
 	return (token);
 }
 
+/*This function determines the type of operator based on the current position in the input string and creates the appropriate token.*/
 t_token	*tokenize_operator(const char *input, int *i)
 {
 	if (input[*i] == '>' && input[*i + 1] == '>')
-		return (handle_double_operator(input, i, ">>", TOKEN_APPEND));
+		return (tokenize_double_operator(input, i, ">>", TOKEN_APPEND));
 	if (input[*i] == '<' && input[*i + 1] == '<')
-		return (handle_double_operator(input, i, "<<", TOKEN_HEREDOC));
-	return (handle_single_operator(input, i));
+		return (tokenize_double_operator(input, i, "<<", TOKEN_HEREDOC));
+	return (tokenize_single_operator(input, i));
 }
+

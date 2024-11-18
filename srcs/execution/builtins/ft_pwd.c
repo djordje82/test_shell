@@ -14,22 +14,20 @@
 
 int	ft_pwd(char **args, t_shell *shell)
 {
-	char current_dir[PATH_MAX];
-	(void)args; // Unused parameter
+	char	current_dir[PATH_MAX];
+	char	*pwd;
 
-	// Get the current working directory
+	(void)args;
 	if (!getcwd(current_dir, PATH_MAX))
 	{
-		// If getcwd fails, try to use PWD environment variable
-		char *pwd = get_env_value("PWD", shell);
+		pwd = get_env_value("PWD", shell);
 		if (pwd)
 		{
 			ft_putendl_fd(pwd, STDOUT_FILENO);
 			return (0);
 		}
-		return (exit_error("pwd", "getcwd failed", 1, shell));
+		return (cleanup_and_exit("pwd", "getcwd failed", 1, shell));
 	}
-
 	ft_putendl_fd(current_dir, STDOUT_FILENO);
 	return (0);
 }

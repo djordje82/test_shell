@@ -39,7 +39,7 @@ SRCS =	main.c \
 		utils/cleanup/cleanup_utils.c \
 		utils/env/env_modify.c \
 		utils/env/env_utils.c \
-		utils/errors/error.c \
+		utils/errors/print_errors.c \
 		utils/signals/signals.c \
 		utils/signals/sig_utils.c \
 		utils/args_utils.c \
@@ -54,10 +54,11 @@ SRCS =	main.c \
 		parsing/wildcards_utils.c \
 		parsing/env_expansion.c \
 		tokenizer/tokenizer.c \
-		tokenizer/tokenize_handlers.c \
+		tokenizer/tokenize_quoted.c \
 		tokenizer/tokenizer_utils.c \
 		tokenizer/tokenize_operators.c \
 		tokenizer/tokenize_word.c \
+		tokenizer/extract_word.c \
 		execution/executor/redirections.c \
 		execution/executor/executor_utils.c \
 		execution/executor/external.c \

@@ -19,7 +19,7 @@ static int	handle_heredoc(t_command *cmd)
 	size_t	len_delimiter;
 
 	if (pipe(heredoc_pipe) == -1)
-		return (exit_error(ERR_PIPE, NULL, 1, NULL));
+		return (cleanup_and_exit(ERR_PIPE, NULL, 1, NULL));
 	len_delimiter = ft_strlen(cmd->infile);
 	while (1)
 	{
@@ -58,11 +58,11 @@ static int	handle_input_redirection(t_command *cmd)
 			g_exit_status = 1;
 			had_error = 1;
 			if (errno == ENOENT)
-				exit_error(ERR_NOFILE, cmd->infile, 1, NULL);
+				cleanup_and_exit(ERR_NOFILE, cmd->infile, 1, NULL);
 			else if (errno == EACCES)
-				exit_error(ERR_PERM, cmd->infile, 1, NULL);
+				cleanup_and_exit(ERR_PERM, cmd->infile, 1, NULL);
 			else
-				exit_error(ERR_NOFILE, cmd->infile, 1, NULL);
+				cleanup_and_exit(ERR_NOFILE, cmd->infile, 1, NULL);
 		}
 		else
 		{
@@ -90,8 +90,8 @@ static int	handle_output_redirection(t_command *cmd)
 		fd = open(cmd->outfile, flags, 0644);
 		if (fd == -1)
 		{
-			exit_error(ERR_PERM, cmd->outfile, 1, NULL);
-			return (1);  // Continue pipeline but mark command as failed
+			cleanup_and_exit(ERR_PERM, cmd->outfile, 1, NULL);
+			return (1);
 		}
 		dup2(fd, STDOUT_FILENO);
 		close(fd);

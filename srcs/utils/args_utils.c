@@ -48,7 +48,7 @@ int	update_command_args(t_command *cmd, char **expanded, int pos,
 	if (!new_args)
 	{
 		ft_free_array((void **)expanded, -1);
-		return (exit_error(ERR_MEM, NULL, 1, shell));
+		return (cleanup_and_exit(ERR_MEM, NULL, 1, shell));
 	}
 	ft_free_array((void **)cmd->args, -1);
 	cmd->args = new_args;

@@ -4,7 +4,7 @@ int	create_process(pid_t *pid, t_shell *shell)
 {
 	*pid = fork();
 	if (*pid == -1)
-		return (exit_error("fork failed", NULL, 1, shell));
+		return (cleanup_and_exit("fork failed", NULL, 1, shell));
 	return (1);
 }
 

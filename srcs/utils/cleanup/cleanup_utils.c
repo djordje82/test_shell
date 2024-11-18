@@ -12,6 +12,28 @@
 
 #include "minishell.h"
 
+/*This function frees a linked list of commands. It iterates through the list,
+	freeing each command's arguments | infiles | outfiles | and then the command itself.*/
+void	cleanup_cmd_list(t_command *cmd)
+{
+	t_command	*temp;
+
+	if (!cmd)
+		return ;
+	while (cmd)
+	{
+		temp = cmd->next;
+		if (cmd->args)
+			ft_free_array((void **)cmd->args, -1);
+		if (cmd->infile)
+			free(cmd->infile);
+		if (cmd->outfile)
+			free(cmd->outfile);
+		free(cmd);
+		cmd = temp;
+	}
+}
+
 /*This function frees process ID's and pipe arrays from the shell struct.*/
 void	cleanup_execution_data(t_shell *shell)
 {

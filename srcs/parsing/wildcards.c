@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+/*This function is used to add a match to the result array.*/
 static int	add_match_to_result(char **result, size_t i, char *name)
 {
 	result[i] = ft_strdup(name);
@@ -20,6 +21,7 @@ static int	add_match_to_result(char **result, size_t i, char *name)
 	return (1);
 }
 
+/*This function is used to fill the result array with the matching entries.*/
 static char	**fill_result_array(char *pattern, size_t count)
 {
 	DIR				*dir;
@@ -49,10 +51,13 @@ static char	**fill_result_array(char *pattern, size_t count)
 	return (result);
 }
 
+/*This function is used to expand wildcards in the input pattern.*/
 char	**expand_wildcards(char *pattern)
 {
 	size_t		count;
 
+	if (!pattern)
+		return (NULL);
 	if (!ft_strchr(pattern, '*'))
 		return (NULL);
 	count = count_matches(pattern);
@@ -60,47 +65,3 @@ char	**expand_wildcards(char *pattern)
 		return (NULL);
 	return (fill_result_array(pattern, count));
 }
-/*char **expand_wildcards(char *pattern)
-{
-    glob_t  globbuf;
-    char    **result;
-    int     i;
-    int     count;
-    
-    if (!ft_strchr(pattern, '*'))
-        return (NULL);
-        
-    if (glob(pattern, GLOB_NOSORT, NULL, &globbuf) != 0)
-        return (NULL);
-        
-    count = globbuf.gl_pathc;
-    if (count == 0)
-    {
-        globfree(&globbuf);
-        return (NULL);
-    }
-    
-    result = malloc(sizeof(char *) * (count + 1));
-    if (!result)
-    {
-        globfree(&globbuf);
-        return (NULL);
-    }
-    
-    i = 0;
-    while (i < count)
-    {
-        result[i] = ft_strdup(globbuf.gl_pathv[i]);
-        if (!result[i])
-        {
-            ft_free_array((void **)result, i);
-            globfree(&globbuf);
-            return (NULL);
-        }
-        i++;
-    }
-    result[count] = NULL;
-    
-    globfree(&globbuf);
-    return (result);
-}*/

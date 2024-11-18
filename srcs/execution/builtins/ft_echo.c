@@ -12,32 +12,24 @@
 
 #include "minishell.h"
 
-int	is_n_flag(char *arg)
-{
-	int i;
-    
-    if (!arg || arg[0] != '-')
-        return (0);
-    i = 1;  // Skip the '-'
-    while (arg[i])
-    {
-        if (arg[i] != 'n')
-            return (0);
-        i++;
-    }
-    return (1);
-}
-
-/*static int	ft_count_args(char **args)
+/*This function is used to check if the argument is a valid -n flag.*/
+int	is_valid_n_flag(char *arg)
 {
 	int	i;
 
-	i = 0;
-	while (args && args[i])
+	if (!arg || arg[0] != '-')
+		return (0);
+	i = 1;
+	while (arg[i])
+	{
+		if (arg[i] != 'n')
+			return (0);
 		i++;
-	return (i);
-}*/
+	}
+	return (1);
+}
 
+/*This function is used to print the arguments.*/
 void	print_args(char **args, int start, int n_flag)
 {
 	int	i;
@@ -54,20 +46,21 @@ void	print_args(char **args, int start, int n_flag)
 		ft_putchar_fd('\n', STDOUT_FILENO);
 }
 
+/*This function is used to print the arguments.*/
 int	ft_echo(char **args, t_shell *shell)
 {
 	int	i;
 	int	n_flag;
 
 	(void)shell;
+	n_flag = 0;
 	if (!args[1])
 	{
 		ft_putchar_fd('\n', STDOUT_FILENO);
-		return (g_exit_status);  // Return existing status
+		return (g_exit_status);
 	}
-	n_flag = 0;
 	i = 1;
-	if (is_n_flag(args[1]))
+	if (is_valid_n_flag(args[1]))
 	{
 		n_flag = 1;
 		i = 2;
@@ -81,42 +74,5 @@ int	ft_echo(char **args, t_shell *shell)
 	}
 	if (!n_flag)
 		ft_putchar_fd('\n', STDOUT_FILENO);
-	return (g_exit_status);  // Return existing status instead of 0
+	return (g_exit_status);
 }
-
-/*int ft_echo(char **args, t_shell *shell)
-{
-    int i;
-    int n_flag;
-    
-    (void)shell;
-    //printf("Debug: Echo called with args:\n");
-    if (!args[1])  // If no arguments, just print newline
-    {
-        ft_putchar_fd('\n', STDOUT_FILENO);
-        return (0);
-    }
-    
-    // First check all arguments for -n flags
-    n_flag = 0;
-    i = 1;
-    if (is_n_flag(args[1]))
-    {
-        n_flag = 1;
-        i = 2;
-    }
-
-// Print all arguments
-    while (args[i])
-    {
-        ft_putstr_fd(args[i], STDOUT_FILENO);
-        if (args[i + 1])  // If there's another argument coming
-            ft_putchar_fd(' ', STDOUT_FILENO);
-        i++;
-    }
-    
-    if (!n_flag)
-        ft_putchar_fd('\n', STDOUT_FILENO);
-    
-    return (0);
-}*/

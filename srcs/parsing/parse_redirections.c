@@ -1,72 +1,47 @@
 #include "minishell.h"
 
-/*int	parse_redirections(t_token **token, t_command *cmd)
+/*This function is used to set the input redirection of a command.*/
+static void	set_input_redirection(t_command *cmd, char *filename, t_token_type type)
 {
-	t_token_type	type;
-	char			*temp_file;
-
-	type = (*token)->type;
-	if (!(*token)->next || (*token)->next->type != TOKEN_WORD)
-	{
-		syntax_error("syntax error near unexpected token `newline'", NULL);
-		return (0);
-	}
-	*token = (*token)->next;
-	temp_file = ft_strdup((*token)->value);
-	if (!temp_file)
-		return (exit_error(ERR_MEM, NULL, 1, NULL));
-	if (type == TOKEN_RDRCT_IN || type == TOKEN_HEREDOC)
-	{
-		if (type == TOKEN_RDRCT_IN && access(temp_file, F_OK) == -1)
-		{
-			g_exit_status = 1;
-			exit_error(ERR_NOFILE, temp_file, 1, NULL);
-			free(temp_file);
-			*token = (*token)->next;
-			return (1);  // Continue parsing but maintain error state
-		}
-		free(cmd->infile);
-		cmd->infile = temp_file;
-		cmd->in_type = (type == TOKEN_RDRCT_IN) ? 1 : 2;
-	}
+	free(cmd->infile);
+	cmd->infile = filename;
+	if (type == TOKEN_RDRCT_IN)
+		cmd->in_type = 1;
 	else
-	{
-		free(cmd->outfile);
-		cmd->outfile = temp_file;
-		cmd->out_type = (type == TOKEN_RDRCT_OUT) ? 1 : 2;
-	}
-	*token = (*token)->next;
-	return (1);
-}*/
+		cmd->in_type = 2;
+}
+
+/*This function is used to set the output redirection of a command.*/
+static void	set_output_redirection(t_command *cmd, char *filename, t_token_type type)
+{
+	free(cmd->outfile);
+	cmd->outfile = filename;
+	if (type == TOKEN_RDRCT_OUT)
+		cmd->out_type = 1;
+	else
+		cmd->out_type = 2;
+}
+
+/*This function is used to parse the redirections of a command.*/
 int	parse_redirections(t_token **token, t_command *cmd)
 {
 	t_token_type	type;
 	char			*temp_file;
 
 	type = (*token)->type;
-
 	if (!(*token)->next || (*token)->next->type != TOKEN_WORD)
 	{
-		syntax_error("syntax error near unexpected token `newline'", NULL);
+		print_syntx_err("syntax error near unexpected token `newline'", NULL);
 		return (0);
 	}
 	*token = (*token)->next;
 	temp_file = ft_strdup((*token)->value);
 	if (!temp_file)
-		return (exit_error(ERR_MEM, NULL, 1, NULL));
-
+		return (cleanup_and_exit(ERR_MEM, NULL, 1, NULL));
 	if (type == TOKEN_RDRCT_IN || type == TOKEN_HEREDOC)
-	{
-		free(cmd->infile);
-		cmd->infile = temp_file;
-		cmd->in_type = (type == TOKEN_RDRCT_IN) ? 1 : 2;
-	}
+		set_input_redirection(cmd, temp_file, type);
 	else
-	{
-		free(cmd->outfile);
-		cmd->outfile = temp_file;
-		cmd->out_type = (type == TOKEN_RDRCT_OUT) ? 1 : 2;
-	}
+		set_output_redirection(cmd, temp_file, type);
 	*token = (*token)->next;
 	return (1);
 }

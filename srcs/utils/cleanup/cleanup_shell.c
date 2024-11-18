@@ -12,28 +12,6 @@
 
 #include "minishell.h"
 
-/*This function frees a linked list of commands. It iterates through the list,
-	freeing each command's arguments | infiles | outfiles | and then the command itself.*/
-void	cleanup_cmd_list(t_command *cmd)
-{
-	t_command	*temp;
-
-	if (!cmd)
-		return ;
-	while (cmd)
-	{
-		temp = cmd->next;
-		if (cmd->args)
-			ft_free_array((void **)cmd->args, -1);
-		if (cmd->infile)
-			free(cmd->infile);
-		if (cmd->outfile)
-			free(cmd->outfile);
-		free(cmd);
-		cmd = temp;
-	}
-}
-
 /*This function performs cleanup of the shell data. It frees the command list | token list | and clears the history.*/
 void	cleanup_shell_data(t_shell *shell)
 {
@@ -52,4 +30,16 @@ void	cleanup_shell_data(t_shell *shell)
 	cleanup_execution_data(shell);
 	cleanup_envp(shell);
 	rl_clear_history();
+}
+
+/*This function prints an error message and exits the program. It also cleans up the shell data.*/
+int	cleanup_and_exit(char *err_msg, char *src, int err_code, t_shell *shell)
+{
+	print_error(err_msg, src);
+	if (shell)
+	{
+		shell->exit_status = err_code;
+		cleanup_shell_data(shell);
+	}
+	exit(err_code);
 }

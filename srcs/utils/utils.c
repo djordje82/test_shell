@@ -31,3 +31,24 @@ t_char_type	identify_shell_char(char c)
 		return (CHAR_SEMICOLON);
 	return (CHAR_NORMAL);
 }
+/*TO TEST
+t_char_type	identify_shell_char(char c)
+{
+	if ((c > 0 && c < 32) && c != ' ' && c != '\t' && c != '\n' && c != '\r')
+		return (CHAR_INVALID);
+	if (c == ' ' || c == '\t' || c == '\n' || c == '\r')
+		return (CHAR_WHITESPACE);
+	if (c == '|')
+		return (CHAR_PIPE);
+	if (c == '<')
+		return (CHAR_REDIR_IN);
+	if (c == '>')
+		return (CHAR_REDIR_OUT);
+	if (c == '\'')
+		return (CHAR_QUOTE);
+	if (c == '\"')
+		return (CHAR_DQUOTE);
+	if (c == ';')
+		return (CHAR_SEMICOLON);
+	return (CHAR_NORMAL);
+}*/

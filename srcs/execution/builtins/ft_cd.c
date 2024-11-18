@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+/*This function is used to get the home directory of the user.*/
 char	*get_home_dir(t_shell *shell)
 {
 	char	*home;
@@ -22,44 +23,26 @@ char	*get_home_dir(t_shell *shell)
 	return (ft_strdup(home));
 }
 
+/*This function is used to update the PWD and OLDPWD environment variables.*/
 int	update_pwd_vars(t_shell *shell)
 {
-	char *old_pwd;
-    char current_dir[PATH_MAX];
+	char	*old_pwd;
+	char	current_dir[PATH_MAX];
 
-    //printf("Debug: Entering update_pwd_vars\n");
-    
-    // Get and update OLDPWD
-    old_pwd = get_env_value("PWD", shell);
-    if (old_pwd)
-    {
-        //printf("Debug: Found old PWD: %s\n", old_pwd);
-        if (update_env_value("OLDPWD", old_pwd, shell) != 0)
-        {
-            //printf("Debug: Failed to update OLDPWD\n");
-            return (1);
-        }
-        //printf("Debug: Successfully updated OLDPWD\n");
-    }
-
-    // Get and update PWD
-    if (!getcwd(current_dir, PATH_MAX))
-    {
-        //printf("Debug: getcwd failed\n");
-        return (1);
-    }
-    //printf("Debug: Current directory: %s\n", current_dir);
-
-    if (update_env_value("PWD", current_dir, shell) != 0)
-    {
-        //printf("Debug: Failed to update PWD\n");
-        return (1);
-    }
-    //printf("Debug: Successfully updated PWD\n");
-    
-    return (0);
+	old_pwd = get_env_value("PWD", shell);
+	if (old_pwd)
+	{
+		if (update_env_value("OLDPWD", old_pwd, shell) != 0)
+			return (1);
+	}
+	if (!getcwd(current_dir, PATH_MAX))
+		return (1);
+	if (update_env_value("PWD", current_dir, shell) != 0)
+		return (1);
+	return (0);
 }
 
+/*This function is used to expand the path of the current directory.*/
 char	*expand_path(char *path, t_shell *shell)
 {
 	char	*expanded;
@@ -84,44 +67,43 @@ char	*expand_path(char *path, t_shell *shell)
 	return (ft_strdup(path));
 }
 
-int ft_cd(char **args, t_shell *shell)
+/*This function is used to print the error message for the cd command.*/
+static void	print_cd_error(char *path)
 {
-    int ret;
+	ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
+	ft_putstr_fd(path, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	if (errno == ENOENT)
+		ft_putendl_fd("No such file or directory", STDERR_FILENO);
+	else if (errno == EACCES)
+		ft_putendl_fd("Permission denied", STDERR_FILENO);
+	else if (errno == ENOTDIR)
+		ft_putendl_fd("Not a directory", STDERR_FILENO);
+	else
+		ft_putendl_fd("Error changing directory", STDERR_FILENO);
+}
 
-    // Check argument count
-    if (ft_count_args(args) > 2)
-    {
-        ft_putendl_fd("minishell: cd: too many arguments", STDERR_FILENO);
-        return (1);
-    }
+/*This function is used to change the current directory of the user.*/
+int	ft_cd(char **args, t_shell *shell)
+{
+	int	ret;
 
-    // If no argument is provided, return error
-    if (!args[1])
-    {
-        ft_putendl_fd("minishell: cd: path required", STDERR_FILENO);
-        return (1);
-    }
-    
-    // Try to change directory
-    if (chdir(args[1]) == -1)
-    {
-        ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
-        ft_putstr_fd(args[1], STDERR_FILENO);
-        ft_putstr_fd(": ", STDERR_FILENO);
-        
-        if (errno == ENOENT)
-            ft_putendl_fd("No such file or directory", STDERR_FILENO);
-        else if (errno == EACCES)
-            ft_putendl_fd("Permission denied", STDERR_FILENO);
-        else if (errno == ENOTDIR)
-            ft_putendl_fd("Not a directory", STDERR_FILENO);
-        else
-            ft_putendl_fd("Error changing directory", STDERR_FILENO);
-
-        ret = 1;
-    }
-    else
-        ret = update_pwd_vars(shell);
-    
-    return (ret);
+	if (ft_count_args(args) > 2)
+	{
+		ft_putendl_fd("minishell: cd: too many arguments", STDERR_FILENO);
+		return (1);
+	}
+	if (!args[1])
+	{
+		ft_putendl_fd("minishell: cd: path required", STDERR_FILENO);
+		return (1);
+	}
+	if (chdir(args[1]) == -1)
+	{
+		print_cd_error(args[1]);
+		ret = 1;
+	}
+	else
+		ret = update_pwd_vars(shell);
+	return (ret);
 }

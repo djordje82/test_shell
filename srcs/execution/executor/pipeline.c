@@ -17,7 +17,7 @@ static int	init_pipeline(t_command *current, int *pipe_fd, t_shell *shell)
 	pipe_fd[0] = -1;
 	pipe_fd[1] = -1;
 	if (current->next && pipe(pipe_fd) == -1)
-		return (exit_error("pipe failed", NULL, 1, shell));
+		return (cleanup_and_exit("pipe failed", NULL, 1, shell));
 	if (current->args && is_parent_only_builtin(current->args[0]))
 		execute_builtin(current, shell);
 	return (1);

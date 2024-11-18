@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+/*This function retrieves the value of an environment variable from the shell's environment array. It returns the value as a string if found, or NULL if not found.*/
 char	*get_env_value(char *name, t_shell *shell)
 {
 	int		i;
@@ -35,6 +36,7 @@ char	*get_env_value(char *name, t_shell *shell)
 	return (NULL);
 }
 
+/*This function finds the index of an environment variable in an array of environment variables. It returns the index of the variable if found, or -1 if not found.*/
 int	find_env_index(char *name, char **envp)
 {
 	int	i;
@@ -51,19 +53,14 @@ int	find_env_index(char *name, char **envp)
 	return (-1);
 }
 
-int	check_env_args(char **args)
+char *extract_env_var_name(const char *str)
 {
-	int i;
+    int	i;
 
+	if (!str)
+		return (NULL);
 	i = 0;
-	while (args[i])
+	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
 		i++;
-	if (i > 1)
-	{
-		ft_putstr_fd("env: '", STDERR_FILENO);
-		ft_putstr_fd(args[1], STDERR_FILENO);
-		ft_putendl_fd("': No such file or directory", STDERR_FILENO);
-		return (0);
-	}
-	return (1);
+	return (ft_substr(str, 0, i));
 }
