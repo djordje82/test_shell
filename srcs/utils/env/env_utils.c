@@ -53,9 +53,10 @@ int	find_env_index(char *name, char **envp)
 	return (-1);
 }
 
-char *extract_env_var_name(const char *str)
+/*This function extracts the name of an environment variable from a string. It returns the name as a new string if found, or NULL if not found.*/
+char	*extract_env_var_name(const char *str)
 {
-    int	i;
+	int	i;
 
 	if (!str)
 		return (NULL);

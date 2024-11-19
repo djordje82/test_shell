@@ -33,7 +33,16 @@ SRCS =	main.c \
 		execution/builtins/ft_export.c \
 		execution/builtins/ft_pwd.c \
 		execution/builtins/ft_unset.c \
-		execution/executor/executor.c \
+		execution/executor/exec.c \
+		execution/executor/setup_redirections.c \
+		execution/executor/exec_utils.c \
+		execution/executor/exec_external.c \
+		execution/executor/exec_external_utils.c \
+		execution/executor/exec_single_cmd.c \
+		execution/executor/exec_builtins.c \
+		execution/executor/exec_pipeline.c \
+		execution/executor/processes.c \
+		execution/executor/heredoc.c \
 		utils/cleanup/cleanup_shell.c \
 		utils/cleanup/cleanup_cmd_node.c \
 		utils/cleanup/cleanup_utils.c \
@@ -58,13 +67,7 @@ SRCS =	main.c \
 		tokenizer/tokenizer_utils.c \
 		tokenizer/tokenize_operators.c \
 		tokenizer/tokenize_word.c \
-		tokenizer/extract_word.c \
-		execution/executor/redirections.c \
-		execution/executor/executor_utils.c \
-		execution/executor/external.c \
-		execution/executor/external_utils.c \
-		execution/executor/pipeline.c \
-		execution/executor/processes.c
+		tokenizer/extract_word.c 
 
 # Object files
 OBJS = $(SRCS:%.c=$(OBJS_DIR)/%.o)

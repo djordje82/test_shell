@@ -37,6 +37,8 @@
 
 /*ERROR CODES*/
 # define EXIT_SUCCESS 0
+#define EXIT_ERROR_NUMERIC 2
+#define EXIT_ERROR_ARGS 1
 # define EXIT_FAILURE 1
 # define EXIT_ERROR 2
 # define EXIT_NOT_FOUND 127
@@ -69,11 +71,18 @@
 # define ERR_PERM "minishell: Permission denied"
 # define ERR_NOFILE "minishell: No such file or directory"
 
+#define REDIR_TRUNC 1
+#define REDIR_APPEND 2
+#define FILE_PERMS 0644
+#define REDIR_INPUT 1
+#define REDIR_HEREDOC 2
 //# define IS_CTRL(c) ((c > 0 && c < 32) && \
 //	(c != ' ' && c != '\t' && c != '\n' && c != '\r'))
 //# define IS_SPACE(c) (c == ' ' || c == '\t' || c == '\n' || c == '\r')
+
 /*GLOBAL VARIABLE*/
-extern int	g_exit_status;
+//extern int	g_exit_status;
+extern sig_atomic_t	g_exit_status;
 
 typedef enum e_char_type
 {
@@ -268,8 +277,8 @@ void			handle_eof(t_shell *shell);
 void			disable_ctrl_chars(void);
 void			signal_handler(int signum);
 void			signal_handler_child(int signum);
-void	setup_execution_signals(struct sigaction *sa_old_int,
-		struct sigaction *sa_old_quit);
+void			setup_execution_signals(struct sigaction *sa_old_int, \
+				struct sigaction *sa_old_quit);
 
 /*UTILS /SHELL*/
 void			run_shell_loop(t_shell *shell);
@@ -281,6 +290,7 @@ int				validate_shell_var(char *name);
 char			*get_env_value(char *name, t_shell *shell);
 int				get_env_size(char **envp);
 int				update_env_value(char *name, char *value, t_shell *shell);
+int				remove_env_var(char *name, t_shell *shell);
 
 /*ENVIRONMENT /UTILS*/
 int				count_envp(char **envp);
@@ -305,7 +315,7 @@ int				is_valid_n_flag(char *arg);
 void			print_args(char **args, int start, int n_flag);
 
 /*BUILTINS /EXECUTION*/
-int				execute_builtin(t_command *cmd, t_shell *shell);
+int				route_builtin_cmd(t_command *cmd, t_shell *shell);
 
 /*BUILTINS /CD*/
 char			*get_home_dir(t_shell *shell);
@@ -325,29 +335,29 @@ void			print_exported_var(char *var);
 
 /*BUILTINS /UNSET*/
 int				validate_shell_var(char *name);
-void			print_identifier_error(char *arg);
-int				remove_env_var(char *name, t_shell *shell);
+//void			print_identifier_error(char *arg);
+
 
 /*EXECUTOR /REDIRECTIONS*/
 int				setup_redirections(t_command *cmd);
-void			reset_redirections(int stdin_fd, int stdout_fd);
+void			restore_std_fds(int stdin_fd, int stdout_fd);
 
 /*EXECUTOR /PIPELINE*/
 void			setup_pipe_redirections(int *prev_pipe, int *pipe_fd);
-int				handle_pipeline(t_command *current, int *prev_pipe, pid_t *last_pid,
+int				setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 		t_shell *shell);
 
 
 /*EXECUTOR /PROCESSES*/
 int				create_process(pid_t *pid, t_shell *shell);
-void			handle_child_process(t_command *cmd, int *prev_pipe, int *pipe_fd,
+void			handle_pipeline_child(t_command *cmd, int *prev_pipe, int *pipe_fd,
 		t_shell *shell);
 void			handle_parent_process(int *prev_pipe, int *pipe_fd);
 void			wait_for_children(pid_t last_pid);
 
 /*EXECUTOR /UTILS*/
 int				is_builtin(char *cmd);
-int				execute_builtin(t_command *cmd, t_shell *shell);
+int				route_builtin_cmd(t_command *cmd, t_shell *shell);
 char			*get_cmd_path(char *cmd, char **paths);
 char			*find_command_path(char *cmd, t_shell *shell);
 
@@ -355,26 +365,28 @@ char			*find_command_path(char *cmd, t_shell *shell);
 /*EXECUTOR /EXEC*/
 int				execute_command(t_command *cmd, t_shell *shell);
 int				execute_single_command(t_command *cmd, t_shell *shell);
+int				execute_single_builtin(t_command *cmd, t_shell *shell);
 int				is_parent_only_builtin(char *cmd);
-int				handle_pipeline(t_command *current, int *prev_pipe, 
+int				setup_pipeline_steps(t_command *current, int *prev_pipe, 
         pid_t *last_pid, t_shell *shell);
-void			handle_child_process(t_command *cmd, int *prev_pipe, 
+void			handle_pipeline_child(t_command *cmd, int *prev_pipe, 
         int *pipe_fd, t_shell *shell);
 void			handle_parent_process(int *prev_pipe, int *pipe_fd);
 void			wait_for_children(pid_t last_pid);
+int				setup_heredoc(t_command *cmd);
 
 
 /*EXECUTOR /EXTERNAL AND UTILS*/
-int				execute_external(t_command *cmd, t_shell *shell);
+int				execute_external_cmd(t_command *cmd, t_shell *shell);
 void			handle_wait_status(int status);
 int				handle_wildcard_expansion(t_command *cmd, t_shell *shell);
-int	execute_external_command(t_command *cmd, char *cmd_path,
+int	execute_external_single_cmd(t_command *cmd, char *cmd_path,
 		t_shell *shell);
-int				handle_command_not_found(t_command *cmd);
-void			setup_pipeline_execution(t_command *cmd, char *cmd_path, 
+int				print_command_not_found(t_command *cmd);
+void			execute_pipeline_cmd(t_command *cmd, char *cmd_path, 
         t_shell *shell);
-void			handle_execution_errors(char *cmd_path, char *cmd_name);
-void	execute_child_process(t_command *cmd, char *cmd_path, t_shell *shell);
+void			handle_command_errors(char *cmd_path, char *cmd_name);
+void	execute_external_child(t_command *cmd, char *cmd_path, t_shell *shell);
 
 
 #endif

@@ -1,0 +1,97 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   setup_redirections.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/15 18:05:00 by dodordev          #+#    #+#             */
+/*   Updated: 2024/11/15 18:05:03 by dodordev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*This function handles regular input redirection. It opens the input file with the appropriate flags and duplicates the file descriptor to stdin.*/
+static int	handle_regular_input(t_command *cmd)
+{
+	int	fd;
+
+	fd = open(cmd->infile, O_RDONLY);
+	if (fd == -1)
+	{
+		g_exit_status = 1;
+		if (errno == ENOENT)
+			return (cleanup_and_exit(ERR_NOFILE, cmd->infile, 1, NULL));
+		else if (errno == EACCES)
+			return (cleanup_and_exit(ERR_PERM, cmd->infile, 1, NULL));
+		return (cleanup_and_exit(ERR_NOFILE, cmd->infile, 1, NULL));
+	}
+	if (dup2(fd, STDIN_FILENO) == -1)
+	{
+		close(fd);
+		return (0);
+	}
+	close(fd);
+	return (1);
+}
+
+/*This function handles input redirection. It opens the input file with the appropriate flags and duplicates the file descriptor to stdin.*/
+static int	handle_input_redirection(t_command *cmd)
+{
+	if (cmd->in_type == REDIR_INPUT)
+		return (handle_regular_input(cmd));
+	else if (cmd->in_type == REDIR_HEREDOC)
+		return (setup_heredoc(cmd));
+	return (1);
+}
+
+/*This function handles output redirection. It opens the output file with the appropriate flags and duplicates the file descriptor to stdout.*/
+static int	handle_output_redirection(t_command *cmd)
+{
+	int	fd;
+	int	flags;
+
+	flags = O_WRONLY | O_CREAT;
+	if (cmd->out_type == REDIR_TRUNC)
+		flags |= O_TRUNC;
+	else if (cmd->out_type == REDIR_APPEND)
+		flags |= O_APPEND;
+	if (cmd->out_type)
+	{
+		fd = open(cmd->outfile, flags, FILE_PERMS);
+		if (fd == -1)
+			return (cleanup_and_exit(ERR_PERM, cmd->outfile, 1, NULL));
+		if (dup2(fd, STDOUT_FILENO) == -1)
+		{
+			close(fd);
+			return (0);
+		}
+		close(fd);
+	}
+	return (1);
+}
+
+/*This function sets up input and output redirections for a command. It handles regular input and heredoc redirections, and returns 1 if no errors occurred, otherwise 0.*/
+int	setup_redirections(t_command *cmd)
+{
+	int	status;
+	int	had_error;
+
+	had_error = 0;
+	if (cmd->infile)
+	{
+		status = handle_input_redirection(cmd);
+		if (!status)
+			had_error = 1;
+	}
+	if (cmd->outfile)
+	{
+		status = handle_output_redirection(cmd);
+		if (!status)
+			had_error = 1;
+	}
+	if (had_error)
+		g_exit_status = 1;
+	return (1);
+}

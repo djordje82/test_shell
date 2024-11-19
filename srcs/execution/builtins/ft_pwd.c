@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+/*This function is used to print the current working directory.*/
 int	ft_pwd(char **args, t_shell *shell)
 {
 	char	current_dir[PATH_MAX];

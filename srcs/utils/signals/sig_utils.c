@@ -29,6 +29,11 @@ void	signal_handler(int signum)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
+	else if (signum == SIGQUIT)
+	{
+		g_exit_status = 131; // 128 + SIGQUIT(3)
+		write(STDERR_FILENO, "Quit (core dumped)\n", 18);
+	}
 }
 
 void	signal_handler_child(int signum)

@@ -56,11 +56,12 @@ void	run_shell_loop(t_shell *shell)
 
 	while (shell->running)
 	{
-		input = readline(PROMPT);
+		input = readline("minishell $");
 		if (!input)
 		{
-			write(STDOUT_FILENO, "exit\n", 5);
-			break ;
+			if (isatty(STDIN_FILENO))
+				write(2, "exit\n", 6);
+			exit (0);
 		}
 		process_shell_input(input, shell);
 		free(input);

@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int		g_exit_status;
+sig_atomic_t	g_exit_status;
 
 void	setup_signals(void)
 {

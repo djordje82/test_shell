@@ -8,7 +8,7 @@ int	create_process(pid_t *pid, t_shell *shell)
 	return (1);
 }
 
-void	handle_child_process(t_command *cmd, int *prev_pipe, int *pipe_fd,
+void	handle_pipeline_child(t_command *cmd, int *prev_pipe, int *pipe_fd,
 		t_shell *shell)
 {
 	int	status;
@@ -69,4 +69,18 @@ void	wait_for_children(pid_t last_pid)
 				g_exit_status = WEXITSTATUS(status);
 		}
 	}
+}
+
+void	handle_wait_status(int status)
+{
+	if (WIFSIGNALED(status))
+	{
+		g_exit_status = 128 + WTERMSIG(status);
+		if (WTERMSIG(status) == SIGQUIT)
+			write(STDERR_FILENO, "Quit (core dumped)\n", 18);
+		else if (WTERMSIG(status) == SIGINT)
+			write(STDERR_FILENO, "\n", 1);
+	}
+	else if (WIFEXITED(status))
+		g_exit_status = WEXITSTATUS(status);
 }

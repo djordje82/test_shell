@@ -51,3 +51,32 @@ int	update_env_value(char *name, char *value, t_shell *shell)
 	return (0);
 }
 
+/*This function removes an environment variable from the shell's environment array. It returns 1 if the variable is found and removed, or 0 if the variable is not found.*/
+int	remove_env_var(char *name, t_shell *shell)
+{
+	int		i;
+	int		j;
+	int		name_len;
+
+	name_len = ft_strlen(name);
+	i = 0;
+	while (shell->envp[i])
+	{
+		if (ft_strncmp(shell->envp[i], name, name_len) == 0
+			&& (shell->envp[i][name_len] == '='
+			|| shell->envp[i][name_len] == '\0'))
+		{
+			free(shell->envp[i]);
+			j = i;
+			while (shell->envp[j + 1])
+			{
+				shell->envp[j] = shell->envp[j + 1];
+				j++;
+			}
+			shell->envp[j] = NULL;
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
