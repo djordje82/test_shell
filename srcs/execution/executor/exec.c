@@ -31,6 +31,14 @@ int	execute_commands(t_shell *shell)
 	prev_pipe[0] = -1;
 	prev_pipe[1] = -1;
 	last_pid = 0;
+
+	// Validate first command
+    if (current && !current->is_valid)
+    {
+        print_command_not_found(current);
+        return (127);
+    }
+
 	setup_execution_signals(&sa_old_int, &sa_old_quit);
 	if (current && !current->next && current->args
 		&& is_builtin(current->args[0]))
@@ -38,7 +46,8 @@ int	execute_commands(t_shell *shell)
 	while (current)
 	{
 		if (!setup_pipeline_steps(current, prev_pipe, &last_pid, shell))
-			return (1);
+			//return (1);
+			break;
 		current = current->next;
 	}
 	wait_for_children(last_pid);

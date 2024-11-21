@@ -10,7 +10,7 @@ int	is_builtin(char *cmd)
 }
 
 /*This function routes a builtin command to the appropriate handler function.*/
-int	route_builtin_cmd(t_command *cmd, t_shell *shell)
+int	handle_builtin_cmd(t_command *cmd, t_shell *shell)
 {
 	if (ft_strncmp(cmd->args[0], "echo", 5) == 0)
 		return (ft_echo(cmd->args, shell));
@@ -43,7 +43,7 @@ int	execute_single_builtin(t_command *cmd, t_shell *shell)
 		restore_std_fds(stdin_fd, stdout_fd);
 		return (g_exit_status);
 	}
-	status = route_builtin_cmd(cmd, shell);
+	status = handle_builtin_cmd(cmd, shell);
 	restore_std_fds(stdin_fd, stdout_fd);
 	if (ft_strncmp(cmd->args[0], "exit", 5) == 0 && status != 1)
 	{

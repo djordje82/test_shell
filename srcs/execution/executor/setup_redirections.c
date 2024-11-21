@@ -72,12 +72,14 @@ static int	handle_output_redirection(t_command *cmd)
 	return (1);
 }
 
-/*This function sets up input and output redirections for a command. It handles regular input and heredoc redirections, and returns 1 if no errors occurred, otherwise 0.*/
+
 int	setup_redirections(t_command *cmd)
 {
 	int	status;
 	int	had_error;
 
+	if (!cmd)
+		return (0);
 	had_error = 0;
 	if (cmd->infile)
 	{
@@ -85,13 +87,16 @@ int	setup_redirections(t_command *cmd)
 		if (!status)
 			had_error = 1;
 	}
-	if (cmd->outfile)
+	if (cmd->outfile && !had_error)
 	{
 		status = handle_output_redirection(cmd);
 		if (!status)
 			had_error = 1;
 	}
 	if (had_error)
+	{
 		g_exit_status = 1;
+		return (0);
+	}
 	return (1);
 }

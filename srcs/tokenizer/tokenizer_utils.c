@@ -50,3 +50,10 @@ t_token_type	get_token_type(char c)
 		return (TOKEN_ENV);
 	return (TOKEN_WORD);
 }
+
+/*This function skips over any whitespace characters in the input string.*/
+void	skip_whitespace(const char *input, int *pos)
+{
+	while (input[*pos] && is_whitespace(input[*pos]))
+		(*pos)++;
+}

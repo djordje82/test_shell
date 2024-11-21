@@ -80,3 +80,28 @@ int	remove_env_var(char *name, t_shell *shell)
 	}
 	return (0);
 }
+
+void	update_shell_level(t_shell *shell)
+{
+	char	*current_level;
+	int		level;
+	char	*new_level;
+
+	current_level = get_env_value("SHLVL", shell);
+	if (!current_level || !*current_level)
+		level = 1;
+	else
+	{
+		level = ft_atoi(current_level);
+		if (level < 0)
+			level = 0;
+		else if (level >= 999) //maximum level shell can have
+			level = 1;
+		level++;
+	}
+	new_level = ft_itoa(level);
+	if (!new_level)
+		return ;
+	update_env_value("SHLVL", new_level, shell);
+	free(new_level);
+}

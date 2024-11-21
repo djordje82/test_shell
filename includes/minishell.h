@@ -37,8 +37,8 @@
 
 /*ERROR CODES*/
 # define EXIT_SUCCESS 0
-#define EXIT_ERROR_NUMERIC 2
-#define EXIT_ERROR_ARGS 1
+# define EXIT_ERROR_NUMERIC 2
+# define EXIT_ERROR_ARGS 1
 # define EXIT_FAILURE 1
 # define EXIT_ERROR 2
 # define EXIT_NOT_FOUND 127
@@ -82,7 +82,7 @@
 
 /*GLOBAL VARIABLE*/
 //extern int	g_exit_status;
-extern sig_atomic_t	g_exit_status;
+extern volatile sig_atomic_t	g_exit_status;
 
 typedef enum e_char_type
 {
@@ -91,9 +91,9 @@ typedef enum e_char_type
 	CHAR_PIPE,       // |
 	CHAR_REDIR_IN,   // <
 	CHAR_REDIR_OUT,  // >
-	CHAR_QUOTE,      // '
+	CHAR_SQUOTE,      // '
 	CHAR_DQUOTE,     // "
-	CHAR_SEMICOLON,  // ; (for future implementation)
+	//CHAR_SEMICOLON,  // ; (for future implementation)
     //CHAR_ENV,      // \ (for future implementation)
 	CHAR_NORMAL     // Regular characters
 } t_char_type;
@@ -122,7 +122,7 @@ typedef struct s_node
 	char	**outfile;
 	char	**heredoc;
 	int		*append;
-	int		**hd_pipe;
+	//int		**hd_pipe;
 	int		*fd_in;
 	int		*fd_out;
 	int		n_input;
@@ -142,8 +142,10 @@ typedef struct s_command
 	char		**args;
 	char		*infile;
 	char		*outfile;
+	//int			is_valid;
 	int			in_type;
 	int			out_type;
+	bool		is_valid;
 	struct s_command	*next;
 	struct s_command	*prev;
 }			t_command;
@@ -162,7 +164,7 @@ typedef struct s_shell
 
 /*MAIN*/
 void			initialize_shell(t_shell *shell, char **envp);
-int				setup_minishell(t_shell *shell, char **env, int argc, char **argv);
+int				prevent_batch_and_init(t_shell *shell, char **env, int argc, char **argv);
 void			run_shell_loop(t_shell *shell);
 void			process_shell_input(char *input, t_shell *shell);
 void			reset_shell_state(t_shell *shell);
@@ -176,6 +178,7 @@ t_token	*tokenize_word(const char *input, int *i, t_shell *shell);
 t_token *tokenize_pipe(const char *input, int *pos);
 t_token	*tokenize_quoted_str(char *input, int *i, t_shell *shell);
 t_token *get_next_token(const char *input, int *pos, t_shell *shell);
+void	skip_whitespace(const char *input, int *pos);
 
 /*TOKENIZER /EXTRACT WORD*/
 char	*append_word_part(char *result, const char *input, int start, int len);
@@ -194,8 +197,9 @@ char			**insert_arg_array(char **orig_args, int pos, char **expanded);
 
 
 /*PARSER*/
-t_command		*parse_command(t_token **token);
+t_command	*parse_command(t_token **token);
 int				parse_tokens(t_shell *shell);
+bool			validate_command(t_command *cmd, t_shell *shell);
 
 /*PARSER /UTILS*/
 t_command		*create_cmd_node(void);
@@ -248,7 +252,7 @@ void			cleanup_cmd_list(t_command *cmd);
 int				cleanup_and_exit(char *err_msg, char *src, int err_code, t_shell *shell);
 
 /*UTILS*/
-t_char_type		identify_shell_char(char c);
+t_char_type		find_special_chars(char c);
 
 
 /*UTILS /CHECKERS*/
@@ -263,7 +267,8 @@ int				is_word_delimiter(char c);
 char			**insert_arg_array(char **orig_args, int pos, char **to_insert);
 int				update_command_args(t_command *cmd, char **expanded, int pos, t_shell *shell);
 
-/*UTILS /ERRORS*/	
+/*UTILS
+cff5c78 /ERRORS*/	
 void			print_command_error(char *cmd, char *error_msg);
 void			print_redir_error(char *msg, char *file);
 int				print_syntx_err(char *err_msg, char *src);
@@ -272,17 +277,17 @@ void			print_error(char *err_msg, char *src);
 
 /*UTILS /SIGNALS*/
 void			setup_signals(void);
-void			setup_child_signals(void);
+void			setup_child_signal(void);
 void			handle_eof(t_shell *shell);
 void			disable_ctrl_chars(void);
-void			signal_handler(int signum);
+void			interactive_signal_handler(int signum);
 void			signal_handler_child(int signum);
-void			setup_execution_signals(struct sigaction *sa_old_int, \
+void			setup_execution_signals(struct sigaction *sa_old_int, 
 				struct sigaction *sa_old_quit);
 
 /*UTILS /SHELL*/
 void			run_shell_loop(t_shell *shell);
-int				setup_minishell(t_shell *shell, char **env, int argc, char **argv);
+int				prevent_batch_and_init(t_shell *shell, char **env, int argc, char **argv);
 void			initialize_shell(t_shell *shell, char **envp);
 int				validate_shell_var(char *name);
 
@@ -305,6 +310,7 @@ char			*create_env_string(char *name, char *value);
 int				update_env_value(char *name, char *value, t_shell *shell);
 char			**copy_env(char **envp);
 int				add_env_var(char *arg, t_shell *shell);
+void			update_shell_level(t_shell *shell);
 //void			print_env_var(char *env_var);
 
 /*BUILTINS /ENV*/
@@ -315,7 +321,7 @@ int				is_valid_n_flag(char *arg);
 void			print_args(char **args, int start, int n_flag);
 
 /*BUILTINS /EXECUTION*/
-int				route_builtin_cmd(t_command *cmd, t_shell *shell);
+int				handle_builtin_cmd(t_command *cmd, t_shell *shell);
 
 /*BUILTINS /CD*/
 char			*get_home_dir(t_shell *shell);
@@ -346,6 +352,7 @@ void			restore_std_fds(int stdin_fd, int stdout_fd);
 void			setup_pipe_redirections(int *prev_pipe, int *pipe_fd);
 int				setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 		t_shell *shell);
+void			close_pipe(int *prev_pipe, int *pipe_fd);
 
 
 /*EXECUTOR /PROCESSES*/
@@ -357,7 +364,7 @@ void			wait_for_children(pid_t last_pid);
 
 /*EXECUTOR /UTILS*/
 int				is_builtin(char *cmd);
-int				route_builtin_cmd(t_command *cmd, t_shell *shell);
+int				handle_builtin_cmd(t_command *cmd, t_shell *shell);
 char			*get_cmd_path(char *cmd, char **paths);
 char			*find_command_path(char *cmd, t_shell *shell);
 
@@ -377,7 +384,7 @@ int				setup_heredoc(t_command *cmd);
 
 
 /*EXECUTOR /EXTERNAL AND UTILS*/
-int				execute_external_cmd(t_command *cmd, t_shell *shell);
+int				handle_external_cmd(t_command *cmd, t_shell *shell);
 void			handle_wait_status(int status);
 int				handle_wildcard_expansion(t_command *cmd, t_shell *shell);
 int	execute_external_single_cmd(t_command *cmd, char *cmd_path,

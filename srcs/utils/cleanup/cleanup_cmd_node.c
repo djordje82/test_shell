@@ -76,10 +76,10 @@ void	cleanup_command_node(t_node *node)
 		ft_free_array((void **)node->args, -1);
 		node->args = NULL;
 	}
-	if (node->hd_pipe)
+	/* if (node->hd_pipe)
 	{
 		ft_free_array((void **)node->hd_pipe, node->n_input);
 		node->hd_pipe = NULL;
-	}
+	} */
 	free(node);
 }

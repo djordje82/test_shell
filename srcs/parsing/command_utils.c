@@ -24,6 +24,7 @@ t_command	*create_cmd_node(void)
 	cmd->outfile = NULL;
 	cmd->in_type = 0;
 	cmd->out_type = 0;
+	cmd->is_valid = false;
 	cmd->next = NULL;
 	return (cmd);
 }
@@ -45,3 +46,33 @@ void	add_cmd_node(t_command **cmd_list, t_command *new_cmd)
 	new_cmd->prev = current;
 }
 
+/* bool validate_command(t_command *cmd, t_shell *shell)
+{
+    char *cmd_path;
+
+    // No command or empty command
+    if (!cmd || !cmd->args || !cmd->args[0])
+    {
+        cmd->is_valid = false;
+        return (false);
+    }
+
+    // Check if it's a builtin
+    if (is_builtin(cmd->args[0]))
+    {
+        cmd->is_valid = true;
+        return (true);
+    }
+
+    // Check if external command exists
+    cmd_path = find_command(cmd->args[0], shell->envp);
+    if (!cmd_path)
+    {
+        cmd->is_valid = false;
+        return (false);
+    }
+
+    free(cmd_path);
+    cmd->is_valid = true;
+    return (true);
+} */

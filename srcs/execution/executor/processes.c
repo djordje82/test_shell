@@ -26,7 +26,7 @@ void	handle_pipeline_child(t_command *cmd, int *prev_pipe, int *pipe_fd,
 	}
 	else
 	{
-		setup_child_signals();
+		setup_child_signal();
 		status = execute_single_command(cmd, shell);
 	}
 	close(saved_stdout);
@@ -34,7 +34,22 @@ void	handle_pipeline_child(t_command *cmd, int *prev_pipe, int *pipe_fd,
 	exit(status);
 }
 
-void	handle_parent_process(int *prev_pipe, int *pipe_fd)
+void handle_parent_process(int *prev_pipe, int *pipe_fd)
+{
+    close_pipe(prev_pipe, NULL);  // Close previous pipe ends
+    
+    if (pipe_fd[1] != -1)  // If there's a next command
+    {
+        prev_pipe[0] = pipe_fd[0];
+        prev_pipe[1] = pipe_fd[1];
+    }
+    else
+    {
+        close_pipe(NULL, pipe_fd);
+    }
+}
+
+/* void	handle_parent_process(int *prev_pipe, int *pipe_fd)
 {
 	if (prev_pipe[0] != -1)
 	{
@@ -46,7 +61,7 @@ void	handle_parent_process(int *prev_pipe, int *pipe_fd)
 		prev_pipe[0] = pipe_fd[0];
 		prev_pipe[1] = pipe_fd[1];
 	}
-}
+} */
 
 void	wait_for_children(pid_t last_pid)
 {

@@ -33,12 +33,13 @@ int	execute_external_single_cmd(t_command *cmd, char *cmd_path, t_shell *shell)
 }
 
 /*This function executes an external command. It handles wildcard expansion, checks for command not found, and sets up pipeline execution if necessary.*/
-int	execute_external_cmd(t_command *cmd, t_shell *shell)
+int	handle_external_cmd(t_command *cmd, t_shell *shell)
 {
 	char	*cmd_path;
 
-	if (!handle_wildcard_expansion(cmd, shell))
-		return (1);
+//	if (!handle_wildcard_expansion(cmd, shell))
+//		return (1);
+	signal(SIGINT, SIG_IGN);
 	if (!cmd->args || !cmd->args[0] || !cmd->args[0][0])
 		return (0);
 	cmd_path = find_command_path(cmd->args[0], shell);

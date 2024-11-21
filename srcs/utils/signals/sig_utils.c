@@ -12,15 +12,9 @@
 
 #include "minishell.h"
 
-void	handle_eof(t_shell *shell)
+void	interactive_signal_handler(int signum)
 {
-	write(STDOUT_FILENO, "exit\n", 5);
-	shell->exit_status = CTRL_D_EXIT_CODE;
-	shell->running = false;
-}
-
-void	signal_handler(int signum)
-{
+	g_exit_status = 1;
 	if (signum == SIGINT)
 	{
 		g_exit_status = 130; // 128 + SIGINT(2)
@@ -36,18 +30,9 @@ void	signal_handler(int signum)
 	}
 }
 
-void	signal_handler_child(int signum)
+void	handle_eof(t_shell *shell)
 {
-	if (signum == SIGINT)
-	{
-		g_exit_status = 130; // 128 + SIGINT(2)
-		write(STDERR_FILENO, "\n", 1);
-		exit(130);
-	}
-	else if (signum == SIGQUIT)
-	{
-		g_exit_status = 131; // 128 + SIGQUIT(3)
-		write(STDERR_FILENO, "Quit (core dumped)\n", 18);
-		exit(131);
-	}
+	write(STDOUT_FILENO, "exit\n", 5);
+	shell->exit_status = CTRL_D_EXIT_CODE;
+	shell->running = false;
 }

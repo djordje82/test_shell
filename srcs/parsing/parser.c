@@ -40,6 +40,7 @@ t_command	*parse_command(t_token **token)
 	cmd = create_cmd_node();
 	if (!cmd)
 		return (NULL);
+	cmd->is_valid = true;
 	while (*token && (*token)->type != TOKEN_PIPE)
 	{
 		if ((*token)->type == TOKEN_RDRCT_IN
@@ -48,22 +49,38 @@ t_command	*parse_command(t_token **token)
 			|| (*token)->type == TOKEN_HEREDOC)
 		{
 			if (!parse_redirections(token, cmd))
+			{
+				cmd->is_valid = false;
 				return (cleanup_cmd_list(cmd), NULL);
+			}
 			continue ;  // Add continue here to skip the extra token advance
 		}
 		else if ((*token)->type == TOKEN_WORD || (*token)->type == TOKEN_QUOTE
 			|| (*token)->type == TOKEN_DQUOTE)
 		{
 			if (!parse_cmd_arguments(token, cmd))
+			{
+				cmd->is_valid = false;
 				return (cleanup_cmd_list(cmd), NULL);
+			}
 			continue ;
 		}
-		if (*token && (*token)->type != TOKEN_PIPE)
-			*token = (*token)->next;
+		else
+		{
+			if (*token && (*token)->type != TOKEN_PIPE)
+				*token = (*token)->next;
+		}
 	}
 	i = 0;
 	while (cmd->args && cmd->args[i])
 		i++;
+	/* if (i == 0)
+	{
+		cmd->is_valid = false;
+		return(cmd);
+	}
+	//validate_command(cmd, shell);
+	cmd->is_valid = true; */
 	return (cmd);
 }
 

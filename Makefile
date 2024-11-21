@@ -52,7 +52,6 @@ SRCS =	main.c \
 		utils/signals/signals.c \
 		utils/signals/sig_utils.c \
 		utils/args_utils.c \
-		utils/shell_utils.c \
 		utils/utils.c \
 		utils/checkers.c \
 		parsing/parser.c \

@@ -29,7 +29,7 @@ void	cleanup_shell_data(t_shell *shell)
 	}
 	cleanup_execution_data(shell);
 	cleanup_envp(shell);
-	rl_clear_history();
+	//rl_clear_history();
 }
 
 /*This function prints an error message and exits the program. It also cleans up the shell data.*/

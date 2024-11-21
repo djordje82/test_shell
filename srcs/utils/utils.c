@@ -13,7 +13,7 @@
 #include "minishell.h"
 
 /*This function returns the type of a character based on its value. It checks for whitespace | pipe | redirection | quote | double quote | semicolon | normal character.*/
-t_char_type	identify_shell_char(char c)
+t_char_type	find_special_chars(char c)
 {
 	if (c == ' ' || c == '\t' || c == '\n' || c == '\r')
 		return (CHAR_WHITESPACE);
@@ -24,31 +24,29 @@ t_char_type	identify_shell_char(char c)
 	if (c == '>')
 		return (CHAR_REDIR_OUT);
 	if (c == '\'')
-		return (CHAR_QUOTE);
+		return (CHAR_SQUOTE);
 	if (c == '\"')
 		return (CHAR_DQUOTE);
-	if (c == ';')
-		return (CHAR_SEMICOLON);
 	return (CHAR_NORMAL);
 }
-/*TO TEST
-t_char_type	identify_shell_char(char c)
+
+/*This function checks if a variable name is valid. It checks if the name is not empty | if the first character is a digit | if the name contains an equal sign.*/
+int	validate_shell_var(char *name)
 {
-	if ((c > 0 && c < 32) && c != ' ' && c != '\t' && c != '\n' && c != '\r')
-		return (CHAR_INVALID);
-	if (c == ' ' || c == '\t' || c == '\n' || c == '\r')
-		return (CHAR_WHITESPACE);
-	if (c == '|')
-		return (CHAR_PIPE);
-	if (c == '<')
-		return (CHAR_REDIR_IN);
-	if (c == '>')
-		return (CHAR_REDIR_OUT);
-	if (c == '\'')
-		return (CHAR_QUOTE);
-	if (c == '\"')
-		return (CHAR_DQUOTE);
-	if (c == ';')
-		return (CHAR_SEMICOLON);
-	return (CHAR_NORMAL);
-}*/
+	int	i;
+
+	if (!name || !*name || ft_isdigit(name[0]))
+		return (0);
+	i = 0;
+	while (name[i])
+	{
+		if (name[i] == '=')
+		{
+			break ;
+		}
+		if (!ft_isalnum(name[i]) && name[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
+}

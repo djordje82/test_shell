@@ -22,7 +22,7 @@ static int	execute_command_type(t_command *cmd, t_shell *shell,
 
 	if (is_builtin(cmd->args[0]))
 	{
-		status = route_builtin_cmd(cmd, shell);
+		status = handle_builtin_cmd(cmd, shell);
 		if (ft_strncmp(cmd->args[0], "exit", 5) == 0 && status != 1)
 		{
 			restore_std_fds(stdin_fd, stdout_fd);
@@ -30,7 +30,7 @@ static int	execute_command_type(t_command *cmd, t_shell *shell,
 		}
 	}
 	else
-		status = execute_external_cmd(cmd, shell);
+		status = handle_external_cmd(cmd, shell);
 	return (status);
 }
 
