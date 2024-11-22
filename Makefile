@@ -26,41 +26,41 @@ OBJS_DIR = objs
 
 # Source files
 SRCS =	main.c \
-		execution/builtins/ft_cd.c \
-		execution/builtins/ft_echo.c \
-		execution/builtins/ft_env.c \
-		execution/builtins/ft_exit.c \
-		execution/builtins/ft_export.c \
-		execution/builtins/ft_pwd.c \
-		execution/builtins/ft_unset.c \
-		execution/executor/exec.c \
-		execution/executor/setup_redirections.c \
-		execution/executor/exec_utils.c \
-		execution/executor/exec_external.c \
-		execution/executor/exec_external_utils.c \
-		execution/executor/exec_single_cmd.c \
-		execution/executor/exec_builtins.c \
-		execution/executor/exec_pipeline.c \
-		execution/executor/processes.c \
-		execution/executor/heredoc.c \
+		builtins/ft_cd.c \
+		builtins/ft_echo.c \
+		builtins/ft_env.c \
+		builtins/ft_exit.c \
+		builtins/ft_export.c \
+		builtins/ft_pwd.c \
+		builtins/ft_unset.c \
+		executor/exec.c \
+		executor/setup_redirections.c \
+		executor/exec_utils.c \
+		executor/exec_external.c \
+		executor/exec_external_utils.c \
+		executor/exec_single_cmd.c \
+		executor/exec_builtins.c \
+		executor/exec_pipeline.c \
+		executor/processes.c \
+		executor/heredoc.c \
 		utils/cleanup/cleanup_shell.c \
 		utils/cleanup/cleanup_cmd_node.c \
 		utils/cleanup/cleanup_utils.c \
 		utils/env/env_modify.c \
 		utils/env/env_utils.c \
 		utils/errors/print_errors.c \
-		utils/signals/signals.c \
-		utils/signals/sig_utils.c \
 		utils/args_utils.c \
 		utils/utils.c \
 		utils/checkers.c \
-		parsing/parser.c \
-		parsing/parser_utils.c \
-		parsing/parse_redirections.c \
-		parsing/command_utils.c \
-		parsing/wildcards.c \
-		parsing/wildcards_utils.c \
-		parsing/env_expansion.c \
+		parser/parser.c \
+		parser/parser_utils.c \
+		parser/parse_redirections.c \
+		parser/command_utils.c \
+		parser/wildcards.c \
+		parser/wildcards_utils.c \
+		parser/env_expansion.c \
+		signals/signals.c \
+		signals/sig_utils.c \
 		tokenizer/tokenizer.c \
 		tokenizer/tokenize_quoted.c \
 		tokenizer/tokenizer_utils.c \

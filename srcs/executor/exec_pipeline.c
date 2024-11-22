@@ -102,7 +102,7 @@ int setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
         }
         // If not first command, continue pipeline
     }
-    //signal(SIGINT, SIG_IGN);
+    // signal(SIGINT, SIG_IGN);
     // Initialize pipeline only if command is valid or not first
     if (!init_pipeline(current, pipe_fd, shell))
         return (0);

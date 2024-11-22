@@ -12,7 +12,8 @@
 
 #include "minishell.h"
 
-/*This function is used to extract a quoted string from the input string. It handles both single and double quotes.*/
+/*This function is used to extract a quoted string from the input string. \ 
+It handles both single and double quotes.*/
 char	*extract_quoted(char *input, int *pos, char quote_type)
 {
 	int		start;
@@ -36,7 +37,8 @@ char	*extract_quoted(char *input, int *pos, char quote_type)
 	return (content);
 }
 
-/*This function is used to tokenize a quoted strings in shell input. It handles both single and double quotes.*/
+/*This function is used to tokenize a quoted strings in shell input. \ 
+It handles both single and double quotes.*/
 t_token *tokenize_quoted_str(char *input, int *i, t_shell *shell)
 {
 	char		*value;

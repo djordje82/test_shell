@@ -12,7 +12,9 @@
 
 #include "minishell.h"
 
-/*This function is used to create a token list for wildcard matches. It creates a token for each match and links them together in a linked list. It returns the head of the token list or NULL if there is an error.*/
+/*This function is used to create a token list for wildcard matches. \ 
+It creates a token for each match and links them together in a linked list. \ 
+It returns the head of the token list or NULL if there is an error.*/
 static t_token	*create_wildcard_token_list(char **matches)
 {
 	t_token	*first;
@@ -40,7 +42,9 @@ static t_token	*create_wildcard_token_list(char **matches)
 	return (first);
 }
 
-/*This function is used to tokenize a word from the input string. It extracts the word, expands environment variables, and creates a token list for wildcard matches. It returns the token list or NULL if there is an error.*/
+/*This function is used to tokenize a word from the input string. \ 
+It extracts the word, expands environment variables, and creates a token list \ 
+for wildcard matches. It returns the token list or NULL if there is an error.*/
 t_token	*tokenize_word(const char *input, int *i, t_shell *shell)
 {
 	char	*value;
