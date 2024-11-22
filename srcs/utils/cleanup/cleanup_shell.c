@@ -33,7 +33,7 @@ void	cleanup_shell_data(t_shell *shell)
 }
 
 /*This function prints an error message and exits the program. It also cleans up the shell data.*/
-int	cleanup_and_exit(char *err_msg, char *src, int err_code, t_shell *shell)
+/* int	cleanup_and_exit(char *err_msg, char *src, int err_code, t_shell *shell)
 {
 	print_error(err_msg, src);
 	if (shell)
@@ -42,4 +42,16 @@ int	cleanup_and_exit(char *err_msg, char *src, int err_code, t_shell *shell)
 		cleanup_shell_data(shell);
 	}
 	exit(err_code);
+} */
+int cleanup_and_exit(char *err_msg, char *src, int err_code, t_shell *shell)
+{
+    print_error(err_msg, src);
+    
+    if (shell)
+    {
+        shell->exit_status = err_code;
+        cleanup_shell_data(shell);
+    }
+    
+    exit(err_code);
 }

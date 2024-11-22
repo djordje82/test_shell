@@ -31,7 +31,7 @@ int	ft_unset(char **args, t_shell *shell)
 	i = 1;
 	while (args[i])
 	{
-		if (!validate_shell_var(args[i]))
+		if (!validate_env_var(args[i]))
 		{
 			print_identifier_error(args[i]);
 			status = 1;

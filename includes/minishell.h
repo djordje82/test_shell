@@ -29,7 +29,6 @@
 # include <errno.h>
 # include <termios.h>
 # include <limits.h>
-//# include <glob.h> //for wildcard expansion
 # include <dirent.h> //for wildcard expansion opendir(), readdir(), closedir(), DIR
 
 # define SHELL_NAME "minishell"
@@ -69,19 +68,16 @@
 # define ERR_SYNTAX_REDIR "minishell: syntax error near unexpected token `redirection'"
 # define ERR_CMD "minishell: command not found"
 # define ERR_PERM "minishell: Permission denied"
-# define ERR_NOFILE "minishell: No such file or directory"
+# define ERR_NOFILE "No such file or directory"
 
 #define REDIR_TRUNC 1
 #define REDIR_APPEND 2
 #define FILE_PERMS 0644
 #define REDIR_INPUT 1
 #define REDIR_HEREDOC 2
-//# define IS_CTRL(c) ((c > 0 && c < 32) && \
-//	(c != ' ' && c != '\t' && c != '\n' && c != '\r'))
-//# define IS_SPACE(c) (c == ' ' || c == '\t' || c == '\n' || c == '\r')
 
 /*GLOBAL VARIABLE*/
-//extern int	g_exit_status;
+
 extern volatile sig_atomic_t	g_exit_status;
 
 typedef enum e_char_type
@@ -107,7 +103,7 @@ typedef enum e_token_type
 	TOKEN_APPEND,		// >>
 	TOKEN_HEREDOC,		// <<
 	TOKEN_SPACE,
-	TOKEN_QUOTE,		// '
+	TOKEN_SQUOTE,		// '
 	TOKEN_DQUOTE,		// "
 	TOKEN_ENV			// $
 }	t_token_type;
@@ -289,7 +285,7 @@ void			setup_execution_signals(struct sigaction *sa_old_int,
 void			run_shell_loop(t_shell *shell);
 int				prevent_batch_and_init(t_shell *shell, char **env, int argc, char **argv);
 void			initialize_shell(t_shell *shell, char **envp);
-int				validate_shell_var(char *name);
+int				validate_env_var(char *name);
 
 /*ENVIRONMENT*/
 char			*get_env_value(char *name, t_shell *shell);
@@ -330,7 +326,7 @@ int				update_pwd_vars(t_shell *shell);
 char			*expand_path(char *path, t_shell *shell);
 
 /*BUILTINS /EXPORT*/
-int				validate_shell_var(char *name);
+int				validate_env_var(char *name);
 void			print_export_error(char *arg);
 //char			*extract_env_var_name(char *arg);
 char			*get_var_value(char *arg);
@@ -340,7 +336,7 @@ char			**copy_env(char **envp);
 void			print_exported_var(char *var);
 
 /*BUILTINS /UNSET*/
-int				validate_shell_var(char *name);
+int				validate_env_var(char *name);
 //void			print_identifier_error(char *arg);
 
 

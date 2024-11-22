@@ -46,29 +46,40 @@ static int	handle_input_redirection(t_command *cmd)
 	return (1);
 }
 
+static void	print_file_error(const char *filename)
+{
+    ft_putstr_fd("minishell: ", STDERR_FILENO);
+    ft_putstr_fd(filename, STDERR_FILENO);
+    ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+}
+
 /*This function handles output redirection. It opens the output file with the appropriate flags and duplicates the file descriptor to stdout.*/
 static int	handle_output_redirection(t_command *cmd)
 {
 	int	fd;
 	int	flags;
 
+	if (!cmd->outfile || !cmd->out_type)
+		return (1);
 	flags = O_WRONLY | O_CREAT;
 	if (cmd->out_type == REDIR_TRUNC)
 		flags |= O_TRUNC;
 	else if (cmd->out_type == REDIR_APPEND)
 		flags |= O_APPEND;
-	if (cmd->out_type)
+
+	fd = open(cmd->outfile, flags, FILE_PERMS);
+	if (fd == -1)
 	{
-		fd = open(cmd->outfile, flags, FILE_PERMS);
-		if (fd == -1)
-			return (cleanup_and_exit(ERR_PERM, cmd->outfile, 1, NULL));
-		if (dup2(fd, STDOUT_FILENO) == -1)
-		{
-			close(fd);
-			return (0);
-		}
-		close(fd);
+		//return (cleanup_and_exit(ERR_PERM, cmd->outfile, 1, NULL));
+		print_file_error(cmd->outfile);
+		return (0);
 	}
+	if (dup2(fd, STDOUT_FILENO) == -1)
+	{
+		close(fd);
+		return (0);
+	}
+	close(fd);
 	return (1);
 }
 

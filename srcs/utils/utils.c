@@ -12,7 +12,9 @@
 
 #include "minishell.h"
 
-/*This function returns the type of a character based on its value. It checks for whitespace | pipe | redirection | quote | double quote | semicolon | normal character.*/
+/*This function returns the type of a character based on its value. \ 
+It checks for whitespace | pipe | redirection | quote \ 
+| double quote | semicolon | normal character.*/
 t_char_type	find_special_chars(char c)
 {
 	if (c == ' ' || c == '\t' || c == '\n' || c == '\r')
@@ -30,8 +32,10 @@ t_char_type	find_special_chars(char c)
 	return (CHAR_NORMAL);
 }
 
-/*This function checks if a variable name is valid. It checks if the name is not empty | if the first character is a digit | if the name contains an equal sign.*/
-int	validate_shell_var(char *name)
+/*This function checks if a variable name is valid. \ 
+It checks if the name is not empty | if the first character is a digit | \ 
+if the name contains an equal sign.*/
+int	validate_env_var(char *name)
 {
 	int	i;
 

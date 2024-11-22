@@ -43,7 +43,7 @@ t_token_type	get_token_type(char c)
 	if (c == '>')
 		return (TOKEN_RDRCT_OUT);
 	if (c == '\'')
-		return (TOKEN_QUOTE);
+		return (TOKEN_SQUOTE);
 	if (c == '\"')
 		return (TOKEN_DQUOTE);
 	if (c == '$')
