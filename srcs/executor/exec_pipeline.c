@@ -132,7 +132,7 @@ int setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 }
 
 /*This function sets up pipe redirections. It duplicates file descriptors to standard input and output, and closes the pipe file descriptors.*/
-void setup_pipe_redirections(int *prev_pipe, int *pipe_fd)
+/* void setup_pipe_redirections(int *prev_pipe, int *pipe_fd)
 {
     // Current order might cause issues with pipe handling
     // Better order:
@@ -147,6 +147,23 @@ void setup_pipe_redirections(int *prev_pipe, int *pipe_fd)
         dup2(prev_pipe[0], STDIN_FILENO);
         close(prev_pipe[0]);
         close(prev_pipe[1]);
+    }
+} */
+
+void setup_pipe_redirections(int *prev_pipe, int *pipe_fd)
+{
+    // Set input from previous pipe if it exists
+    if (prev_pipe && prev_pipe[0] != -1)
+    {
+        dup2(prev_pipe[0], STDIN_FILENO);
+        close(prev_pipe[0]);
+    }
+
+    // Set output to current pipe if it exists
+    if (pipe_fd && pipe_fd[1] != -1)
+    {
+        dup2(pipe_fd[1], STDOUT_FILENO);
+        close(pipe_fd[1]);
     }
 }
 

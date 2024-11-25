@@ -23,6 +23,14 @@ int	print_syntx_err(char *err_msg, char *src)
 	return (0);
 }
 
+void print_file_error(const char *filename, const char *error_msg)
+{
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(filename, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	ft_putendl_fd(error_msg, STDERR_FILENO);
+}
+
 /*This function prints a command error message. It prepends "minishell: " to the command and appends the error message to it.*/
 void	print_command_error(char *cmd, char *error_msg)
 {

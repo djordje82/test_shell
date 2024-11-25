@@ -8,7 +8,7 @@ int	create_process(pid_t *pid, t_shell *shell)
 	return (1);
 }
 
-void	handle_pipeline_child(t_command *cmd, int *prev_pipe, int *pipe_fd,
+/* void	handle_pipeline_child(t_command *cmd, int *prev_pipe, int *pipe_fd,
 		t_shell *shell)
 {
 	int	status;
@@ -32,6 +32,42 @@ void	handle_pipeline_child(t_command *cmd, int *prev_pipe, int *pipe_fd,
 	close(saved_stdout);
 	close(saved_stdin);
 	exit(status);
+} */
+
+void handle_pipeline_child(t_command *cmd, int *prev_pipe, int *pipe_fd,
+        t_shell *shell)
+{
+    int status;
+    
+    // No need to save stdout/stdin here
+    // The child process will exit anyway
+
+    // Setup pipes first
+    setup_pipe_redirections(prev_pipe, pipe_fd);
+    
+    // Close unused pipe ends immediately
+    if (prev_pipe)
+    {
+        if (prev_pipe[1] != -1)
+            close(prev_pipe[1]);  // Close write end of previous pipe
+    }
+    if (pipe_fd)
+    {
+        if (pipe_fd[0] != -1)
+            close(pipe_fd[0]);    // Close read end of current pipe
+    }
+
+    // Then handle redirections
+    if (!setup_redirections(cmd))
+    {
+        exit(1);
+    }
+
+    // Execute command
+    setup_child_signal();
+    status = execute_single_command(cmd, shell);
+    
+    exit(status);
 }
 
 void handle_parent_process(int *prev_pipe, int *pipe_fd)

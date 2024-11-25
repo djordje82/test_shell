@@ -269,6 +269,7 @@ void			print_command_error(char *cmd, char *error_msg);
 void			print_redir_error(char *msg, char *file);
 int				print_syntx_err(char *err_msg, char *src);
 void			print_error(char *err_msg, char *src);
+void			print_file_error(const char *filename, const char *error_msg);
 
 
 /*UTILS /SIGNALS*/
