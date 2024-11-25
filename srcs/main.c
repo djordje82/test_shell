@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:01:11 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/17 19:07:49 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/25 12:36:00 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	run_shell_loop(t_shell *shell)
 
 	while (shell->running)
 	{
-		input = readline("minishell $");
+		input = readline("minishell$ ");
 		if (!input)
 		{
 			if (isatty(STDIN_FILENO))

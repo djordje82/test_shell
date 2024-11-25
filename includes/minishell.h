@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/14 17:10:36 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/25 12:49:25 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINI_SHELL_H
-# define MINI_SHELL_H
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
 # include <stdio.h>
 # include <stdbool.h>
@@ -40,8 +40,8 @@
 # define EXIT_ERROR_ARGS 1
 # define EXIT_FAILURE 1
 # define EXIT_ERROR 2
-# define EXIT_NOT_FOUND 127
-# define EXIT_NOT_EXECUTABLE 126
+# define CMD_NOT_FOUND 127
+# define CMD_NOT_EXECUTABLE 126
 # define CTRL_D_EXIT_CODE 0
 # define CTRL_C_EXIT_CODE 130
 # define CTRL_BSLASH_EXIT_CODE 131
@@ -55,6 +55,10 @@
 # define EXIT_SIGNAL 140
 # define EXIT_UNEXPECTED 141
 # define EXIT_NOT_IMPLEMENTED 142
+
+# ifndef PATH_MAX
+#  define PATH_MAX 4096
+# endif
 
 /*ERROR MESSAGES*/
 # define ERR_MEM "minishell: memory allocation error"
@@ -71,10 +75,10 @@
 # define ERR_NOFILE "No such file or directory"
 
 #define REDIR_TRUNC 1
-#define REDIR_APPEND 2
+#define REDIR_APPEND 667
 #define FILE_PERMS 0644
 #define REDIR_INPUT 1
-#define REDIR_HEREDOC 2
+#define REDIR_HEREDOC 666
 
 /*GLOBAL VARIABLE*/
 
@@ -82,15 +86,12 @@ extern volatile sig_atomic_t	g_exit_status;
 
 typedef enum e_char_type
 {
-	//CHAR_INVALID,   // Invalid characters
-	CHAR_WHITESPACE, // Space, tab, newline
+	CHAR_WHITESPACE,
 	CHAR_PIPE,       // |
 	CHAR_REDIR_IN,   // <
 	CHAR_REDIR_OUT,  // >
 	CHAR_SQUOTE,      // '
 	CHAR_DQUOTE,     // "
-	//CHAR_SEMICOLON,  // ; (for future implementation)
-    //CHAR_ENV,      // \ (for future implementation)
 	CHAR_NORMAL     // Regular characters
 } t_char_type;
 
@@ -193,7 +194,7 @@ char			**insert_arg_array(char **orig_args, int pos, char **expanded);
 
 
 /*PARSER*/
-t_command	*parse_command(t_token **token);
+t_command		*parse_command(t_token **token);
 int				parse_tokens(t_shell *shell);
 bool			validate_command(t_command *cmd, t_shell *shell);
 
