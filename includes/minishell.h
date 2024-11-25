@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/25 12:49:25 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/11/25 13:28:45 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,10 @@
 # define SHELL_NAME "minishell"
 # define PROMPT "minishell> "
 
+# ifndef PATH_MAX
+#  define PATH_MAX 4096
+# endif
+
 /*ERROR CODES*/
 # define EXIT_SUCCESS 0
 # define EXIT_ERROR_NUMERIC 2
@@ -53,12 +57,8 @@
 # define EXIT_ENV 138
 # define EXIT_MALLOC 139
 # define EXIT_SIGNAL 140
-# define EXIT_UNEXPECTED 141
+//# define EXIT_UNEXPECTED 141
 # define EXIT_NOT_IMPLEMENTED 142
-
-# ifndef PATH_MAX
-#  define PATH_MAX 4096
-# endif
 
 /*ERROR MESSAGES*/
 # define ERR_MEM "minishell: memory allocation error"
@@ -100,7 +100,7 @@ typedef enum e_token_type
 	TOKEN_WORD,
 	TOKEN_PIPE,
 	TOKEN_RDRCT_IN,	// <
-	TOKEN_RDRCT_OUT,	// >
+	TOKEN_RDRCT_OUT,	// >Compiling srcs/tokenizer/tokenize_quoted.c...
 	TOKEN_APPEND,		// >>
 	TOKEN_HEREDOC,		// <<
 	TOKEN_SPACE,

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:53:04 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/15 17:54:27 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/25 14:06:51 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,9 @@ void	print_sorted_env(char **envp)
 	char	*temp;
 	char	**sorted;
 
-	// Create a copy of environment to sort
 	sorted = copy_env(envp);
 	if (!sorted)
 		return ;
-	// Bubble sort the environment variables
 	i = 0;
 	while (sorted[i])
 	{
@@ -47,11 +45,9 @@ void	print_sorted_env(char **envp)
 		}
 		i++;
 	}
-	// Print sorted environment
 	i = 0;
 	while (sorted[i])
 		print_exported_var(sorted[i++]);
-	// Clean up
 	ft_free_array((void **)sorted, -1);
 }
 
@@ -84,22 +80,18 @@ char	**copy_env(char **envp)
 	int		i;
 	int		size;
 
-	// Count environment variables
 	size = 0;
 	while (envp && envp[size])
 		size++;
-	// Allocate array of pointers
 	new_env = (char **)malloc(sizeof(char *) * (size + 1));
 	if (!new_env)
 		return (NULL);
-	// Copy each environment variable
 	i = 0;
 	while (i < size)
 	{
 		new_env[i] = ft_strdup(envp[i]);
 		if (!new_env[i])
 		{
-			// Free all previously allocated strings and the array
 			while (--i >= 0)
 				free(new_env[i]);
 			free(new_env);
@@ -107,7 +99,7 @@ char	**copy_env(char **envp)
 		}
 		i++;
 	}
-	new_env[i] = NULL; // Null terminate the array
+	new_env[i] = NULL;
 	return (new_env);
 }
 
@@ -185,12 +177,11 @@ int	add_new_var(char *arg, t_shell *shell)
 	new_env = malloc(sizeof(char *) * (size + 2));
 	if (!new_env)
 		return (0);
-	// Copy existing environment
+
 	i = 0;
 	while (shell->envp[i])
 	{
 		new_env[i] = ft_strdup(shell->envp[i]);
-			// Make copies instead of moving pointers
 		if (!new_env[i])
 		{
 			ft_free_array((void **)new_env, i);
@@ -198,7 +189,6 @@ int	add_new_var(char *arg, t_shell *shell)
 		}
 		i++;
 	}
-	// Add new variable
 	new_env[i] = ft_strdup(arg);
 	if (!new_env[i])
 	{
@@ -206,7 +196,6 @@ int	add_new_var(char *arg, t_shell *shell)
 		return (0);
 	}
 	new_env[i + 1] = NULL;
-	// Free old environment and update
 	ft_free_array((void **)shell->envp, -1);
 	shell->envp = new_env;
 	return (1);
@@ -214,17 +203,16 @@ int	add_new_var(char *arg, t_shell *shell)
 
 int	ft_export(char **args, t_shell *shell)
 {
-	int i;
-	int status;
-	char *name;
-	char *value;
+	int		i;
+	int		status;
+	char	*name;
+	char	*value;
 
 	if (!args[1])
 	{
 		print_sorted_env(shell->envp);
 		return (0);
 	}
-
 	status = 0;
 	i = 1;
 	while (args[i])
@@ -247,6 +235,5 @@ int	ft_export(char **args, t_shell *shell)
 		}
 		i++;
 	}
-
 	return (status);
 }

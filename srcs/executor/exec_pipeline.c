@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipeline.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/21 17:13:21 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/25 14:18:52 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
         }
         // If not first command, continue pipeline
     }
-    // signal(SIGINT, SIG_IGN);
+    signal(SIGINT, SIG_IGN);
     // Initialize pipeline only if command is valid or not first
     if (!init_pipeline(current, pipe_fd, shell))
         return (0);
@@ -131,24 +131,6 @@ int setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
     return (1);
 }
 
-/*This function sets up pipe redirections. It duplicates file descriptors to standard input and output, and closes the pipe file descriptors.*/
-/* void setup_pipe_redirections(int *prev_pipe, int *pipe_fd)
-{
-    // Current order might cause issues with pipe handling
-    // Better order:
-    if (pipe_fd[1] != -1)
-    {
-        dup2(pipe_fd[1], STDOUT_FILENO);
-        close(pipe_fd[0]);
-        close(pipe_fd[1]);
-    }
-    if (prev_pipe[0] != -1)
-    {
-        dup2(prev_pipe[0], STDIN_FILENO);
-        close(prev_pipe[0]);
-        close(prev_pipe[1]);
-    }
-} */
 
 void setup_pipe_redirections(int *prev_pipe, int *pipe_fd)
 {

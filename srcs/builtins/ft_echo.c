@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:52:07 by dodordev          #+#    #+#             */
-/*   Updated: 2024/10/25 13:25:40 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/25 14:11:35 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int	is_valid_n_flag(char *arg)
 	}
 	return (1);
 }
+
 
 /*This function is used to print the arguments.*/
 void	print_args(char **args, int start, int n_flag)
