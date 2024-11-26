@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_external_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:23 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/15 18:04:25 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/25 17:11:44 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	handle_command_errors(char *cmd_path, char *cmd_name) // TODO: Remove use o
 /*This function executes an external command in a child process. It sets up child signals, handles redirections, and executes the command.*/
 void	execute_external_child(t_command *cmd, char *cmd_path, t_shell *shell)
 {
-	setup_child_signal();
+	init_signals(false);
 	if (!setup_redirections(cmd))
 		exit(1);
 	execve(cmd_path, cmd->args, shell->envp);

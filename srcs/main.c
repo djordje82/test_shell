@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:01:11 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/25 12:36:00 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/11/25 17:11:02 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int	main(int argc, char **argv, char **env)
 		return (cleanup_and_exit("minishell: arguments not allowed", NULL, 1, NULL));
 	(void)argv;
 	initialize_shell(&shell, env);
-	setup_signals();
+	init_signals(true);
 	run_shell_loop(&shell);
 	exit_status = shell.exit_status;
 	cleanup_shell_data(&shell);

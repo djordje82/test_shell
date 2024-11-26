@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:58:51 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/15 17:58:53 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/26 10:53:16 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,10 @@ if (!value)
 /*This function determines the type of token based on the character at the current position. It returns the appropriate token type for the character.*/
 t_token_type	get_token_type(char c)
 {
+	/* if (c == '\'' && c == '$')
+		return (TOKEN_WORD);
+	if (c == '"' && c == '$')
+		return (TOKEN_WORD); */
 	if (c == '|')
 		return (TOKEN_PIPE);
 	if (c == '<')

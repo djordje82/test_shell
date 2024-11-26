@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_expansion.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:12 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/17 17:46:15 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/26 12:06:03 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,10 @@
 /*This function is used to get the content of a variable.*/
 static char	*get_var_content(char *str, int *i, t_shell *shell)
 {
+	char	*var_name;
+	char	*var_value;
+	//char	*result;
+
 	if (str[*i + 1] == '?')
 	{
 		*i += 2;
@@ -25,10 +29,16 @@ static char	*get_var_content(char *str, int *i, t_shell *shell)
 		*i += 1;
 		return (ft_strdup("$"));
 	}
-	char	*var_name = extract_env_var_name(&str[*i + 1]);
-	char	*var_value = get_env_value(var_name, shell);
+	var_name = extract_env_var_name(&str[*i + 1]);
+	var_value = get_env_value(var_name, shell);
 	*i += ft_strlen(var_name) + 1;
 	free(var_name);
+	/* if (!var_value)
+		result = ft_strdup("");
+	else
+		result = ft_strdup(var_value);
+	free(var_value);
+	return (result); */
 	return (ft_strdup(var_value ? var_value : ""));
 }
 

@@ -52,7 +52,7 @@ void handle_pipeline_child(t_command *cmd, int *prev_pipe, int *pipe_fd,
 	}
 	if (!setup_redirections(cmd))
 		exit(1);
-	setup_child_signal();
+	init_signals(false);
 	status = execute_single_command(cmd, shell);
 	exit(status);
 }

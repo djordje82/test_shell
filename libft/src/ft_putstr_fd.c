@@ -3,26 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/25 14:14:04 by dodordev          #+#    #+#             */
-/*   Updated: 2023/11/25 14:19:28 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/26 11:33:43 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <errno.h>
 
 void	ft_putstr_fd(const char *s, int fd)
 {
-	int	i;
-
-	if (s != 0)
+	if (!s)
+		return ;
+	while (*s)
 	{
-		i = 0;
-		while (s[i])
+		if (write(fd, s, 1) == -1)
 		{
-			ft_putchar_fd(s[i], fd);
-			i++;
+			if (errno == EPIPE)
+				return ;
+			write (1, "write error", 11);
 		}
+		s++;
 	}
 }
