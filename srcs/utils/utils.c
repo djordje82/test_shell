@@ -32,25 +32,3 @@ t_char_type	find_special_chars(char c)
 	return (CHAR_NORMAL);
 }
 
-/*This function checks if a variable name is valid. \ 
-It checks if the name is not empty | if the first character is a digit | \ 
-if the name contains an equal sign.*/
-int	validate_env_var(char *name)
-{
-	int	i;
-
-	if (!name || !*name || ft_isdigit(name[0]))
-		return (0);
-	i = 0;
-	while (name[i])
-	{
-		if (name[i] == '=')
-		{
-			break ;
-		}
-		if (!ft_isalnum(name[i]) && name[i] != '_')
-			return (0);
-		i++;
-	}
-	return (1);
-}

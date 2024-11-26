@@ -103,14 +103,3 @@ char	*find_command_path(char *cmd, t_shell *shell)
 	ft_free_array((void **)paths, -1);
 	return (cmd_path);
 }*/
-
-/*This function restores the standard file descriptors to their original values.*/
-void	restore_std_fds(int stdin_fd, int stdout_fd)
-{
-	if (dup2(stdin_fd, STDIN_FILENO) == -1)
-		perror("dup2 stdin");
-	if (dup2(stdout_fd, STDOUT_FILENO) == -1)
-		perror("dup2 stdout");
-	close(stdin_fd);
-	close(stdout_fd);
-}

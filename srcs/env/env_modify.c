@@ -12,6 +12,59 @@
 
 #include "minishell.h"
 
+/*This function updates the value of an environment variable in the shell's environment array. It returns 0 on success, or 1 if the variable is not found or if there is an error.*/
+int	update_env_value(char *name, char *value, t_shell *shell)
+{
+	int		index;
+	char	*new_str;
+
+	if (!name || !value || !shell->envp)
+		return (1);
+	index = find_env_index(name, shell->envp);
+	if (index < 0)
+		return (1);
+	new_str = create_env_string(name, value);
+	if (!new_str)
+		return (1);
+	free(shell->envp[index]);
+	shell->envp[index] = new_str;
+	return (0);
+}
+
+int	add_new_var(char *arg, t_shell *shell)
+{
+	char	**new_env;
+	int		size;
+	int		i;
+
+	size = count_env_vars(shell->envp);
+	new_env = malloc(sizeof(char *) * (size + 2));
+	if (!new_env)
+		return (0);
+
+	i = 0;
+	while (shell->envp[i])
+	{
+		new_env[i] = ft_strdup(shell->envp[i]);
+		if (!new_env[i])
+		{
+			ft_free_array((void **)new_env, i);
+			return (0);
+		}
+		i++;
+	}
+	new_env[i] = ft_strdup(arg);
+	if (!new_env[i])
+	{
+		ft_free_array((void **)new_env, i);
+		return (0);
+	}
+	new_env[i + 1] = NULL;
+	ft_free_array((void **)shell->envp, -1);
+	shell->envp = new_env;
+	return (1);
+}
+
 /*This function creates a new environment variable string by concatenating the name and value with an equal sign. It returns the new string or NULL if there is an error.*/
 char	*create_env_string(char *name, char *value)
 {
@@ -30,25 +83,6 @@ char	*create_env_string(char *name, char *value)
 	result[name_len] = '=';
 	ft_strlcpy(result + name_len + 1, value, value_len + 1);
 	return (result);
-}
-
-/*This function updates the value of an environment variable in the shell's environment array. It returns 0 on success, or 1 if the variable is not found or if there is an error.*/
-int	update_env_value(char *name, char *value, t_shell *shell)
-{
-	int		index;
-	char	*new_str;
-
-	if (!name || !value || !shell->envp)
-		return (1);
-	index = find_env_index(name, shell->envp);
-	if (index < 0)
-		return (1);
-	new_str = create_env_string(name, value);
-	if (!new_str)
-		return (1);
-	free(shell->envp[index]);
-	shell->envp[index] = new_str;
-	return (0);
 }
 
 /*This function removes an environment variable from the shell's environment array. It returns 1 if the variable is found and removed, or 0 if the variable is not found.*/
@@ -79,29 +113,4 @@ int	remove_env_var(char *name, t_shell *shell)
 		i++;
 	}
 	return (0);
-}
-
-void	update_shell_level(t_shell *shell)
-{
-	char	*current_level;
-	int		level;
-	char	*new_level;
-
-	current_level = get_env_value("SHLVL", shell);
-	if (!current_level || !*current_level)
-		level = 1;
-	else
-	{
-		level = ft_atoi(current_level);
-		if (level < 0)
-			level = 0;
-		else if (level >= 999) //maximum level shell can have
-			level = 1;
-		level++;
-	}
-	new_level = ft_itoa(level);
-	if (!new_level)
-		return ;
-	update_env_value("SHLVL", new_level, shell);
-	free(new_level);
 }

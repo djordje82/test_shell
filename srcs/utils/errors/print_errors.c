@@ -40,33 +40,6 @@ void	print_command_error(char *cmd, char *error_msg)
 	ft_putchar_fd('\n', STDERR_FILENO);
 }
 
-/*This function prints a redirection error message. It prepends the file name to the error message and prints the result.*/
-void	print_redir_error(char *msg, char *file)
-{
-	ft_putstr_fd(file, STDERR_FILENO);
-	ft_putendl_fd(msg, STDERR_FILENO);
-}
-
-/*This function prints an error message. If a source string is provided, it appends the error message to the source string and prints the result.*/
-/* void	print_error(char *err_msg, char *src)
-{
-	char	*result;
-
-	if (src)
-	{
-		result = ft_strjoin(src, err_msg);
-		if (!result)
-		{
-			ft_putendl_fd(ERR_MEM, STDERR_FILENO);
-			//exit(-1);
-		}
-		ft_putendl_fd(result, STDERR_FILENO);
-		free(result);
-	}
-	else if (err_msg)
-		ft_putendl_fd(err_msg, STDERR_FILENO);
-} */
-
 void print_error(char *err_msg, char *src)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);

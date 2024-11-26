@@ -41,15 +41,15 @@ SRCS =	main.c \
 		executor/exec_single_cmd.c \
 		executor/exec_builtins.c \
 		executor/exec_pipeline.c \
-		executor/processes.c \
 		executor/heredoc.c \
 		utils/cleanup/cleanup_shell.c \
 		utils/cleanup/cleanup_cmd_node.c \
 		utils/cleanup/cleanup_utils.c \
-		utils/env/env_modify.c \
-		utils/env/env_utils.c \
+		env/env_modify.c \
+		env/env_core.c \
+		env/env_print.c \
+		env/env_parse.c \
 		utils/errors/print_errors.c \
-		utils/args_utils.c \
 		utils/utils.c \
 		utils/checkers.c \
 		parser/parser.c \
@@ -66,8 +66,8 @@ SRCS =	main.c \
 		tokenizer/tokenizer_utils.c \
 		tokenizer/tokenize_operators.c \
 		tokenizer/tokenize_word.c \
-		tokenizer/extract_word.c 
-
+		tokenizer/extract_word.c \
+		pipes/pipe_manager.c
 # Object files
 OBJS = $(SRCS:%.c=$(OBJS_DIR)/%.o)
 

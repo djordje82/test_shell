@@ -53,15 +53,66 @@ int	find_env_index(char *name, char **envp)
 	return (-1);
 }
 
-/*This function extracts the name of an environment variable from a string. It returns the name as a new string if found, or NULL if not found.*/
-char	*extract_env_var_name(const char *str)
+char	**copy_env(char **envp)
+{
+	char	**new_env;
+	int		i;
+	int		size;
+
+	size = 0;
+	while (envp && envp[size])
+		size++;
+	new_env = (char **)malloc(sizeof(char *) * (size + 1));
+	if (!new_env)
+		return (NULL);
+	i = 0;
+	while (i < size)
+	{
+		new_env[i] = ft_strdup(envp[i]);
+		if (!new_env[i])
+		{
+			while (--i >= 0)
+				free(new_env[i]);
+			free(new_env);
+			return (NULL);
+		}
+		i++;
+	}
+	new_env[i] = NULL;
+	return (new_env);
+}
+
+int	count_env_vars(char **envp)
 {
 	int	i;
 
-	if (!str)
-		return (NULL);
 	i = 0;
-	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
+	while (envp[i])
 		i++;
-	return (ft_substr(str, 0, i));
+	return (i);
+}
+
+void	update_shell_level(t_shell *shell)
+{
+	char	*current_level;
+	int		level;
+	char	*new_level;
+
+	current_level = get_env_value("SHLVL", shell);
+	if (!current_level || !*current_level)
+		level = 1;
+	else
+	{
+		level = ft_atoi(current_level);
+		if (level < 0)
+			level = 0;
+		else if (level >= 999)
+			level = 1;
+		level++;
+	}
+	new_level = ft_itoa(level);
+	if (!new_level)
+		return ;
+	update_env_value("SHLVL", new_level, shell);
+	free(new_level);
 }

@@ -12,24 +12,42 @@
 
 #include "minishell.h"
 
-/*This function is used to get the content of a variable.*/
-static char	*get_var_content(char *str, int *i, t_shell *shell)
+char *get_env_value_expanded(char *name, t_shell *shell)
 {
-	if (str[*i + 1] == '?')
-	{
-		*i += 2;
-		return (ft_itoa(shell->exit_status));
-	}
-	if (is_whitespace(str[*i + 1]))
-	{
-		*i += 1;
-		return (ft_strdup("$"));
-	}
-	char	*var_name = extract_env_var_name(&str[*i + 1]);
-	char	*var_value = get_env_value(var_name, shell);
-	*i += ft_strlen(var_name) + 1;
-	free(var_name);
-	return (ft_strdup(var_value ? var_value : ""));
+	char	*value;
+
+	if (!name)
+        return (ft_strdup(""));
+    if (ft_strncmp(name, "?", 1) == 0)
+        return (ft_itoa(shell->exit_status));
+    
+    value = get_env_value(name, shell);
+	if (value)
+		return (ft_strdup(value));
+	else
+		return (ft_strdup(""));
+}
+
+/*This function is used to get the content of a variable.*/
+static char *get_var_content(char *str, int *i, t_shell *shell)
+{
+    char *var_name;
+    char *value;
+
+    if (is_whitespace(str[*i + 1]))
+    {
+        (*i)++;
+        return (ft_strdup("$"));
+    }
+
+    var_name = extract_env_var_name(&str[*i + 1]);
+    if (!var_name)
+        return (ft_strdup(""));
+
+    *i += ft_strlen(var_name) + 1;
+    value = get_env_value_expanded(var_name, shell);
+    free(var_name);
+    return (value);
 }
 
 /*This function is used to expand the environment variables in the input string.*/

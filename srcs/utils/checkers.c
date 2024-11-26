@@ -38,14 +38,3 @@ int	is_word_delimiter(char c)
 	return (is_whitespace(c) || 
 		(is_special_char(c) && !is_quote(c)));
 }
-
-int	has_equals_sign(char *str)
-{
-	while (*str)
-	{
-		if (*str == '=')
-			return (1);
-		str++;
-	}
-	return (0);
-}

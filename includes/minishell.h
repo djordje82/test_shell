@@ -192,6 +192,10 @@ t_token *tokenize_operator(const char *input, int *i);
 int				handle_quotes(char *input, int *i, char quote_type);
 char			**insert_arg_array(char **orig_args, int pos, char **expanded);
 
+/*PIPES*/
+int				create_pipe(int pipe_fd[2], t_shell *shell);
+void			close_pipe_ends(int pipe_fd[2]);
+int				setup_pipe_io(int in_fd, int out_fd);
 
 /*PARSER*/
 t_command		*parse_command(t_token **token);
@@ -233,8 +237,6 @@ int				ft_exit(char **args, t_shell *shell);
 /*ERROR HANDLING*/
 int				minishell_clean(t_shell *shell, int exit_code);
 void			minishell_reset(t_shell *shell);
-//void			print_syntx_err(const char *msg);
-//int				redir_error(char *filename);
 
 /*CLEANUP*/
 void			cleanup_execution_data(t_shell *shell);
@@ -261,8 +263,8 @@ int				is_word_delimiter(char c);
 
 /*UTILS /ARGS*/
 //int				is_numeric_arg(char *str);
-char			**insert_arg_array(char **orig_args, int pos, char **to_insert);
-int				update_command_args(t_command *cmd, char **expanded, int pos, t_shell *shell);
+//char			**insert_arg_array(char **orig_args, int pos, char **to_insert);
+//int				update_command_args(t_command *cmd, char **expanded, int pos, t_shell *shell);
 
 /*UTILS
 cff5c78 /ERRORS*/	
@@ -291,7 +293,7 @@ int				validate_env_var(char *name);
 
 /*ENVIRONMENT*/
 char			*get_env_value(char *name, t_shell *shell);
-int				get_env_size(char **envp);
+int				count_env_vars(char **envp);
 int				update_env_value(char *name, char *value, t_shell *shell);
 int				remove_env_var(char *name, t_shell *shell);
 
@@ -309,7 +311,8 @@ int				update_env_value(char *name, char *value, t_shell *shell);
 char			**copy_env(char **envp);
 int				add_env_var(char *arg, t_shell *shell);
 void			update_shell_level(t_shell *shell);
-//void			print_env_var(char *env_var);
+void			print_env_var(char *env_var);
+void			print_sorted_env(char **envp);
 
 /*BUILTINS /ENV*/
 int				ft_env(char **args, t_shell *shell);
@@ -331,7 +334,7 @@ char			*expand_path(char *path, t_shell *shell);
 int				validate_env_var(char *name);
 void			print_export_error(char *arg);
 //char			*extract_env_var_name(char *arg);
-char			*get_var_value(char *arg);
+char			*extract_env_var_value(char *arg);
 int				update_existing_var(char *arg, t_shell *shell);
 int				add_new_var(char *arg, t_shell *shell);
 char			**copy_env(char **envp);
