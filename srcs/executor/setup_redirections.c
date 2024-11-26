@@ -6,40 +6,36 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:00 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/25 18:07:11 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/11/26 14:36:44 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function handles regular input redirection. It opens the input file with the appropriate flags and duplicates the file descriptor to stdin.*/
-static int handle_regular_input(t_command *cmd)
+static int	handle_regular_input(t_command *cmd)
 {
-    int fd;
+	int	fd;
 
-    fd = open(cmd->infile, O_RDONLY);
-    if (fd == -1)
-    {
-        g_exit_status = 1;
-        if (errno == ENOENT)
-            print_file_error(cmd->infile, "No such file or directory");
-        else if (errno == EACCES)
-            print_file_error(cmd->infile, "Permission denied");
-        else
-            print_file_error(cmd->infile, "Error opening file");
-        return (0);
-    }
-
-    if (dup2(fd, STDIN_FILENO) == -1)
-    {
-        close(fd);
-        return (0);
-    }
-    close(fd);
-    return (1);
+	fd = open(cmd->infile, O_RDONLY);
+	if (fd == -1)
+	{
+		g_exit_status = 1;
+		if (errno == ENOENT)
+			print_file_error(cmd->infile, "No such file or directory");
+		else if (errno == EACCES)
+			print_file_error(cmd->infile, "Permission denied");
+		else
+			return (0);
+	}
+	if (dup2(fd, STDIN_FILENO) == -1)
+	{
+		close(fd);
+		return (0);
+	}
+	close(fd);
+	return (1);
 }
 
-/*This function handles input redirection. It opens the input file with the appropriate flags and duplicates the file descriptor to stdin.*/
 static int	handle_input_redirection(t_command *cmd)
 {
 	if (cmd->in_type == REDIR_INPUT)

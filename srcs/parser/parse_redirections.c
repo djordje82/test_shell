@@ -1,6 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_redirections.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/26 14:36:04 by jadyar            #+#    #+#             */
+/*   Updated: 2024/11/26 14:39:11 by jadyar           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-/*This function is used to set the input redirection of a command.*/
 static void	set_input_redirection(t_command *cmd, char *filename, t_token_type type)
 {
 	free(cmd->infile);
@@ -11,7 +22,6 @@ static void	set_input_redirection(t_command *cmd, char *filename, t_token_type t
 		cmd->in_type = 2;
 }
 
-/*This function is used to set the output redirection of a command.*/
 static void	set_output_redirection(t_command *cmd, char *filename, t_token_type type)
 {
 	free(cmd->outfile);
@@ -22,7 +32,6 @@ static void	set_output_redirection(t_command *cmd, char *filename, t_token_type 
 		cmd->out_type = 2;
 }
 
-/*This function is used to parse the redirections of a command.*/
 int	parse_redirections(t_token **token, t_command *cmd)
 {
 	t_token_type	type;
