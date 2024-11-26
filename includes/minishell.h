@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/25 13:28:45 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/11/26 14:41:28 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@
 # define ERR_CMD "minishell: command not found"
 # define ERR_PERM "minishell: Permission denied"
 # define ERR_NOFILE "No such file or directory"
+# define ERR_BATCH "minishell: arguments not allowed"
 
 #define REDIR_TRUNC 1
 #define REDIR_APPEND 667

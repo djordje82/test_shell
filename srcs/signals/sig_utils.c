@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sig_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:32 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/25 15:41:03 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/11/26 15:28:37 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	interactive_signal_handler(int signum)
 	g_exit_status = 1;
 	if (signum == SIGINT)
 	{
-		g_exit_status = 130; // 128 + SIGINT(2)
+		g_exit_status = 130;
 		write(STDERR_FILENO, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
@@ -25,7 +25,7 @@ void	interactive_signal_handler(int signum)
 	}
 	else if (signum == SIGQUIT)
 	{
-		g_exit_status = 131; // 128 + SIGQUIT(3)
+		g_exit_status = 131;
 		write(STDERR_FILENO, "Quit (core dumped)\n", 18);
 	}
 }

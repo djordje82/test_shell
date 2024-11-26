@@ -6,22 +6,21 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:12 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/17 17:46:15 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/26 15:30:46 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *get_env_value_expanded(char *name, t_shell *shell)
+char	*get_env_value_expanded(char *name, t_shell *shell)
 {
 	char	*value;
 
 	if (!name)
-        return (ft_strdup(""));
-    if (ft_strncmp(name, "?", 1) == 0)
-        return (ft_itoa(shell->exit_status));
-    
-    value = get_env_value(name, shell);
+		return (ft_strdup(""));
+	if (ft_strncmp(name, "?", 1) == 0)
+		return (ft_itoa(shell->exit_status));
+	value = get_env_value(name, shell);
 	if (value)
 		return (ft_strdup(value));
 	else
@@ -29,25 +28,23 @@ char *get_env_value_expanded(char *name, t_shell *shell)
 }
 
 /*This function is used to get the content of a variable.*/
-static char *get_var_content(char *str, int *i, t_shell *shell)
+static char	*get_var_content(char *str, int *i, t_shell *shell)
 {
-    char *var_name;
-    char *value;
+	char	*var_name;
+	char	*value;
 
-    if (is_whitespace(str[*i + 1]))
-    {
-        (*i)++;
-        return (ft_strdup("$"));
-    }
-
-    var_name = extract_env_var_name(&str[*i + 1]);
-    if (!var_name)
-        return (ft_strdup(""));
-
-    *i += ft_strlen(var_name) + 1;
-    value = get_env_value_expanded(var_name, shell);
-    free(var_name);
-    return (value);
+	if (is_whitespace(str[*i + 1]))
+	{
+		(*i)++;
+		return (ft_strdup("$"));
+	}
+	var_name = extract_env_var_name(&str[*i + 1]);
+	if (!var_name)
+		return (ft_strdup(""));
+	*i += ft_strlen(var_name) + 1;
+	value = get_env_value_expanded(var_name, shell);
+	free(var_name);
+	return (value);
 }
 
 /*This function is used to expand the environment variables in the input string.*/

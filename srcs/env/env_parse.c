@@ -1,6 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env_parse.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/26 15:12:38 by dodordev          #+#    #+#             */
+/*   Updated: 2024/11/26 15:43:44 by dodordev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-/*This function extracts the name of an environment variable from a string. It returns the name as a new string if found, or NULL if not found.*/
+/*This function extracts the name of an environment variable from a string. It returns the name as a new string if found,
+	or NULL if not found.*/
 char	*extract_env_var_name(const char *str)
 {
 	int	i;
@@ -15,8 +28,8 @@ char	*extract_env_var_name(const char *str)
 	return (ft_substr(str, 0, i));
 }
 
-/*This function extracts the value of an assignment from a given string. \ 
-It returns a new string containing the value, \ 
+/*This function extracts the value of an assignment from a given string. \
+It returns a new string containing the value, \
 or an empty string if no assignment is found.*/
 char	*extract_env_var_value(char *arg)
 {
@@ -28,8 +41,8 @@ char	*extract_env_var_value(char *arg)
 	return (ft_strdup(equals + 1));
 }
 
-/*This function checks if a variable name is valid. \ 
-It checks if the name is not empty | if the first character is a digit | \ 
+/*This function checks if a variable name is valid. \
+It checks if the name is not empty | if the first character is a digit | \
 if the name contains an equal sign.*/
 int	validate_env_var(char *name)
 {
@@ -60,22 +73,4 @@ int	has_equals_sign(char *str)
 		str++;
 	}
 	return (0);
-}
-
-/*This function checks the number of arguments passed to the env command. If there are more than one argument, it prints an error message and returns 0.*/
-int	check_env_args(char **args)
-{
-	int	i;
-
-	i = 0;
-	while (args[i])
-		i++;
-	if (i > 1)
-	{
-		ft_putstr_fd("env: '", STDERR_FILENO);
-		ft_putstr_fd(args[1], STDERR_FILENO);
-		ft_putendl_fd("': too many arguments", STDERR_FILENO);
-		return (0);
-	}
-	return (1);
 }

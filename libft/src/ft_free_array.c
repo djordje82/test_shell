@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 13:20:55 by dodordev          #+#    #+#             */
-/*   Updated: 2024/10/24 13:21:11 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/26 15:19:14 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,10 @@
 
 void	ft_free_array(void **arr, int size)
 {
-	int	i;
+	int i;
 
 	if (!arr)
-	{
 		return ;
-	}
 
 	i = 0;
 	if (size == -1)
@@ -38,6 +36,5 @@ void	ft_free_array(void **arr, int size)
 			i++;
 		}
 	}
-
 	free(arr);
 }
