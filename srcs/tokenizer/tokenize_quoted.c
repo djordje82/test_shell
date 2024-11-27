@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/17 17:46:38 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/27 11:59:19 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,21 +19,37 @@ char	*extract_quoted(char *input, int *pos, char quote_type)
 	int		start;
 	int		len;
 	char	*content;
+	int		i;
 
 	if (!input || !pos)
 		return (NULL);
-	(*pos)++;
+	(*pos)++;  // Skip opening quote
 	start = *pos;
 	len = 0;
+	i = 0;
+	content = malloc(sizeof(char) * (ft_strlen(input) + 1));
+	if (!content)
+		return (NULL);
 	while (input[*pos] && input[*pos] != quote_type)
 	{
-		len++;
+		//printf("Current char: %c at pos: %d\n", input[*pos], *pos);
+		if (input[*pos] == '\\' && quote_type == '"' 
+			&& input[*pos + 1] != '\0')
+		{
+			(*pos)++;  // Move past backslash
+			content[i++] = input[*pos];     // Count the escaped character
+			//printf("Escaped char: %c at pos: %d\n", input[*pos], *pos);
+		}
+		else
+			content[i++] = input[*pos];
 		(*pos)++;
 	}
 	if (!input[*pos])
-		return (NULL);
-	content = ft_substr(input, start, len);
-	(*pos)++;
+		return (free(content), NULL);
+	//ft_strlcpy(content, input + start, len + 1);
+	//printf("Final content: '%s'\n", content);
+	content[i] = '\0';
+	(*pos)++;  // Skip closing quote
 	return (content);
 }
 
