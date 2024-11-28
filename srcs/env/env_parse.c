@@ -6,14 +6,13 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:12:38 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/26 15:43:44 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 13:10:11 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function extracts the name of an environment variable from a string. It returns the name as a new string if found,
-	or NULL if not found.*/
+/*This function extracts the name of an environment variable from a string.*/
 char	*extract_env_var_name(const char *str)
 {
 	int	i;
@@ -28,9 +27,7 @@ char	*extract_env_var_name(const char *str)
 	return (ft_substr(str, 0, i));
 }
 
-/*This function extracts the value of an assignment from a given string. \
-It returns a new string containing the value, \
-or an empty string if no assignment is found.*/
+/*This function extracts the value of an assignment from a given string.*/
 char	*extract_env_var_value(char *arg)
 {
 	char	*equals;

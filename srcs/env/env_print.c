@@ -6,18 +6,11 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:12:52 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 12:28:41 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 13:11:50 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*This function is used to print the environment variables.*/
-void	print_env_var(char *env_var)
-{
-	if (has_equals_sign(env_var))
-		ft_putendl_fd(env_var, STDOUT_FILENO);
-}
 
 static void	sort_env_array(char **sorted)
 {
