@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_expansion.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:12 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/26 15:30:46 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 13:02:52 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static char	*get_var_content(char *str, int *i, t_shell *shell)
 	char	*var_name;
 	char	*value;
 
-	if (is_whitespace(str[*i + 1]))
+	if (ft_is_whitespace(str[*i + 1]))
 	{
 		(*i)++;
 		return (ft_strdup("$"));

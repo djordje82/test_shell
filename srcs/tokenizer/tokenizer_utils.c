@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:58:51 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 11:38:44 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 13:03:08 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,6 @@ t_token_type	get_operator_type(char c)
 /*This function skips over any whitespace characters in the input string.*/
 void	skip_whitespace(const char *input, int *pos)
 {
-	while (input[*pos] && is_whitespace(input[*pos]))
+	while (input[*pos] && ft_is_whitespace(input[*pos]))
 		(*pos)++;
 }

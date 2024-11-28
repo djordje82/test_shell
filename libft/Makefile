@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+         #
+#    By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/30 12:10:30 by dodordev          #+#    #+#              #
-#    Updated: 2024/10/21 12:53:53 by dodordev         ###   ########.fr        #
+#    Updated: 2024/11/28 13:00:41 by jadyar           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ SRC_DIR = src/
 OBJS_DIR = objs/
 
 LIBFT_FILES = isalpha isdigit isalnum isnumber \
-		isascii isprint atoi atoll \
+		isascii isprint atoi atoll is_whitespace \
 		bzero calloc itoa count_args \
 		close_fd \
 		memchr memcmp memcpy \

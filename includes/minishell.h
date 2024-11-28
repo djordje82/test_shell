@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 11:49:02 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 12:39:12 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,7 +273,6 @@ int								cleanup_and_exit(char *err_msg, char *src,
 t_char_type						find_special_chars(char c);
 
 /*UTILS /CHECKERS*/
-int								has_equals_sign(char *str);
 int								is_whitespace(char c);
 int								is_quote(char c);
 int								is_special_char(char c);
