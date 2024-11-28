@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_quoted.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 13:01:10 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 15:12:52 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*extract_quoted(char *input, int *pos, char quote_type)
 
 	if (!input || !pos)
 		return (NULL);
-	(*pos)++;  // Skip opening quote
+	(*pos)++;
 	start = *pos;
 	len = 0;
 	i = 0;

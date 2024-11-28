@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:16 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 12:58:48 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 15:20:17 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_token	*get_token_type(const char *input, int *pos, t_shell *shell)
 		return (NULL);
 	if (!input[*pos])
 		return (NULL);
-	while (input[*pos] && is_whitespace(input[*pos]))
+	while (input[*pos] && ft_is_whitespace(input[*pos]))
 		(*pos)++;
 	type = get_operator_type(input[*pos]);
 	if (type == TOKEN_PIPE || type == TOKEN_RDRCT_IN || type == TOKEN_RDRCT_OUT)
@@ -31,7 +31,9 @@ t_token	*get_token_type(const char *input, int *pos, t_shell *shell)
 		if (input[*pos] == '<' && input[*pos + 1] == '<')
 			return (tokenize_double_operator(input, pos, "<<", TOKEN_HEREDOC));
 		return (tokenize_single_operator(input, pos));
-	}
+	if (type == TOKEN_SQUOTE || type == TOKEN_DQUOTE)
+		return (tokenize_quoted_str((char *)input, pos, shell));
+	return (tokenize_word(input, pos, shell));
 	if (type == TOKEN_SQUOTE || type == TOKEN_DQUOTE)
 		return (tokenize_quoted_str((char *)input, pos, shell));
 	return (tokenize_word(input, pos, shell));
@@ -63,15 +65,18 @@ static int	check_quotes(const char *input)
 
 	i = 0;
 	quote = 0;
+	quote = 0;
 	while (input[i])
 	{
 		escaped = (i > 0 && input[i - 1] == '\\');
 		if ((input[i] == '\'' || input[i] == '"') && !quote && !escaped)
 			quote = input[i];
+			quote = input[i];
 		else if (input[i] == quote && !escaped)
 			quote = 0;
 		i++;
 	}
+	return (!quote);
 	return (!quote);
 }
 
@@ -95,10 +100,10 @@ and words. It returns the head of the token list or NULL if there is an error.*/
 
 t_token	*tokenize_input(const char *input, t_shell *shell)
 {
-	t_token	*head;
-	t_token	*current;
-	t_token	*new_token;
-	int		pos;
+	t_token *head;      // pointer to the head of the token list
+	t_token *current;   // pointer to the current token in the list
+	t_token *new_token; // pointer to the new token to be added to the list
+	int pos;            // position in the input string
 	if (!initialize_tokenization(input, shell))
 		return (NULL);
 	head = NULL;
