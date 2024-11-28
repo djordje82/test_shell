@@ -6,13 +6,15 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:16 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 15:39:34 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 16:26:57 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function retrieves the next token from the input string based on the current position. It identifies the type of shell character at the current position and handles different types of tokens accordingly. It returns the new token or NULL if there is an error.*/
+/*This function retrieves the next token from the input string \ 
+based on the current position. It identifies the type of shell character \ 
+at the current position and handles different types of tokens accordingly.*/
 t_token	*get_token_type(const char *input, int *pos, t_shell *shell)
 {
 	t_token_type	type;
@@ -35,12 +37,9 @@ t_token	*get_token_type(const char *input, int *pos, t_shell *shell)
 	if (type == TOKEN_SQUOTE || type == TOKEN_DQUOTE)
 		return (tokenize_quoted_str((char *)input, pos, shell));
 	return (tokenize_word(input, pos, shell));
-	if (type == TOKEN_SQUOTE || type == TOKEN_DQUOTE)
-		return (tokenize_quoted_str((char *)input, pos, shell));
-	return (tokenize_word(input, pos, shell));
 }
 
-/*This function appends a new token to the end of a linked list of tokens. It updates the head and current pointers accordingly.*/
+/*This function appends a new token to the end of a linked list of tokens.*/
 static void	add_token_to_list(t_token **head, t_token **current, t_token *new_token)
 {
 	if (!new_token)
@@ -77,30 +76,26 @@ static int	check_quotes(const char *input)
 	return (!quote);
 }
 
-static t_token	*initialize_tokenization(const char *input, t_shell *shell)
+static int	initialize_tokenization(const char *input, t_shell *shell)
 {
 	if (!input || !shell)
-		return (NULL);
+		return (0);
 	if (!check_quotes(input))
 	{
 		ft_putendl_fd("minishell: syntax error: unclosed quotes", 2);
 		g_exit_status = 2;
-		return (NULL);
+		return (0);
 	}
-	return ((t_token *)1);
+	return (1);
 }
 
-/*This function tokenizes the input string into a linked list of tokens. \ 
-It handles various types of tokens,
-including pipes, redirection operators, quoted strings,
-and words. It returns the head of the token list or NULL if there is an error.*/
-
+/*This function tokenizes the input string into a linked list of tokens.*/
 t_token	*tokenize_input(const char *input, t_shell *shell)
 {
-	t_token *head;      // pointer to the head of the token list
-	t_token *current;   // pointer to the current token in the list
-	t_token *new_token; // pointer to the new token to be added to the list
-	int pos;            // position in the input string
+	t_token		*head;
+	t_token		*current;
+	t_token		*new_token;
+	int			pos;
 	if (!initialize_tokenization(input, shell))
 		return (NULL);
 	head = NULL;

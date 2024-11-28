@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:58:51 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 13:03:08 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/11/28 16:20:48 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function creates a new token with the given value and type. It allocates memory for the token, duplicates the value, and sets the type. It returns the new token or NULL if there is an error.*/
+/*This function creates a new token with the given value and type.*/
 t_token	*create_token(char *value, t_token_type type)
 {
 	t_token	*token;
@@ -33,7 +33,8 @@ if (!value)
 	return (token);
 }
 
-/*This function determines the type of token based on the character at the current position. It returns the appropriate token type for the character.*/
+/*This function determines the type of token based on the character \ 
+at the current position. It returns the appropriate token type for the character.*/
 t_token_type	get_operator_type(char c)
 {
 	if (c == '|')
