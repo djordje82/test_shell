@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:20:46 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 13:06:11 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 17:40:02 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,31 +51,43 @@ static char	*append_unquoted_part(char *result, const char *input, int *start,
 
 /*This function is used to process a quoted segment of the input string. \
 It appends the part of the string that is not quoted to the result.*/
-char	*process_quoted_segment(char *result, const char *input, int *start,
-		int *len)
-{
-	char	quote_type;
-	int		quote_pos;
-	char	*quoted_content;
 
-	if (!result || !input || !start || !len)
-		return (NULL);
-	result = append_unquoted_part(result, input, start, len);
-	if (!result)
-		return (NULL);
-	quote_type = input[*start + *len];
-	quote_pos = *start + *len;
-	quoted_content = extract_quoted((char *)input, &quote_pos, quote_type);
-	if (!quoted_content)
-	{
-		free(result);
-		return (NULL);
-	}
-	result = ft_strjoin_free(result, quoted_content);
-	free(quoted_content);
-	*len = quote_pos - *start - *len;
-	*start += *len;
-	return (result);
+char *process_quoted_segment(char *result, const char *input,
+    int *start, int *len)
+{
+    char    quote_type;
+    int     quote_pos;
+    char    *quoted_content;
+
+    if (!result || !input || !start || !len)
+        return (NULL);
+    result = append_unquoted_part(result, input, start, len);
+    if (!result)
+        return (NULL);
+    
+    quote_type = input[*start + *len];
+    quote_pos = *start + *len;
+
+    if (quote_pos > 0 && input[quote_pos - 1] == '\\' && quote_type == '"')
+    {
+        (*len)++;
+        return (result);
+    }
+
+    quoted_content = extract_quoted((char *)input, &quote_pos, quote_type);
+    if (!quoted_content)
+    {
+        ft_putendl_fd("minishell: syntax error: unclosed quotes", 2);
+        g_exit_status = 2;
+        free(result);
+        return (NULL);
+    }
+    
+    result = ft_strjoin_free(result, quoted_content);
+    free(quoted_content);
+    *len = quote_pos - *start - *len;
+    *start += *len;
+    return (result);
 }
 
 /*This function is used to process the content of a word in the input string. \

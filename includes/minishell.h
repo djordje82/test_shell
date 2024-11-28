@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 15:08:40 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/11/28 16:29:55 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,15 +225,6 @@ int								parse_cmd_arguments(t_token **token,
 int								parse_redirections(t_token **token,
 									t_command *cmd);
 
-/*PARSING /WILDCARDS*/
-char							**expand_wildcards(char *pattern);
-int								match_star(const char *str,
-									const char *pattern);
-int								match_pattern(const char *str,
-									const char *pattern);
-int								is_valid_match(char *name, char *pattern);
-char							**init_result_array(size_t count, DIR **dir);
-size_t							count_matches(char *pattern);
 
 /*PARSING /ENV_EXPANSION*/
 char							*extract_env_var_name(const char *str);
@@ -262,7 +253,6 @@ void							cleanup_envp(t_shell *shell);
 void							cleanup_token_list(t_token *tokens);
 void							cleanup_fd_arrays(t_node *node);
 void							cleanup_file_resources(t_node *node);
-// void			free_list(t_list **cmnd_list);
 void							cleanup_cmd_node(t_node *node);
 void							cleanup_shell_data(t_shell *shell);
 void							cleanup_cmd_list(t_command *cmd);
@@ -287,14 +277,13 @@ void							print_file_error(const char *filename,
 									const char *error_msg);
 
 /*UTILS /SIGNALS*/
-void							setup_signals(void);
-void							setup_child_signal(void);
-void							handle_eof(t_shell *shell);
-void							disable_ctrl_chars(void);
-void							interactive_signal_handler(int signum);
-void							signal_handler_child(int signum);
-void							setup_execution_signals(struct sigaction *sa_old_int,
-									struct sigaction *sa_old_quit);
+void				setup_signals(void);
+void				setup_child_signal(void);
+void				handle_eof(t_shell *shell);
+void				disable_ctrl_chars(void);
+void				interactive_signal_handler(int signum);
+void				signal_handler_child(int signum);
+void				setup_execution_signals(struct sigaction *sa_old_int, struct sigaction *sa_old_quit);
 
 /*UTILS /SHELL*/
 void							run_shell_loop(t_shell *shell);

@@ -6,26 +6,11 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:03:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/15 18:03:41 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 17:57:17 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	validate_pipe_syntax(t_token *tokens)
-{
-	if (tokens->type == TOKEN_PIPE)
-		return (0);
-	while (tokens && tokens->next)
-	{
-		if (tokens->type == TOKEN_PIPE && tokens->next->type == TOKEN_PIPE)
-			return (0);
-		tokens = tokens->next;
-	}
-	if (tokens && tokens->type == TOKEN_PIPE)
-		return (0);
-	return (1);
-}
 
 /*This function is used to parse a command from a list of tokens.*/
 t_command	*parse_command(t_token **token)
@@ -105,6 +90,21 @@ static int	build_command_list(t_token *tokens, t_shell *shell)
 		if (current && current->type == TOKEN_PIPE)
 			current = current->next;
 	}
+	return (1);
+}
+
+static int	validate_pipe_syntax(t_token *tokens)
+{
+	if (tokens->type == TOKEN_PIPE)
+		return (0);
+	while (tokens && tokens->next)
+	{
+		if (tokens->type == TOKEN_PIPE && tokens->next->type == TOKEN_PIPE)
+			return (0);
+		tokens = tokens->next;
+	}
+	if (tokens && tokens->type == TOKEN_PIPE)
+		return (0);
 	return (1);
 }
 
