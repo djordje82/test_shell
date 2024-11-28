@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:16 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 15:20:17 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/11/28 15:39:34 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ t_token	*get_token_type(const char *input, int *pos, t_shell *shell)
 		if (input[*pos] == '<' && input[*pos + 1] == '<')
 			return (tokenize_double_operator(input, pos, "<<", TOKEN_HEREDOC));
 		return (tokenize_single_operator(input, pos));
+	}
 	if (type == TOKEN_SQUOTE || type == TOKEN_DQUOTE)
 		return (tokenize_quoted_str((char *)input, pos, shell));
 	return (tokenize_word(input, pos, shell));
@@ -40,8 +41,7 @@ t_token	*get_token_type(const char *input, int *pos, t_shell *shell)
 }
 
 /*This function appends a new token to the end of a linked list of tokens. It updates the head and current pointers accordingly.*/
-static void	add_token_to_list(t_token **head, t_token **current,
-		t_token *new_token)
+static void	add_token_to_list(t_token **head, t_token **current, t_token *new_token)
 {
 	if (!new_token)
 		return ;
@@ -65,18 +65,15 @@ static int	check_quotes(const char *input)
 
 	i = 0;
 	quote = 0;
-	quote = 0;
 	while (input[i])
 	{
 		escaped = (i > 0 && input[i - 1] == '\\');
 		if ((input[i] == '\'' || input[i] == '"') && !quote && !escaped)
 			quote = input[i];
-			quote = input[i];
 		else if (input[i] == quote && !escaped)
 			quote = 0;
 		i++;
 	}
-	return (!quote);
 	return (!quote);
 }
 

@@ -3,29 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   env_print.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:12:52 by dodordev          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/11/28 12:25:00 by jadyar           ###   ########.fr       */
-=======
-/*   Updated: 2024/11/28 13:11:50 by dodordev         ###   ########.fr       */
->>>>>>> d2
+/*   Updated: 2024/11/28 15:44:32 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-<<<<<<< HEAD
-/*This function is used to print the environment variables.*/
-void	print_env_var(char *env_var)
-{
-	if (ft_strchr(env_var, '='))
-		ft_putendl_fd(env_var, STDOUT_FILENO);
-}
-
-=======
->>>>>>> d2
 static void	sort_env_array(char **sorted)
 {
 	int		i;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipeline.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 15:12:10 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/11/28 15:49:36 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,11 @@ int	create_process(pid_t *pid, t_shell *shell)
 	return (1);
 }
 
-/* static int	init_pipeline(t_command *current, int *pipe_fd, t_shell *shell)
+int	is_parent_only_builtin(char *cmd)
 {
-	pipe_fd[0] = -1;
-	pipe_fd[1] = -1;
-	if (current->next && !create_pipe(pipe_fd, shell))
-		return (0);
-	if (current->args && is_parent_only_builtin(current->args[0]))
-		handle_builtin_cmd(current, shell);
-	return (1);
-} */
+	return (ft_strncmp(cmd, "cd", 3) == 0 || ft_strncmp(cmd, "export", 7) == 0
+		|| ft_strncmp(cmd, "unset", 6) == 0);
+}
 
 static int	init_pipeline(t_command *current, int *pipe_fd, t_shell *shell)
 {
