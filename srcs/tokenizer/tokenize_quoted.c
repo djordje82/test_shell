@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/27 12:09:37 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 13:01:10 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ char	*extract_quoted(char *input, int *pos, char quote_type)
 		if (input[*pos] == '\\' && quote_type == '"' 
 			&& input[*pos + 1] != '\0')
 		{
-			(*pos)++;  // Move past backslash
-			content[i++] = input[*pos];     // Count the escaped character
+			(*pos)++;
+			content[i++] = input[*pos];
 		}
 		else
 			content[i++] = input[*pos];
@@ -45,7 +45,7 @@ char	*extract_quoted(char *input, int *pos, char quote_type)
 	if (!input[*pos])
 		return (free(content), NULL);
 	content[i] = '\0';
-	(*pos)++;  // Skip closing quote
+	(*pos)++;
 	return (content);
 }
 

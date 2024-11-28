@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 11:49:02 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 12:35:21 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,11 +193,11 @@ char							*extract_word(const char *input, int *pos);
 
 /*TOKENIZER /UTILS*/
 t_token_type					get_operator_type(char c);
-
-//t_token							*tokenize_operator(const char *input, int *i);
-t_token	*tokenize_single_operator(const char *input, int *i);
-t_token	*tokenize_double_operator(const char *input, int *pos,
-		const char *op_str, t_token_type type);
+t_token							*tokenize_single_operator(const char *input,
+									int *i);
+t_token							*tokenize_double_operator(const char *input,
+									int *pos, const char *op_str,
+									t_token_type type);
 
 int								handle_quotes(char *input, int *i,
 									char quote_type);
@@ -279,16 +279,11 @@ int								is_quote(char c);
 int								is_special_char(char c);
 int								is_word_delimiter(char c);
 
-/*UTILS /ARGS*/
-// int				is_numeric_arg(char *str);
-// char			**insert_arg_array(char **orig_args, int pos, char **to_insert);
-// int				update_command_args(t_command *cmd, char **expanded, int pos, t_shell *shell);
-
 /*UTILS ERRORS*/
 void							print_command_error(char *cmd, char *error_msg);
 void							print_redir_error(char *msg, char *file);
 int								print_syntx_err(char *err_msg, char *src);
-void							print_error(char *err_msg, char *src);
+void							print_error_msg(char *err_msg, char *src);
 void							print_file_error(const char *filename,
 									const char *error_msg);
 
@@ -353,8 +348,6 @@ char							*expand_path(char *path, t_shell *shell);
 
 /*BUILTINS /EXPORT*/
 int								validate_env_var(char *name);
-void							print_export_error(char *arg);
-// char			*extract_env_var_name(char *arg);
 char							*extract_env_var_value(char *arg);
 int								update_existing_var(char *arg, t_shell *shell);
 int								add_new_var(char *arg, t_shell *shell);

@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:12:52 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/26 15:14:13 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 12:28:41 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,4 @@ void	print_exported_var(char *var)
 	if (found_equals)
 		ft_putchar_fd('"', STDOUT_FILENO);
 	ft_putchar_fd('\n', STDOUT_FILENO);
-}
-
-void	print_export_error(char *arg)
-{
-	ft_putstr_fd("minishell: export: `", STDERR_FILENO);
-	ft_putstr_fd(arg, STDERR_FILENO);
-	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 }

@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:00:33 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/26 15:24:36 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 12:34:09 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,4 @@ void	print_command_error(char *cmd, char *error_msg)
 	ft_putchar_fd('\n', STDERR_FILENO);
 }
 
-void	print_error(char *err_msg, char *src)
-{
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	if (src)
-	{
-		ft_putstr_fd(src, STDERR_FILENO);
-		ft_putstr_fd(": ", STDERR_FILENO);
-	}
-	if (err_msg)
-		ft_putendl_fd(err_msg, STDERR_FILENO);
-}
+
