@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/26 15:07:36 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 13:41:44 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,12 @@ int	create_process(pid_t *pid, t_shell *shell)
 	if (*pid == -1)
 		return (cleanup_and_exit("fork failed", NULL, 1, shell));
 	return (1);
+}
+
+int	is_parent_only_builtin(char *cmd)
+{
+	return (ft_strncmp(cmd, "cd", 3) == 0 || ft_strncmp(cmd, "export", 7) == 0
+		|| ft_strncmp(cmd, "unset", 6) == 0);
 }
 
 /*This function initializes a pipeline. It sets up pipe file descriptors and checks for parent-only builtins.*/

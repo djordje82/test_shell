@@ -6,17 +6,11 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:13 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/15 18:04:16 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 13:41:35 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	is_parent_only_builtin(char *cmd)
-{
-	return (ft_strncmp(cmd, "cd", 3) == 0 || ft_strncmp(cmd, "export", 7) == 0
-		|| ft_strncmp(cmd, "unset", 6) == 0);
-}
 
 /*This function executes commands. It handles single commands, pipelines, and signals.*/
 int	execute_commands(t_shell *shell)
