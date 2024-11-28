@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_parse.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:12:38 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/26 15:43:44 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 12:31:52 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,9 @@ char	*extract_env_var_name(const char *str)
 	return (ft_substr(str, 0, i));
 }
 
-/*This function extracts the value of an assignment from a given string. \
-It returns a new string containing the value, \
+/*This function extracts the value of an assignment from
+ a given string.
+It returns a new string containing the value, 
 or an empty string if no assignment is found.*/
 char	*extract_env_var_value(char *arg)
 {
@@ -41,8 +42,9 @@ char	*extract_env_var_value(char *arg)
 	return (ft_strdup(equals + 1));
 }
 
-/*This function checks if a variable name is valid. \
-It checks if the name is not empty | if the first character is a digit | \
+/*This function checks if a variable name is valid. 
+It checks if the name is not empty | if the first character
+ is a digit | 
 if the name contains an equal sign.*/
 int	validate_env_var(char *name)
 {
@@ -62,15 +64,4 @@ int	validate_env_var(char *name)
 		i++;
 	}
 	return (1);
-}
-
-int	has_equals_sign(char *str)
-{
-	while (*str)
-	{
-		if (*str == '=')
-			return (1);
-		str++;
-	}
-	return (0);
 }

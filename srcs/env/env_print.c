@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_print.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:12:52 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/26 15:14:13 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 12:25:00 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*This function is used to print the environment variables.*/
 void	print_env_var(char *env_var)
 {
-	if (has_equals_sign(env_var))
+	if (ft_strchr(env_var, '='))
 		ft_putendl_fd(env_var, STDOUT_FILENO);
 }
 
