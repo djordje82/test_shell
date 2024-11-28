@@ -6,16 +6,16 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:16 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/27 11:55:50 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 11:41:41 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*This function retrieves the next token from the input string based on the current position. It identifies the type of shell character at the current position and handles different types of tokens accordingly. It returns the new token or NULL if there is an error.*/
-t_token	*get_next_token(const char *input, int *pos, t_shell *shell)
+t_token	*get_token_type(const char *input, int *pos, t_shell *shell)
 {
-	t_char_type	type;
+	t_token_type	type;
 
 	if (!input || !pos || !shell)
 		return (NULL);
@@ -23,18 +23,23 @@ t_token	*get_next_token(const char *input, int *pos, t_shell *shell)
 		return (NULL);
 	while (input[*pos] && is_whitespace(input[*pos]))
 		(*pos)++;
-	type = find_special_chars(input[*pos]);
-	if (type == CHAR_PIPE)
-		return (tokenize_operator(input, pos));
-	if (type == CHAR_REDIR_IN || type == CHAR_REDIR_OUT)
-		return (tokenize_operator(input, pos));
-	if (type == CHAR_SQUOTE || type == CHAR_DQUOTE)
-		return (tokenize_quoted_str((char *)input, pos, shell));
-	return (tokenize_word(input, pos, shell));
+	type = get_operator_type(input[*pos]);
+	if (type == TOKEN_PIPE || type == TOKEN_RDRCT_IN || type == TOKEN_RDRCT_OUT)
+	{
+		if (input[*pos] == '>' && input[*pos + 1] == '>')
+            return (tokenize_double_operator(input, pos, ">>", TOKEN_APPEND));
+        if (input[*pos] == '<' && input[*pos + 1] == '<')
+            return (tokenize_double_operator(input, pos, "<<", TOKEN_HEREDOC));
+        return (tokenize_single_operator(input, pos));
+	}
+
+    if (type == TOKEN_SQUOTE || type == TOKEN_DQUOTE)
+        return (tokenize_quoted_str((char *)input, pos, shell));
+    return (tokenize_word(input, pos, shell));
 }
 
 /*This function appends a new token to the end of a linked list of tokens. It updates the head and current pointers accordingly.*/
-static void	append_token(t_token **head, t_token **current, t_token *new_token)
+static void	add_token_to_list(t_token **head, t_token **current, t_token *new_token)
 {
 	if (!new_token)
 		return ;
@@ -108,10 +113,10 @@ t_token	*tokenize_input(const char *input, t_shell *shell)
 	pos = 0;
 	while (input[pos])
 	{
-		new_token = get_next_token(input, &pos, shell);
+		new_token = get_token_type(input, &pos, shell);
 		if (!new_token)
 			return (handle_token_error(head));
-		append_token(&head, &current, new_token);
+		add_token_to_list(&head, &current, new_token);
 		skip_whitespace(input, &pos);
 		if (!input[pos])
 			break ;

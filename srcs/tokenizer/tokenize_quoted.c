@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/27 11:59:19 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/27 12:09:37 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,11 @@ char	*extract_quoted(char *input, int *pos, char quote_type)
 		return (NULL);
 	while (input[*pos] && input[*pos] != quote_type)
 	{
-		//printf("Current char: %c at pos: %d\n", input[*pos], *pos);
 		if (input[*pos] == '\\' && quote_type == '"' 
 			&& input[*pos + 1] != '\0')
 		{
 			(*pos)++;  // Move past backslash
 			content[i++] = input[*pos];     // Count the escaped character
-			//printf("Escaped char: %c at pos: %d\n", input[*pos], *pos);
 		}
 		else
 			content[i++] = input[*pos];
@@ -46,8 +44,6 @@ char	*extract_quoted(char *input, int *pos, char quote_type)
 	}
 	if (!input[*pos])
 		return (free(content), NULL);
-	//ft_strlcpy(content, input + start, len + 1);
-	//printf("Final content: '%s'\n", content);
 	content[i] = '\0';
 	(*pos)++;  // Skip closing quote
 	return (content);
@@ -74,7 +70,5 @@ t_token *tokenize_quoted_str(char *input, int *i, t_shell *shell)
 	}
 	token = create_token(value, TOKEN_WORD);
 	free(value);
-	if (input[*i] == quote_type)
-		(*i)++;
 	return (token);
 }
