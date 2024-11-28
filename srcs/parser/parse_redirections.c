@@ -1,25 +1,37 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_redirections.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/26 15:20:05 by dodordev          #+#    #+#             */
+/*   Updated: 2024/11/26 15:20:08 by dodordev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-static void set_redirection(t_command *cmd, char *filename, t_token_type type)
+static void	set_redirection(t_command *cmd, char *filename, t_token_type type)
 {
-    if (type == TOKEN_RDRCT_IN || type == TOKEN_HEREDOC)
-    {
-        free(cmd->infile);
-        cmd->infile = filename;
-        if (type == TOKEN_RDRCT_IN)
-            cmd->in_type = REDIR_INPUT;
-        else
-            cmd->in_type = REDIR_HEREDOC;
-    }
-    else // TOKEN_RDRCT_OUT or TOKEN_RDRCT_APPEND
-    {
-        free(cmd->outfile);
-        cmd->outfile = filename;
-        if (type == TOKEN_RDRCT_OUT)
-            cmd->out_type = REDIR_TRUNC;
-        else
-            cmd->out_type = REDIR_APPEND;
-    }
+	if (type == TOKEN_RDRCT_IN || type == TOKEN_HEREDOC)
+	{
+		free(cmd->infile);
+		cmd->infile = filename;
+		if (type == TOKEN_RDRCT_IN)
+			cmd->in_type = REDIR_INPUT;
+		else
+			cmd->in_type = REDIR_HEREDOC;
+	}
+	else // TOKEN_RDRCT_OUT or TOKEN_RDRCT_APPEND
+	{
+		free(cmd->outfile);
+		cmd->outfile = filename;
+		if (type == TOKEN_RDRCT_OUT)
+			cmd->out_type = REDIR_TRUNC;
+		else
+			cmd->out_type = REDIR_APPEND;
+	}
 }
 
 /*This function is used to parse the redirections of a command.*/

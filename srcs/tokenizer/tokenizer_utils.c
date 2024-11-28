@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:58:51 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/15 17:58:53 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 11:38:44 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ if (!value)
 }
 
 /*This function determines the type of token based on the character at the current position. It returns the appropriate token type for the character.*/
-t_token_type	get_token_type(char c)
+t_token_type	get_operator_type(char c)
 {
 	if (c == '|')
 		return (TOKEN_PIPE);

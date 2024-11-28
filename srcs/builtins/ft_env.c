@@ -1,21 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:54:00 by dodordev          #+#    #+#             */
-/*   Updated: 2024/10/17 11:54:20 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/26 15:43:52 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*This function checks the number of arguments passed to the env command. If there are more than one argument,
+	it prints an error message and returns 0.*/
+int	check_env_args(char **args)
+{
+	int	i;
+
+	i = 0;
+	while (args[i])
+		i++;
+	if (i > 1)
+	{
+		ft_putstr_fd("env: '", STDERR_FILENO);
+		ft_putstr_fd(args[1], STDERR_FILENO);
+		ft_putendl_fd("': too many arguments", STDERR_FILENO);
+		return (0);
+	}
+	return (1);
+}
+
 /*This function is used to print the environment variables.*/
 int	ft_env(char **args, t_shell *shell)
 {
-	int	i;
+	int i;
 
 	if (!check_env_args(args))
 		return (127);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:01:11 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/25 12:36:00 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/11/26 14:42:19 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ void	process_shell_input(char *input, t_shell *shell)
 	}
 }
 
-/*This function starts the shell loop. It reads input from the user | processes the input | and frees the input.*/
+/*This function starts the shell loop. \ 
+It reads input from the user | processes the input | and frees the input.*/
 void	run_shell_loop(t_shell *shell)
 {
 	char	*input;
@@ -55,7 +56,7 @@ void	run_shell_loop(t_shell *shell)
 		{
 			if (isatty(STDIN_FILENO))
 				write(2, "exit\n", 6);
-			exit (0);
+			exit(0);
 		}
 		process_shell_input(input, shell);
 		free(input);
@@ -81,27 +82,13 @@ void	initialize_shell(t_shell *shell, char **envp)
 
 /*This function initializes entire minishell program. It checks if the number of arguments is not 1 | Sets all fields to NULL/0 | Initializes the shell struct | Sets up the signals | and sets the running flag to true.*/
 
-/*int	main(int argc, char **argv, char **env)
-{
-	t_shell	shell;
-	int		exit_status;
-
-	if (prevent_batch_and_init(&shell, env, argc, argv) != 0)
-		return (1);
-	run_shell_loop(&shell);
-	exit_status = shell.exit_status;
-	cleanup_shell_data(&shell);
-	return (exit_status);
-}*/
-
-
 int	main(int argc, char **argv, char **env)
 {
 	t_shell	shell;
 	int		exit_status;
 
 	if (argc != 1)
-		return (cleanup_and_exit("minishell: arguments not allowed", NULL, 1, NULL));
+		return (cleanup_and_exit(ERR_BATCH, NULL, 1, NULL));
 	(void)argv;
 	initialize_shell(&shell, env);
 	setup_signals();

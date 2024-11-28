@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:52:07 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/25 14:11:35 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/11/26 16:27:43 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,24 +27,6 @@ int	is_valid_n_flag(char *arg)
 		i++;
 	}
 	return (1);
-}
-
-
-/*This function is used to print the arguments.*/
-void	print_args(char **args, int start, int n_flag)
-{
-	int	i;
-
-	i = start;
-	while (args[i])
-	{
-		ft_putstr_fd(args[i], STDOUT_FILENO);
-		if (args[i + 1])
-			ft_putchar_fd(' ', STDOUT_FILENO);
-		i++;
-	}
-	if (!n_flag)
-		ft_putchar_fd('\n', STDOUT_FILENO);
 }
 
 /*This function is used to print the arguments.*/
