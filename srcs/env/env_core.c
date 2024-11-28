@@ -1,18 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_utils.c                                        :+:      :+:    :+:   */
+/*   env_core.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:47:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/17 19:08:08 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 13:08:18 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function retrieves the value of an environment variable from the shell's environment array. It returns the value as a string if found, or NULL if not found.*/
+/*This function retrieves the value of an environment variable. \ 
+It returns the value as a string if found, or NULL if not found.*/
 char	*get_env_value(char *name, t_shell *shell)
 {
 	int		i;
@@ -36,7 +37,8 @@ char	*get_env_value(char *name, t_shell *shell)
 	return (NULL);
 }
 
-/*This function finds the index of an environment variable in an array of environment variables. It returns the index of the variable if found, or -1 if not found.*/
+/*This function finds the index of an environment variable. \ 
+It returns the index of the variable if found, or -1 if not found.*/
 int	find_env_index(char *name, char **envp)
 {
 	int	i;
@@ -92,6 +94,7 @@ int	count_env_vars(char **envp)
 	return (i);
 }
 
+/*This function updates the SHLVL of the Minishell program*/
 void	update_shell_level(t_shell *shell)
 {
 	char	*current_level;

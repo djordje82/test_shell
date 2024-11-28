@@ -6,12 +6,17 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:12:52 by dodordev          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/11/28 12:25:00 by jadyar           ###   ########.fr       */
+=======
+/*   Updated: 2024/11/28 13:11:50 by dodordev         ###   ########.fr       */
+>>>>>>> d2
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+<<<<<<< HEAD
 /*This function is used to print the environment variables.*/
 void	print_env_var(char *env_var)
 {
@@ -19,6 +24,8 @@ void	print_env_var(char *env_var)
 		ft_putendl_fd(env_var, STDOUT_FILENO);
 }
 
+=======
+>>>>>>> d2
 static void	sort_env_array(char **sorted)
 {
 	int		i;
@@ -79,11 +86,4 @@ void	print_exported_var(char *var)
 	if (found_equals)
 		ft_putchar_fd('"', STDOUT_FILENO);
 	ft_putchar_fd('\n', STDOUT_FILENO);
-}
-
-void	print_export_error(char *arg)
-{
-	ft_putstr_fd("minishell: export: `", STDERR_FILENO);
-	ft_putstr_fd(arg, STDERR_FILENO);
-	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 }

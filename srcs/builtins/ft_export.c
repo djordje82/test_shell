@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:53:04 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 12:18:20 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/11/28 14:09:18 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,9 @@ static int	validate_and_process(char *arg, t_shell *shell)
 {
 	if (arg[0] == '=' || !validate_env_var(arg))
 	{
-		print_export_error(arg);
+		ft_putstr_fd("minishell: export: `", STDERR_FILENO);
+		ft_putstr_fd(arg, STDERR_FILENO);
+		ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 		return (1);
 	}
 	return (process_export_var(arg, shell));

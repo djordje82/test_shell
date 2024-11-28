@@ -6,13 +6,13 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:47:04 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/17 19:08:10 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 13:09:31 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function updates the value of an environment variable in the shell's environment array. It returns 0 on success, or 1 if the variable is not found or if there is an error.*/
+/*This function updates the value of an environment variable.*/
 int	update_env_value(char *name, char *value, t_shell *shell)
 {
 	int		index;
@@ -41,7 +41,6 @@ int	add_new_var(char *arg, t_shell *shell)
 	new_env = malloc(sizeof(char *) * (size + 2));
 	if (!new_env)
 		return (0);
-
 	i = 0;
 	while (shell->envp[i])
 	{
@@ -65,7 +64,8 @@ int	add_new_var(char *arg, t_shell *shell)
 	return (1);
 }
 
-/*This function creates a new environment variable string by concatenating the name and value with an equal sign. It returns the new string or NULL if there is an error.*/
+/*This function creates a new environment variable string by concatenating \
+the name and value with an equal sign.*/
 char	*create_env_string(char *name, char *value)
 {
 	char	*result;
@@ -85,12 +85,12 @@ char	*create_env_string(char *name, char *value)
 	return (result);
 }
 
-/*This function removes an environment variable from the shell's environment array. It returns 1 if the variable is found and removed, or 0 if the variable is not found.*/
+/*This function removes an environment variable.*/
 int	remove_env_var(char *name, t_shell *shell)
 {
-	int		i;
-	int		j;
-	int		name_len;
+	int	i;
+	int	j;
+	int	name_len;
 
 	name_len = ft_strlen(name);
 	i = 0;
@@ -98,7 +98,7 @@ int	remove_env_var(char *name, t_shell *shell)
 	{
 		if (ft_strncmp(shell->envp[i], name, name_len) == 0
 			&& (shell->envp[i][name_len] == '='
-			|| shell->envp[i][name_len] == '\0'))
+				|| shell->envp[i][name_len] == '\0'))
 		{
 			free(shell->envp[i]);
 			j = i;

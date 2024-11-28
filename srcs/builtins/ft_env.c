@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:54:00 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/26 15:43:52 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 13:17:29 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ int	ft_env(char **args, t_shell *shell)
 	i = 0;
 	while (shell->envp[i])
 	{
-		print_env_var(shell->envp[i]);
+		if (has_equals_sign(shell->envp[i]))
+			ft_putendl_fd(shell->envp[i], STDOUT_FILENO);
 		i++;
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:20:46 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/26 15:21:10 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 13:06:11 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ char	*append_word_part(char *result, const char *input, int start, int len)
 	return (new_result);
 }
 
-/*This function is used to append an unquoted part of the input string to the result.*/
+/*This function is used to append an \
+unquoted part of the input string to the result.*/
 static char	*append_unquoted_part(char *result, const char *input, int *start,
 		int *len)
 {
@@ -48,7 +49,8 @@ static char	*append_unquoted_part(char *result, const char *input, int *start,
 	return (result);
 }
 
-/*This function is used to process a quoted segment of the input string. It appends the part of the string that is not quoted to the result.*/
+/*This function is used to process a quoted segment of the input string. \
+It appends the part of the string that is not quoted to the result.*/
 char	*process_quoted_segment(char *result, const char *input, int *start,
 		int *len)
 {
@@ -76,25 +78,22 @@ char	*process_quoted_segment(char *result, const char *input, int *start,
 	return (result);
 }
 
-/*This function is used to process the content of a word in the input string. It handles both quoted and unquoted parts.*/
+/*This function is used to process the content of a word in the input string. \
+It handles both quoted and unquoted parts.*/
 static char	*process_word_content(const char *input, int *start, int *len)
 {
 	char	*result;
+	char	curr_char;
 
-	char curr_char;
-		// is used to store the current character in the input string
 	if (!input || !start || !len)
 		return (NULL);
 	result = ft_strdup("");
-		// we need to initialize the result with an empty string
 	if (!result)
 		return (NULL);
 	while (input[*start + *len])
 	{
-		curr_char = input[*start + *len];         
-			// we set it to the position of the current character in the input string
+		curr_char = input[*start + *len];
 		if (curr_char == '\'' || curr_char == '"')
-			// if the current character is a quote, we process the quoted segment
 		{
 			result = process_quoted_segment(result, input, start, len);
 			if (!result)
@@ -102,26 +101,24 @@ static char	*process_word_content(const char *input, int *start, int *len)
 			continue ;
 		}
 		if (is_word_delimiter(curr_char))
-			// if the current character is a word delimiter, we break the loop
 			break ;
 		(*len)++;
-			// we increment the length of the word if it's regular character
 	}
 	if (*len > 0)
 		result = append_word_part(result, input, *start, *len);
-			// we append the part of the word to the result
 	return (result);
 }
 
-/*This function is used to extract a word from the input string. It handles both quoted and unquoted parts of the string.*/
+/*This function is used to extract a word from the input string. \
+It handles both quoted and unquoted parts of the string.*/
 char	*extract_word(const char *input, int *pos)
 {
 	char *result;
 	int start;
 	int len;
 
-	start = *pos; // we use the pointer to the position of the start of the word
-	len = 0;      // is used to count the number of characters in the word
+	start = *pos;
+	len = 0;
 	result = process_word_content(input, &start, &len);
 	if (!result || !*result)
 	{
@@ -129,6 +126,5 @@ char	*extract_word(const char *input, int *pos)
 		return (NULL);
 	}
 	*pos = start + len;
-		// we update the pointer to the position of the end of the word
 	return (result);
 }
