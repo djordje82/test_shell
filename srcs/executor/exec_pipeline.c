@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipeline.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/26 15:07:36 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 13:59:06 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,7 @@ int	create_process(pid_t *pid, t_shell *shell)
 	return (1);
 }
 
-/*This function initializes a pipeline. It sets up pipe file descriptors and checks for parent-only builtins.*/
-static int	init_pipeline(t_command *current, int *pipe_fd, t_shell *shell)
+/* static int	init_pipeline(t_command *current, int *pipe_fd, t_shell *shell)
 {
 	pipe_fd[0] = -1;
 	pipe_fd[1] = -1;
@@ -40,6 +39,31 @@ static int	init_pipeline(t_command *current, int *pipe_fd, t_shell *shell)
 		return (0);
 	if (current->args && is_parent_only_builtin(current->args[0]))
 		handle_builtin_cmd(current, shell);
+	return (1);
+} */
+
+static int	init_pipeline(t_command *current, int *pipe_fd, t_shell *shell)
+{
+	pipe_fd[0] = -1;
+	pipe_fd[1] = -1;
+	if (current->next && !create_pipe(pipe_fd, shell))
+		return (0);
+	if (current->args && is_builtin(current->args[0]))
+	{
+		if (!current->next && !current->prev)
+		{
+			handle_builtin_cmd(current, shell);
+			return (1);
+		}
+		if (is_parent_only_builtin(current->args[0]))
+		{
+			if (!current->next && !current->prev)
+			{
+				handle_builtin_cmd(current, shell);
+				return (1);
+			}
+		}
+	}
 	return (1);
 }
 
