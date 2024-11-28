@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+         #
+#    By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 14:34:50 by j                 #+#    #+#              #
-#    Updated: 2024/11/08 12:15:12 by dodordev         ###   ########.fr        #
+#    Updated: 2024/11/28 15:01:00 by jadyar           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,8 +56,6 @@ SRCS =	main.c \
 		parser/parser_utils.c \
 		parser/parse_redirections.c \
 		parser/command_utils.c \
-		parser/wildcards.c \
-		parser/wildcards_utils.c \
 		parser/env_expansion.c \
 		signals/signals.c \
 		signals/sig_utils.c \
