@@ -1,6 +1,8 @@
 {
   "version": "0.2.0",
   "configurations": [
+
+
     {
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
@@ -8,13 +10,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-<<<<<<< HEAD
-      "cwd": "/home/jadyar/Desktop/test_shell/srcs/executor",
-      "program": "/home/jadyar/Desktop/test_shell/srcs/executor/build/Debug/outDebug",
-=======
-      "cwd": "/home/jadyar/Desktop/test_shell_1/srcs/tokenizer",
-      "program": "/home/jadyar/Desktop/test_shell_1/srcs/tokenizer/build/Debug/outDebug",
->>>>>>> d2
+      "program": "${workspaceFolder}/minishell",
+      "cwd": "/home/jadyar/Desktop/test_shell_1/srcs/executor",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

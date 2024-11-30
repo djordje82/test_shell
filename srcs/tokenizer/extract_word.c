@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   extract_word.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:20:46 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 17:40:02 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/29 17:29:13 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,13 @@ char	*append_word_part(char *result, const char *input, int start, int len)
 		return (NULL);
 	}
 	new_result = ft_strjoin_free(result, temp);
+	if (!new_result)
+		return (NULL);
 	free(temp);
 	return (new_result);
 }
 
-/*This function is used to append an \
+/*This function is used to append an 
 unquoted part of the input string to the result.*/
 static char	*append_unquoted_part(char *result, const char *input, int *start,
 		int *len)
@@ -49,48 +51,41 @@ static char	*append_unquoted_part(char *result, const char *input, int *start,
 	return (result);
 }
 
-/*This function is used to process a quoted segment of the input string. \
+/*This function is used to process a quoted segment of the input string.
 It appends the part of the string that is not quoted to the result.*/
 
-char *process_quoted_segment(char *result, const char *input,
-    int *start, int *len)
+char	*process_quoted_segment(char *result, const char *input,
+	int *start, int *len)
 {
-    char    quote_type;
-    int     quote_pos;
-    char    *quoted_content;
+	char	quote_type;
+	int		quote_pos;
+	char	*quoted_content;
 
-    if (!result || !input || !start || !len)
-        return (NULL);
-    result = append_unquoted_part(result, input, start, len);
-    if (!result)
-        return (NULL);
-    
-    quote_type = input[*start + *len];
-    quote_pos = *start + *len;
-
-    if (quote_pos > 0 && input[quote_pos - 1] == '\\' && quote_type == '"')
-    {
-        (*len)++;
-        return (result);
-    }
-
-    quoted_content = extract_quoted((char *)input, &quote_pos, quote_type);
-    if (!quoted_content)
-    {
-        ft_putendl_fd("minishell: syntax error: unclosed quotes", 2);
-        g_exit_status = 2;
-        free(result);
-        return (NULL);
-    }
-    
-    result = ft_strjoin_free(result, quoted_content);
-    free(quoted_content);
-    *len = quote_pos - *start - *len;
-    *start += *len;
-    return (result);
+	if (!result || !input || !start || !len)
+		return (NULL);
+	result = append_unquoted_part(result, input, start, len);
+	if (!result)
+		return (NULL);
+	quote_type = input[*start + *len];
+	quote_pos = *start + *len;
+	quoted_content = extract_quoted((char *)input, &quote_pos, quote_type);
+	if (!quoted_content)
+	{
+		ft_putendl_fd("minishell: syntax error: unclosed quotes", 2);
+		g_exit_status = 2;
+		free(result);
+		return (NULL);
+	}
+	result = ft_strjoin_free(result, quoted_content);
+	free(quoted_content);
+	if (!result)
+		return (NULL);
+	*len = quote_pos - *start;
+	*start = quote_pos;
+	return (result);
 }
 
-/*This function is used to process the content of a word in the input string. \
+/*This function is used to process the content of a word in the input string.
 It handles both quoted and unquoted parts.*/
 static char	*process_word_content(const char *input, int *start, int *len)
 {
@@ -117,17 +112,21 @@ static char	*process_word_content(const char *input, int *start, int *len)
 		(*len)++;
 	}
 	if (*len > 0)
+	{
 		result = append_word_part(result, input, *start, *len);
+		if (!result)
+			return (NULL);
+	}
 	return (result);
 }
 
-/*This function is used to extract a word from the input string. \
+/*This function is used to extract a word from the input string.
 It handles both quoted and unquoted parts of the string.*/
 char	*extract_word(const char *input, int *pos)
 {
-	char *result;
-	int start;
-	int len;
+	char	*result;
+	int		start;
+	int		len;
 
 	start = *pos;
 	len = 0;

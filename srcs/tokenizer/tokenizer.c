@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:16 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 16:26:57 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/29 17:22:20 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,17 +60,17 @@ static int	check_quotes(const char *input)
 {
 	int		i;
 	char	quote;
-	int		escaped;
 
 	i = 0;
 	quote = 0;
 	while (input[i])
 	{
-		escaped = (i > 0 && input[i - 1] == '\\');
-		if ((input[i] == '\'' || input[i] == '"') && !quote && !escaped)
+		if ((input[i] == '\'' || input[i] == '"') && !quote)
 			quote = input[i];
-		else if (input[i] == quote && !escaped)
+		else if (input[i] == quote)
 			quote = 0;
+		else if (!quote && (input[i] == '\'' || input[i] == '"'))
+			return (0);
 		i++;
 	}
 	return (!quote);
@@ -96,6 +96,7 @@ t_token	*tokenize_input(const char *input, t_shell *shell)
 	t_token		*current;
 	t_token		*new_token;
 	int			pos;
+
 	if (!initialize_tokenization(input, shell))
 		return (NULL);
 	head = NULL;

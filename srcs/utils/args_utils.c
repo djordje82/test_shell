@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   args_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:00:54 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/17 19:07:54 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/29 17:31:00 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ char	**insert_arg_array(char **orig_args, int pos, char **to_insert)
 	return (new_args);
 }
 
-/*This function processes expanded arguments by inserting them into the \ 
-original command arguments at a specified position. \ 
+/*This function processes expanded arguments by inserting them into the
+original command arguments at a specified position.
 It returns the number of expanded arguments.*/
 int	update_command_args(t_command *cmd, char **expanded, int pos,
 		t_shell *shell)

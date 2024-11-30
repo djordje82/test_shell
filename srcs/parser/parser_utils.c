@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:58:19 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/15 17:58:21 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/29 15:47:40 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,26 +73,19 @@ static char	**add_cmd_argument(char **args, char *new_arg)
 }
 
 /*This function is used to process the value of a token.*/
-static char *process_token_value(char *value, t_token_type type)
+static char	*process_token_value(char *value, t_token_type type)
 {
-    char *result;
-    
-	//printf("Debug: Processing token value: '%s' of type %d\n", value, type);
-	(void)type;
-    /*if (type == TOKEN_SQUOTE || type == TOKEN_DQUOTE)
-    {
-        // Remove surrounding quotes
-        //result = ft_substr(value, 1, ft_strlen(value) - 2);
-		result = ft_strdup(value + 1);
-    }
-    else
-    {
-        result = ft_strdup(value);
-    }*///add comment out here in case you need to reactivate this function
-    result = ft_strdup(value);
-    //printf("Debug: Processed result: '%s'\n", result);
+	char	*result;
 
-    return result;
+	if (type == TOKEN_SQUOTE || type == TOKEN_DQUOTE)
+	{
+		result = ft_substr(value, 1, ft_strlen(value) - 2);
+	}
+	else
+	{
+		result = ft_strdup(value);
+	}
+	return (result);
 }
 
 /*This function is used to parse the arguments of a command.*/

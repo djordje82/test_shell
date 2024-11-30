@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_redirections.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:20:05 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/26 15:20:08 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/29 12:53:48 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	set_redirection(t_command *cmd, char *filename, t_token_type type)
 		else
 			cmd->in_type = REDIR_HEREDOC;
 	}
-	else // TOKEN_RDRCT_OUT or TOKEN_RDRCT_APPEND
+	else
 	{
 		free(cmd->outfile);
 		cmd->outfile = filename;
@@ -49,7 +49,8 @@ int	parse_redirections(t_token **token, t_command *cmd)
 	*token = (*token)->next;
 	temp_file = ft_strdup((*token)->value);
 	if (!temp_file)
-		return (cleanup_and_exit(ERR_MEM, NULL, 1, NULL));
+		//return (cleanup_and_exit(ERR_MEM, NULL, 1, NULL));
+		return (0);
 	set_redirection(cmd, temp_file, type);
 	*token = (*token)->next;
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:12 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 13:02:52 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/11/29 18:16:47 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ static char	*get_var_content(char *str, int *i, t_shell *shell)
 	return (value);
 }
 
-/*This function is used to expand the environment variables in the input string.*/
+/*This function is used to expand the environment
+variables in the input string.*/
 char	*expand_env_vars(char *str, t_shell *shell)
 {
 	char	*result;
@@ -58,8 +59,17 @@ char	*expand_env_vars(char *str, t_shell *shell)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '$' && str[i + 1])
+		if (str[i] == '\\' && str[i + 1] == '$')
+		{
+			temp = ft_substr(str, i + 1, 1);
+			i += 2;
+		}
+		else if (str[i] == '$' && str[i + 1])
+		{
 			temp = get_var_content(str, &i, shell);
+			if (!temp)
+				temp = ft_strdup("");
+		}
 		else
 		{
 			temp = ft_substr(str, i++, 1);
