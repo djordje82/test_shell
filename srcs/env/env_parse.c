@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:12:38 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/30 13:10:49 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/11/30 17:15:53 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,18 @@
 /*This function extracts the name of an environment variable from a string.*/
 char	*extract_env_var_name(const char *str)
 {
-	int	i;
+	int	len;
 
-	if (!str)
+	if (!str || !*str)
 		return (NULL);
 	if (str[0] == '?')
 		return (ft_strdup("?"));
-	i = 0;
-	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
-		i++;
-	return (ft_substr(str, 0, i));
+	len = 0;
+	while (str[len] && (ft_isalnum(str[len]) || str[len] == '_'))
+		len++;
+	if (len == 0)
+		return (NULL);
+	return (ft_substr(str, 0, len));
 }
 
 /*This function extracts the value of an assignment from a given string. \
@@ -34,6 +36,8 @@ char	*extract_env_var_value(char *arg)
 {
 	char	*equals;
 
+	if (!arg)
+		return (NULL);
 	equals = ft_strchr(arg, '=');
 	if (!equals)
 		return (ft_strdup(""));

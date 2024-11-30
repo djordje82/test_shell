@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:20:05 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/29 12:53:48 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/11/30 17:56:44 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 static void	set_redirection(t_command *cmd, char *filename, t_token_type type)
 {
+	if (!filename)
+		return ;
 	if (type == TOKEN_RDRCT_IN || type == TOKEN_HEREDOC)
 	{
 		free(cmd->infile);
@@ -23,7 +25,7 @@ static void	set_redirection(t_command *cmd, char *filename, t_token_type type)
 		else
 			cmd->in_type = REDIR_HEREDOC;
 	}
-	else
+	else if (type == TOKEN_RDRCT_OUT || type == TOKEN_APPEND)
 	{
 		free(cmd->outfile);
 		cmd->outfile = filename;
@@ -32,6 +34,8 @@ static void	set_redirection(t_command *cmd, char *filename, t_token_type type)
 		else
 			cmd->out_type = REDIR_APPEND;
 	}
+	else 
+		free(filename);
 }
 
 /*This function is used to parse the redirections of a command.*/
@@ -40,6 +44,8 @@ int	parse_redirections(t_token **token, t_command *cmd)
 	t_token_type	type;
 	char			*temp_file;
 
+	if (!*token || !(*token) || !cmd)
+		return (0);
 	type = (*token)->type;
 	if (!(*token)->next || (*token)->next->type != TOKEN_WORD)
 	{
@@ -49,8 +55,10 @@ int	parse_redirections(t_token **token, t_command *cmd)
 	*token = (*token)->next;
 	temp_file = ft_strdup((*token)->value);
 	if (!temp_file)
-		//return (cleanup_and_exit(ERR_MEM, NULL, 1, NULL));
+	{
+		print_syntx_err("malloc failed", NULL);
 		return (0);
+	}
 	set_redirection(cmd, temp_file, type);
 	*token = (*token)->next;
 	return (1);

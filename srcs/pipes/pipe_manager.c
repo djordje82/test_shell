@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_manager.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 14:43:39 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/26 15:03:59 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/30 16:42:44 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@
 // Creates a new pipe and handles errors
 int	create_pipe(int pipe_fd[2], t_shell *shell)
 {
-	pipe_fd[0] = -1;
-	pipe_fd[1] = -1;
 	if (pipe(pipe_fd) == -1)
+	{
+		pipe_fd[0] = -1;
+		pipe_fd[1] = -1;
 		return (cleanup_and_exit("pipe failed", NULL, 1, shell));
+	}
 	return (1);
 }
 
@@ -45,13 +47,21 @@ int	setup_pipe_io(int in_fd, int out_fd)
 	if (in_fd != -1)
 	{
 		if (dup2(in_fd, STDIN_FILENO) == -1)
+		{
+			close(in_fd);
+			if (out_fd != -1)
+				close(out_fd);
 			return (0);
+		}
 		close(in_fd);
 	}
 	if (out_fd != -1)
 	{
 		if (dup2(out_fd, STDOUT_FILENO) == -1)
+		{
+			close(out_fd);
 			return (0);
+		}
 		close(out_fd);
 	}
 	return (1);
@@ -85,12 +95,13 @@ void	handle_pipeline_child(t_command *cmd, int *prev_pipe, int *pipe_fd,
 void	handle_parent_process(int *prev_pipe, int *pipe_fd)
 {
 	close_pipe_ends(prev_pipe);
-
 	if (pipe_fd && pipe_fd[1] != -1)
 	{
 		prev_pipe[0] = pipe_fd[0];
 		prev_pipe[1] = pipe_fd[1];
 	}
 	else
+	{
 		close_pipe_ends(pipe_fd);
+	}
 }

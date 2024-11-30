@@ -3,21 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   exec_single_cmd.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:09:35 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/26 15:09:38 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/30 15:24:54 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function cleans up an empty command. It shifts the arguments to remove the empty command.*/
+/*This function cleans up an empty command. It shifts
+ the arguments to remove the empty command.*/
 static void	cleanup_empty_command(char **args)
 {
 	int	i;
 
 	i = 0;
+	if (!args)
+		return ;
 	while (args[i + 1])
 	{
 		args[i] = args[i + 1];
@@ -26,7 +29,8 @@ static void	cleanup_empty_command(char **args)
 	args[i] = NULL;
 }
 
-/*This function executes a command based on its type. It handles built-in commands,
+/*This function executes a command based on its type.
+ It handles built-in commands,
 	external commands, and exits the shell if the command is "exit".*/
 static int	execute_command_type(t_command *cmd, t_shell *shell, int stdin_fd,
 		int stdout_fd)
@@ -51,11 +55,11 @@ static int	execute_command_type(t_command *cmd, t_shell *shell, int stdin_fd,
 	command execution, and cleanup.*/
 int	execute_single_command(t_command *cmd, t_shell *shell)
 {
-	int stdin_fd;
-	int stdout_fd;
-	int status;
+	int	stdin_fd;
+	int	stdout_fd;
+	int	status;
 
-	if (!cmd->args)
+	if (!cmd || !cmd->args)
 		return (0);
 	if (cmd->args[0] && !cmd->args[0][0])
 		cleanup_empty_command(cmd->args);
@@ -63,6 +67,11 @@ int	execute_single_command(t_command *cmd, t_shell *shell)
 		return (0);
 	stdin_fd = dup(STDIN_FILENO);
 	stdout_fd = dup(STDOUT_FILENO);
+	if (stdin_fd == -1 || stdout_fd == -1)
+	{
+		perror("dup fail");
+		return (1);
+	}
 	if (!setup_redirections(cmd))
 	{
 		restore_std_fds(stdin_fd, stdout_fd);

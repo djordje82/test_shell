@@ -7,9 +7,15 @@ static int	write_to_heredoc(int fd, char *line)
 
 	len = ft_strlen(line);
 	if (write(fd, line, len) == -1)
+	{
+		free(line);
 		return (0);
+	}
 	if (write(fd, "\n", 1) == -1)
+	{
+		free(line);
 		return (0);
+	}
 	free(line);
 	return (1);
 }
@@ -24,7 +30,6 @@ int	setup_heredoc(t_command *cmd)
 	char	*line;
 	size_t	len_delimiter;
 
-	// Use our unified pipe creation function
 	if (!create_pipe(heredoc_pipe, NULL))
 		return (0);
 	len_delimiter = ft_strlen(cmd->infile);
@@ -32,19 +37,28 @@ int	setup_heredoc(t_command *cmd)
 	{
 		line = readline("> ");
 		if (!line)
+		{
+			perror("readline failed");
 			break ;
+		}
 		if (ft_strlen(line) == len_delimiter && ft_strncmp(line, cmd->infile,
 				len_delimiter) == 0)
 		{
 			free(line);
 			break ;
 		}
-		write_to_heredoc(heredoc_pipe[1], line);
+		if (!write_to_heredoc(heredoc_pipe[1], line))
+		{
+			perror("write to Heredoc failed");
+			close_pipe_ends(heredoc_pipe);
+			return (0);
+		}
 	}
-	// Close write end first
 	close(heredoc_pipe[1]);
-	// Setup the pipe for input and close remaining fds
 	if (!setup_pipe_io(heredoc_pipe[0], -1))
+	{
+		close(heredoc_pipe[0]);
 		return (0);
+	}
 	return (1);
 }

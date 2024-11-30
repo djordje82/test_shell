@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:10:01 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/26 15:10:04 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/30 15:10:50 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,11 @@ int	execute_single_builtin(t_command *cmd, t_shell *shell)
 
 	stdin_fd = dup(STDIN_FILENO);
 	stdout_fd = dup(STDOUT_FILENO);
+	if (stdin_fd == -1 || stdout_fd == -1)
+	{
+		perror("dup fail");
+		return (1);
+	}
 	if (!setup_redirections(cmd))
 	{
 		restore_std_fds(stdin_fd, stdout_fd);

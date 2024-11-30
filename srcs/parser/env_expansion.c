@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:12 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/29 18:16:47 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/11/30 17:51:13 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ char	*expand_env_vars(char *str, t_shell *shell)
 	char	*temp;
 	int		i;
 
+	if (!str)
+		return (NULL);
 	result = ft_strdup("");
 	i = 0;
 	while (str[i])
@@ -64,11 +66,22 @@ char	*expand_env_vars(char *str, t_shell *shell)
 			temp = ft_substr(str, i + 1, 1);
 			i += 2;
 		}
-		else if (str[i] == '$' && str[i + 1])
+		else if (str[i] == '$' && str[i + 1] == '?')
+		{
+			temp = ft_itoa(shell->exit_status);
+			i += 2;
+		}
+		else if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
 		{
 			temp = get_var_content(str, &i, shell);
 			if (!temp)
 				temp = ft_strdup("");
+		}
+		else if (str[i] == '$' && (!str[i + 1] || \
+		(!ft_isalnum(str[i + 1]) && str[i + 1] != '_')))
+		{
+			temp = ft_strdup("$");
+			i++;
 		}
 		else
 		{
