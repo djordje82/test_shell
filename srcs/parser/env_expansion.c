@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:12 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/30 17:51:13 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/03 14:16:06 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char	*expand_env_vars(char *str, t_shell *shell)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '\\' && str[i + 1] == '$')
+		if (str[i] == '\\' && (str[i + 1] == '$' || str[i] == '\\'))
 		{
 			temp = ft_substr(str, i + 1, 1);
 			i += 2;

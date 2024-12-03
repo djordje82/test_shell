@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/30 14:31:50 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/03 12:27:09 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,27 +86,28 @@ extern volatile sig_atomic_t	g_exit_status;
 typedef enum e_char_type
 {
 	CHAR_WHITESPACE,
-	CHAR_PIPE,      // |
-	CHAR_REDIR_IN,  // <
-	CHAR_REDIR_OUT, // >
-	CHAR_SQUOTE,    // '
-	CHAR_DQUOTE,    // "
-	CHAR_NORMAL     // Regular characters
-}								t_char_type;
+	CHAR_PIPE,
+	CHAR_REDIR_IN,
+	CHAR_REDIR_OUT,
+	CHAR_SQUOTE,
+	CHAR_DQUOTE,
+	CHAR_NORMAL
+}			t_char_type;
 
 typedef enum e_token_type
 {
 	TOKEN_WORD,
 	TOKEN_PIPE,
-	TOKEN_RDRCT_IN,  // <
-	TOKEN_RDRCT_OUT, // >Compiling srcs/tokenizer/tokenize_quoted.c...
-	TOKEN_APPEND,    // >>
-	TOKEN_HEREDOC,   // <<
+	TOKEN_REDIR_IN,
+	TOKEN_REDIR_OUT,
+	TOKEN_APPEND,
+	TOKEN_HEREDOC,
+	TOKEN_UNKNOWN,
 	TOKEN_SPACE,
-	TOKEN_SQUOTE, // '
-	TOKEN_DQUOTE, // "
-	TOKEN_ENV     // $
-}								t_token_type;
+	TOKEN_SQUOTE,
+	TOKEN_DQUOTE,
+	TOKEN_ENV
+}					t_token_type;
 
 /*STRUCTS*/
 typedef struct s_node
@@ -168,7 +169,8 @@ void							reset_shell_state(t_shell *shell);
 
 /*TOKENIZER*/
 char							*ft_strjoin_free(char *s1, char *s2);
-t_token	*create_token(char *value, t_token_type type); // Swap parameters order
+t_token							*create_token(const char *value, \
+								t_token_type type);
 t_token							*tokenize_input(const char *input,
 									t_shell *shell);
 t_token							*tokenize_word(const char *input, int *i,

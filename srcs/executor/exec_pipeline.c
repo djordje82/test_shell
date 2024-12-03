@@ -6,23 +6,22 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/30 17:00:22 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/03 15:30:00 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function restores the standard file descriptors to their original values.*/
 void	restore_std_fds(int stdin_fd, int stdout_fd)
 {
 	if (dup2(stdin_fd, STDIN_FILENO) == -1)
 	{
-		perror("dup2 stdin");
+		//perror("dup2 stdin");
 		exit(1);
 	}
 	if (dup2(stdout_fd, STDOUT_FILENO) == -1)
 	{
-		perror("dup2 stdout");
+		//perror("dup2 stdout");
 		exit(1);
 	}
 	close(stdin_fd);
@@ -43,12 +42,21 @@ int	is_parent_only_builtin(char *cmd)
 		|| ft_strncmp(cmd, "unset", 6) == 0);
 }
 
+static void	cleanup_pipeline_resources(int *prev_pipe, int *pipe_fd)
+{
+	close_pipe_ends(prev_pipe);
+	close_pipe_ends(pipe_fd);
+}
+
 static int	init_pipeline(t_command *current, int *pipe_fd, t_shell *shell)
 {
 	pipe_fd[0] = -1;
 	pipe_fd[1] = -1;
 	if (current->next && !create_pipe(pipe_fd, shell))
+	{
+		perror("pipe failed");
 		return (0);
+	}
 	if (current->args && is_builtin(current->args[0]))
 	{
 		if (is_parent_only_builtin(current->args[0]) \
@@ -71,6 +79,8 @@ int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 	int		pipe_fd[2];
 	pid_t	pid;
 
+	pipe_fd[0] = -1;
+	pipe_fd[1] = -1;
 	if (!current->is_valid)
 	{
 		if (!current->prev)
@@ -82,17 +92,15 @@ int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 		return (0);
 	if (!create_process(&pid, shell))
 	{
-		close_pipe_ends(prev_pipe);
-		close_pipe_ends(pipe_fd);
+		cleanup_pipeline_resources(prev_pipe, pipe_fd);
 		return (0);
 	}
 	if (pid == 0)
 	{
 		setup_child_signal();
-		if (!current->is_valid)
+		if (!current) //is_Valid check maybe
 		{
-			close_pipe_ends(prev_pipe);
-			close_pipe_ends(pipe_fd);
+			cleanup_pipeline_resources(prev_pipe, pipe_fd);
 			exit(127);
 		}
 		handle_pipeline_child(current, prev_pipe, pipe_fd, shell);
@@ -119,10 +127,11 @@ void	execute_pipeline_cmd(t_command *cmd, char *cmd_path, t_shell *shell)
 	}
 	if (!execve(cmd_path, cmd->args, shell->envp))
 	{
-		perror("execve failed");
+		//perror("execve failed");
 		close(STDIN_FILENO);
 		close(STDOUT_FILENO);
 		free(cmd_path);
 		handle_command_errors(cmd_path, cmd->args[0]);
+		exit (EXIT_FAILURE);
 	}
 }

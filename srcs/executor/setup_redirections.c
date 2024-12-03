@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:00 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/30 14:53:22 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/03 15:12:42 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ int	setup_redirections(t_command *cmd)
 		if (!handle_input_redirection(cmd))
 		{
 			g_exit_status = 1;
+			restore_std_fds(STDIN_FILENO, STDOUT_FILENO);
 			return (0);
 		}
 	}
@@ -99,6 +100,7 @@ int	setup_redirections(t_command *cmd)
 		if (!handle_output_redirection(cmd))
 		{
 			g_exit_status = 1;
+			restore_std_fds(STDIN_FILENO, STDOUT_FILENO);
 			return (0);
 		}
 	}

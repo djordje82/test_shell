@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:16 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/29 17:22:20 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/03 12:21:37 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_token	*get_token_type(const char *input, int *pos, t_shell *shell)
 	while (input[*pos] && ft_is_whitespace(input[*pos]))
 		(*pos)++;
 	type = get_operator_type(input[*pos]);
-	if (type == TOKEN_PIPE || type == TOKEN_RDRCT_IN || type == TOKEN_RDRCT_OUT)
+	if (type == TOKEN_PIPE || type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT)
 	{
 		if (input[*pos] == '>' && input[*pos + 1] == '>')
 			return (tokenize_double_operator(input, pos, ">>", TOKEN_APPEND));

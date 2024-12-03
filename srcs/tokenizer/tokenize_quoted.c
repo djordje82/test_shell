@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/29 18:20:07 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/03 13:19:11 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ char	*extract_quoted(char *input, int *pos, char quote_type)
 	char	*content;
 	int		i;
 
-	i = 0;
-	if (!input || !pos)
+	if (!input || !pos || !quote_type)
 		return (NULL);
 	(*pos)++;
 	content = malloc(sizeof(char) * (ft_strlen(input) + 1));
 	if (!content)
 		return (NULL);
+	i = 0;
 	while (input[*pos])
 	{
 		if (input[*pos] == quote_type)
@@ -34,10 +34,12 @@ char	*extract_quoted(char *input, int *pos, char quote_type)
 			if (input[*pos + 1] == quote_type)
 			{
 				(*pos)++;
-				continue ;
 			}
-			(*pos)++;
-			break ;
+			else
+			{
+				(*pos)++;
+				break ;
+			}
 		}
 		if (quote_type == '\'')
 		{

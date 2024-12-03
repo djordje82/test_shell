@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:42 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/17 17:47:42 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/30 19:12:41 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	setup_signals(void)
 {
 	struct sigaction	sa;
 
-	// Initialize sigaction struct
+	ft_memset(&sa, 0, sizeof(struct sigaction));
 	sa.sa_flags = SA_RESTART; // Remove SA_RESTART;
 	sigemptyset(&sa.sa_mask);
 	// Interactive mode handler
@@ -50,7 +50,7 @@ void	setup_execution_signals(struct sigaction *sa_old_int,
 	// Save old handlers
 	sigaction(SIGINT, NULL, sa_old_int);
 	sigaction(SIGQUIT, NULL, sa_old_quit);
-	// Set parent process to ignore signals during command execution
+	ft_memset(&sa, 0, sizeof(struct sigaction));
 	sa.sa_flags = SA_RESTART;
 	sigemptyset(&sa.sa_mask);
 	sa.sa_handler = SIG_IGN;

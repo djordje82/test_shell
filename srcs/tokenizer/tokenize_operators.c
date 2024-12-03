@@ -3,54 +3,66 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_operators.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:58:42 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 11:48:49 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/03 12:53:41 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function creates a token for a double-character operators (>> or <<)*/
-t_token	*tokenize_double_operator(const char *input, int *pos,
-		const char *op_str, t_token_type type)
+t_token_type	get_operator_type(char c)
+{
+	if (c == '\'')
+		return (TOKEN_SQUOTE);
+	if (c == '\"')
+		return (TOKEN_DQUOTE);
+	if (c == '$')
+		return (TOKEN_ENV);
+	if (c == '>')
+		return (TOKEN_REDIR_OUT);
+	if (c == '<')
+		return (TOKEN_REDIR_IN);
+	if (c == '|')
+		return (TOKEN_PIPE);
+	return (TOKEN_UNKNOWN);
+}
+
+t_token	*create_operator_token(const char *value, t_token_type type,
+		int advance, int *pos)
 {
 	t_token	*token;
-	char	*value;
 
-	(void)input;
-	if (!pos || !op_str)
-		return (NULL);
-	value = ft_strdup(op_str);
-	if (!value)
-		return (NULL);
 	token = create_token(value, type);
-	free(value);
-	if (!token)
-		return (NULL);
-	*pos += 2;
+	if (token && pos)
+		*pos += advance;
 	return (token);
 }
 
-/*This function creates a token for a single-character operator (>, <, |,
-	etc.)*/
+// Function: Tokenize double-character operators (e.g., >>, <<)
+t_token	*tokenize_double_operator(const char *input, int *pos,
+		const char *op_str, t_token_type type)
+{
+	if (!input || !pos || !op_str)
+		return (NULL);
+	return (create_operator_token(op_str, type, 2, pos));
+}
+
+// Function: Tokenize single-character operators (e.g., >, <, |)
 t_token	*tokenize_single_operator(const char *input, int *i)
 {
-	char			*value;
-	t_token			*token;
+	char			value[2];
 	t_token_type	type;
 
+	value[0] = input[*i];
 	if (!input || !i)
 		return (NULL);
-	value = ft_substr(input, *i, 1);
-	if (!value)
-		return (NULL);
 	type = get_operator_type(input[*i]);
-	token = create_token(value, type);
-	free(value);
-	if (!token)
+	if (type == TOKEN_UNKNOWN)
+	{
+		ft_putendl_fd("minishell: syntax error", 2);
 		return (NULL);
-	(*i)++;
-	return (token);
+	}
+	return (create_operator_token(value, type, 1, i));
 }

@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:51:35 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/30 14:39:39 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/03 15:50:37 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,8 @@ static void	print_cd_error(char *path)
 /*This function is used to change the current directory of the user.*/
 int	ft_cd(char **args, t_shell *shell)
 {
-	int	ret;
+	int		ret;
+	char	*path;
 
 	if (ft_count_args(args) > 2)
 	{
@@ -94,11 +95,15 @@ int	ft_cd(char **args, t_shell *shell)
 		return (1);
 	}
 	if (!args[1])
+		path = get_home_dir(shell);
+	else
+		path = expand_path(args[1], shell);
+	if (!path)
 	{
-		ft_putendl_fd("minishell: cd: path required", STDERR_FILENO);
+		ft_putendl_fd("minishell: cd: HOME not set", STDERR_FILENO);
 		return (1);
 	}
-	if (chdir(args[1]) == -1)
+	if (chdir(path) == -1)
 	{
 		print_cd_error(args[1]);
 		ret = 1;

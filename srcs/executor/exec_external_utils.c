@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:23 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/30 15:08:35 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/03 15:30:52 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void	execute_external_child(t_command *cmd, char *cmd_path, t_shell *shell)
 	exec_status = execve(cmd_path, cmd->args, shell->envp);
 	if (exec_status == -1)
 	{
-		perror("execve failed");
 		handle_command_errors(cmd_path, cmd->args[0]);
 	}
 }

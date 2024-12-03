@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 14:43:39 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/30 16:42:44 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/11/30 18:20:16 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,16 @@
 // Creates a new pipe and handles errors
 int	create_pipe(int pipe_fd[2], t_shell *shell)
 {
+	if (!pipe_fd)
+		return (0);
 	if (pipe(pipe_fd) == -1)
 	{
 		pipe_fd[0] = -1;
 		pipe_fd[1] = -1;
-		return (cleanup_and_exit("pipe failed", NULL, 1, shell));
+		//return (cleanup_and_exit("pipe failed", NULL, 1, shell));
+		if (shell)
+			perror("pipe failed");
+		return (0);
 	}
 	return (1);
 }
@@ -48,6 +53,7 @@ int	setup_pipe_io(int in_fd, int out_fd)
 	{
 		if (dup2(in_fd, STDIN_FILENO) == -1)
 		{
+			perror("dup2 failed in_fd");
 			close(in_fd);
 			if (out_fd != -1)
 				close(out_fd);
@@ -59,6 +65,7 @@ int	setup_pipe_io(int in_fd, int out_fd)
 	{
 		if (dup2(out_fd, STDOUT_FILENO) == -1)
 		{
+			perror("dup2 failed out_fd");
 			close(out_fd);
 			return (0);
 		}
@@ -81,7 +88,13 @@ void	handle_pipeline_child(t_command *cmd, int *prev_pipe, int *pipe_fd,
 	if (pipe_fd)
 		output_fd = pipe_fd[1];
 	if (!setup_pipe_io(input_fd, output_fd))
+	{
+		perror("pipe io failed");
+		close_pipe_ends(prev_pipe);
+		if (pipe_fd)
+			close_pipe_ends(pipe_fd);
 		exit(1);
+	}
 	close_pipe_ends(prev_pipe);
 	if (pipe_fd)
 		close(pipe_fd[0]);

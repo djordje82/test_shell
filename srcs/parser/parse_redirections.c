@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:20:05 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/30 17:56:44 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/03 12:21:12 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,20 @@ static void	set_redirection(t_command *cmd, char *filename, t_token_type type)
 {
 	if (!filename)
 		return ;
-	if (type == TOKEN_RDRCT_IN || type == TOKEN_HEREDOC)
+	if (type == TOKEN_REDIR_IN || type == TOKEN_HEREDOC)
 	{
 		free(cmd->infile);
 		cmd->infile = filename;
-		if (type == TOKEN_RDRCT_IN)
+		if (type == TOKEN_REDIR_IN)
 			cmd->in_type = REDIR_INPUT;
 		else
 			cmd->in_type = REDIR_HEREDOC;
 	}
-	else if (type == TOKEN_RDRCT_OUT || type == TOKEN_APPEND)
+	else if (type == TOKEN_REDIR_OUT || type == TOKEN_APPEND)
 	{
 		free(cmd->outfile);
 		cmd->outfile = filename;
-		if (type == TOKEN_RDRCT_OUT)
+		if (type == TOKEN_REDIR_OUT)
 			cmd->out_type = REDIR_TRUNC;
 		else
 			cmd->out_type = REDIR_APPEND;

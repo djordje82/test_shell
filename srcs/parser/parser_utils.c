@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:58:19 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/29 15:47:40 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/11/30 18:05:59 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ static char	**copy_existing_args(char **new_args, char **args, int *i)
 		if (!new_args[*i])
 		{
 			ft_free_array((void **)new_args, *i);
-			ft_free_array((void **)args, -1);
 			return (NULL);
 		}
 		(*i)++;
@@ -34,12 +33,10 @@ static char	**create_new_array(char **args, int count)
 {
 	char	**new_args;
 
+	(void)args;
 	new_args = malloc(sizeof(char *) * (count + 2));
 	if (!new_args)
-	{
-		ft_free_array((void **)args, -1);
 		return (NULL);
-	}
 	return (new_args);
 }
 
@@ -49,6 +46,7 @@ static char	**add_cmd_argument(char **args, char *new_arg)
 	char	**new_args;
 	int		i;
 
+	(void)args;
 	if (!new_arg)
 		return (args);
 	i = 0;
@@ -56,7 +54,10 @@ static char	**add_cmd_argument(char **args, char *new_arg)
 		i++;
 	new_args = create_new_array(args, i);
 	if (!new_args)
+	{
+		ft_free_array((void **)args, -1);
 		return (NULL);
+	}
 	i = 0;
 	if (!copy_existing_args(new_args, args, &i))
 		return (NULL);
@@ -64,7 +65,6 @@ static char	**add_cmd_argument(char **args, char *new_arg)
 	if (!new_args[i])
 	{
 		ft_free_array((void **)new_args, i);
-		ft_free_array((void **)args, -1);
 		return (NULL);
 	}
 	new_args[i + 1] = NULL;
@@ -79,6 +79,8 @@ static char	*process_token_value(char *value, t_token_type type)
 
 	if (type == TOKEN_SQUOTE || type == TOKEN_DQUOTE)
 	{
+		if (ft_strlen(value) < 2)
+			return (ft_strdup(""));
 		result = ft_substr(value, 1, ft_strlen(value) - 2);
 	}
 	else
@@ -94,6 +96,8 @@ int	parse_cmd_arguments(t_token **token, t_command *cmd)
 	char	**new_args;
 	char	*processed_value;
 
+	if (!*token || !(*token) || !cmd)
+		return (0);
 	processed_value = process_token_value((*token)->value, (*token)->type);
 	if (!processed_value)
 		return (0);

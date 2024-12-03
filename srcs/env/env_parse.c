@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:12:38 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/30 17:15:53 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/03 13:50:03 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*extract_env_var_name(const char *str)
 
 	if (!str || !*str)
 		return (NULL);
-	if (str[0] == '?')
+	if (*str == '?')
 		return (ft_strdup("?"));
 	len = 0;
 	while (str[len] && (ft_isalnum(str[len]) || str[len] == '_'))

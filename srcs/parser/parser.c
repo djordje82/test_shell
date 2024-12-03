@@ -3,42 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:03:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 17:57:17 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/03 12:20:17 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*This function is used to parse a command from a list of tokens.*/
+
 t_command	*parse_command(t_token **token)
 {
 	t_command	*cmd;
-	t_token		*temp;
-	int			i;
 
-	temp = *token;
-	while (temp)
-		temp = temp->next;
+	if (!token || !*token)
+		return (NULL);
 	cmd = create_cmd_node();
 	if (!cmd)
 		return (NULL);
 	cmd->is_valid = true;
 	while (*token && (*token)->type != TOKEN_PIPE)
 	{
-		if ((*token)->type == TOKEN_RDRCT_IN
-			|| (*token)->type == TOKEN_RDRCT_OUT
+		if ((*token)->type == TOKEN_REDIR_IN
+			|| (*token)->type == TOKEN_REDIR_OUT
 			|| (*token)->type == TOKEN_APPEND
 			|| (*token)->type == TOKEN_HEREDOC)
 		{
 			if (!parse_redirections(token, cmd))
 			{
 				cmd->is_valid = false;
-				return (cleanup_cmd_list(cmd), NULL);
+				cleanup_cmd_list(cmd);
+				return (NULL);
 			}
-			continue ;  // Add continue here to skip the extra token advance
+			continue ;
 		}
 		else if ((*token)->type == TOKEN_WORD || (*token)->type == TOKEN_SQUOTE
 			|| (*token)->type == TOKEN_DQUOTE)
@@ -46,26 +45,15 @@ t_command	*parse_command(t_token **token)
 			if (!parse_cmd_arguments(token, cmd))
 			{
 				cmd->is_valid = false;
-				return (cleanup_cmd_list(cmd), NULL);
+				cleanup_cmd_list(cmd);
+				return (NULL);
 			}
 			continue ;
 		}
-		else
-		{
-			if (*token && (*token)->type != TOKEN_PIPE)
-				*token = (*token)->next;
-		}
+		*token = (*token)->next;
 	}
-	i = 0;
-	while (cmd->args && cmd->args[i])
-		i++;
-	/* if (i == 0)
-	{
+	if (!cmd->args || !cmd->args[0])
 		cmd->is_valid = false;
-		return(cmd);
-	}
-	//validate_command(cmd, shell);
-	cmd->is_valid = true; */
 	return (cmd);
 }
 
@@ -95,16 +83,26 @@ static int	build_command_list(t_token *tokens, t_shell *shell)
 
 static int	validate_pipe_syntax(t_token *tokens)
 {
-	if (tokens->type == TOKEN_PIPE)
+	if (!tokens)
 		return (0);
+	if (tokens->type == TOKEN_PIPE)
+	{
+		print_syntx_err("syntax error near unexpected token `|'", NULL);
+	}
 	while (tokens && tokens->next)
 	{
 		if (tokens->type == TOKEN_PIPE && tokens->next->type == TOKEN_PIPE)
+		{
+			print_syntx_err("syntax error near unexpected token `|'", NULL);
 			return (0);
+		}
 		tokens = tokens->next;
 	}
 	if (tokens && tokens->type == TOKEN_PIPE)
+	{
+		print_syntx_err("syntax error near unexpected token `|'", NULL);
 		return (0);
+	}
 	return (1);
 }
 
@@ -114,14 +112,13 @@ int	parse_tokens(t_shell *shell)
 		return (1);
 	if (!validate_pipe_syntax(shell->tokens))
 	{
-		cleanup_and_exit(ERR_SYNTAX_PIPE, NULL, 2, shell);
-		g_exit_status = 2; // Set exit status for syntax error
-		return (0);        // Return but don't exit
+		g_exit_status = 2;
+		return (0);
 	}
 	if (!build_command_list(shell->tokens, shell))
 	{
-		g_exit_status = 2; // Set exit status for syntax error
-		return (0);        // Return but don't exit
+		g_exit_status = 2;
+		return (0);
 	}
 	return (1);
 }
