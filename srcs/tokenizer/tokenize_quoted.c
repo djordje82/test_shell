@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 13:19:11 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/03 19:12:08 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ char	*extract_quoted(char *input, int *pos, char quote_type)
 	char	*content;
 	int		i;
 
-	if (!input || !pos || !quote_type)
+	i = 0;
+	if (!input || !pos)
 		return (NULL);
 	(*pos)++;
 	content = malloc(sizeof(char) * (ft_strlen(input) + 1));
 	if (!content)
 		return (NULL);
-	i = 0;
 	while (input[*pos])
 	{
 		if (input[*pos] == quote_type)
@@ -34,12 +34,10 @@ char	*extract_quoted(char *input, int *pos, char quote_type)
 			if (input[*pos + 1] == quote_type)
 			{
 				(*pos)++;
+				continue ;
 			}
-			else
-			{
-				(*pos)++;
-				break ;
-			}
+			(*pos)++;
+			break ;
 		}
 		if (quote_type == '\'')
 		{
@@ -79,7 +77,7 @@ t_token	*tokenize_quoted_str(char *input, int *i, t_shell *shell)
 	{
 		expanded = ft_strdup(value);
 	}
-	else if (quote_type == '"' && value[0] != '\0')
+	else if (quote_type == '"' && *value)
 	{
 		expanded = expand_env_vars(value, shell);
 		free(value);

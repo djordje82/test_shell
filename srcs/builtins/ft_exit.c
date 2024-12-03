@@ -6,13 +6,12 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:54:29 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/25 13:31:13 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/03 16:39:40 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*This function is used to print the error message for the exit command.*/
+ 
 static void	print_exit_error(char *arg)
 {
 	ft_putstr_fd("minishell: exit: ", STDERR_FILENO);

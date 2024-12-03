@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:54:00 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 15:41:57 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/03 16:22:06 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,7 @@
 	it prints an error message and returns 0.*/
 int	check_env_args(char **args)
 {
-	int	i;
-
-	i = 0;
-	while (args[i])
-		i++;
-	if (i > 1)
+	if (args[1])
 	{
 		ft_putstr_fd("env: '", STDERR_FILENO);
 		ft_putstr_fd(args[1], STDERR_FILENO);
@@ -31,10 +26,9 @@ int	check_env_args(char **args)
 	return (1);
 }
 
-/*This function is used to print the environment variables.*/
 int	ft_env(char **args, t_shell *shell)
 {
-	int i;
+	int	i;
 
 	if (!check_env_args(args))
 		return (127);

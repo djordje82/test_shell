@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unset.c                                            :+:      :+:    :+:   */
+/*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:53:32 by dodordev          #+#    #+#             */
-/*   Updated: 2024/10/17 11:53:51 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/03 16:55:10 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int	ft_unset(char **args, t_shell *shell)
 	int	i;
 	int	status;
 
+	if (!args || !shell)
+		return (1);
 	if (!args[1])
 		return (0);
 	status = 0;

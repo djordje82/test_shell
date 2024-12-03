@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:52:37 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/25 14:07:04 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/03 16:47:54 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,12 @@
 /*This function is used to print the current working directory.*/
 int	ft_pwd(char **args, t_shell *shell)
 {
-	char	current_dir[PATH_MAX];
+	char	*current_dir;
 	char	*pwd;
 
 	(void)args;
-	if (!getcwd(current_dir, PATH_MAX))
+	current_dir = getcwd(NULL, 0);
+	if (!current_dir)
 	{
 		pwd = get_env_value("PWD", shell);
 		if (pwd)
@@ -27,8 +28,10 @@ int	ft_pwd(char **args, t_shell *shell)
 			ft_putendl_fd(pwd, STDOUT_FILENO);
 			return (0);
 		}
-		return (cleanup_and_exit("pwd", "getcwd failed", 1, shell));
+		ft_putendl_fd("minishell: pwd: error pwd failed", STDERR_FILENO);
+		return (1);
 	}
 	ft_putendl_fd(current_dir, STDOUT_FILENO);
+	free(current_dir);
 	return (0);
 }

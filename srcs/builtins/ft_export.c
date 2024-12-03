@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:53:04 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 14:09:18 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/03 16:42:39 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@ static int	process_export_var(char *arg, t_shell *shell)
 	char	*value;
 
 	name = extract_env_var_name(arg);
+	if (!name)
+	{
+		ft_putstr_fd("minishell: export: `", STDERR_FILENO);
+		return (1);
+	}
 	value = extract_env_var_value(arg);
 	if (!update_env_value(name, value, shell))
 	{
@@ -32,7 +37,7 @@ static int	process_export_var(char *arg, t_shell *shell)
 
 static int	validate_and_process(char *arg, t_shell *shell)
 {
-	if (arg[0] == '=' || !validate_env_var(arg))
+	if (!arg || arg[0] == '=' || !validate_env_var(arg))
 	{
 		ft_putstr_fd("minishell: export: `", STDERR_FILENO);
 		ft_putstr_fd(arg, STDERR_FILENO);

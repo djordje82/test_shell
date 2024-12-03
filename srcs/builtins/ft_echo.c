@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:52:07 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/26 16:27:43 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/03 16:18:54 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function is used to check if the argument is a valid -n flag.*/
 int	is_valid_n_flag(char *arg)
 {
 	int	i;
@@ -29,7 +28,6 @@ int	is_valid_n_flag(char *arg)
 	return (1);
 }
 
-/*This function is used to print the arguments.*/
 int	ft_echo(char **args, t_shell *shell)
 {
 	int	i;
@@ -37,25 +35,20 @@ int	ft_echo(char **args, t_shell *shell)
 
 	(void)shell;
 	n_flag = 0;
-	if (!args[1])
-	{
-		ft_putchar_fd('\n', STDOUT_FILENO);
-		return (g_exit_status);
-	}
 	i = 1;
-	if (is_valid_n_flag(args[1]))
+	while (args[i] && is_valid_n_flag(args[i]))
 	{
 		n_flag = 1;
-		i = 2;
+		i++;
 	}
 	while (args[i])
 	{
-		ft_putstr_fd(args[i], STDOUT_FILENO);
+		write(STDOUT_FILENO, args[i], ft_strlen(args[i]));
 		if (args[i + 1])
-			ft_putchar_fd(' ', STDOUT_FILENO);
+			write(STDOUT_FILENO, " ", 1);
 		i++;
 	}
 	if (!n_flag)
-		ft_putchar_fd('\n', STDOUT_FILENO);
-	return (g_exit_status);
+		write(STDOUT_FILENO, "\n", 1);
+	return (0);
 }

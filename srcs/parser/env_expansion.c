@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:12 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 14:16:06 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/03 18:46:14 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*get_env_value_expanded(char *name, t_shell *shell)
 	if (value)
 		return (ft_strdup(value));
 	else
-		return (ft_strdup(""));
+		return (ft_strdup(" "));
 }
 
 /*This function is used to get the content of a variable.*/
@@ -61,9 +61,9 @@ char	*expand_env_vars(char *str, t_shell *shell)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '\\' && (str[i + 1] == '$' || str[i] == '\\'))
+		if (str[i] == '\\' && (str[i + 1] == '$' || str[i + 1] == '\\'))
 		{
-			temp = ft_substr(str, i + 1, 1);
+			temp = ft_strdup("$");
 			i += 2;
 		}
 		else if (str[i] == '$' && str[i + 1] == '?')
@@ -77,8 +77,7 @@ char	*expand_env_vars(char *str, t_shell *shell)
 			if (!temp)
 				temp = ft_strdup("");
 		}
-		else if (str[i] == '$' && (!str[i + 1] || \
-		(!ft_isalnum(str[i + 1]) && str[i + 1] != '_')))
+		else if (str[i] == '$')
 		{
 			temp = ft_strdup("$");
 			i++;
