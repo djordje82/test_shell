@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 14:43:39 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 17:15:39 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/04 18:23:17 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,38 +70,6 @@ int	setup_pipe_io(int in_fd, int out_fd)
 	return (1);
 }
 
-//TO DO: SPLIT
-void	handle_pipeline_child(t_command *cmd, int *prev_pipe, int *pipe_fd,
-		t_shell *shell)
-{
-	int	status;
-	int	input_fd;
-	int	output_fd;
-
-	input_fd = -1;
-	if (prev_pipe)
-		input_fd = prev_pipe[0];
-	output_fd = -1;
-	if (pipe_fd)
-		output_fd = pipe_fd[1];
-	if (!setup_pipe_io(input_fd, output_fd))
-	{
-		perror("pipe io failed");
-		close_pipe_ends(prev_pipe);
-		if (pipe_fd)
-			close_pipe_ends(pipe_fd);
-		exit(1);
-	}
-	close_pipe_ends(prev_pipe);
-	if (pipe_fd)
-		close(pipe_fd[0]);
-	if (!setup_redirections(cmd))
-		exit(1);
-	setup_child_signal();
-	status = execute_single_command(cmd, shell);
-	exit(status);
-}
-
 void	handle_parent_process(int *prev_pipe, int *pipe_fd)
 {
 	close_pipe_ends(prev_pipe);
@@ -114,4 +82,27 @@ void	handle_parent_process(int *prev_pipe, int *pipe_fd)
 	{
 		close_pipe_ends(pipe_fd);
 	}
+}
+
+void	handle_pipeline_child(t_command *cmd, int *prev_pipe, int *pipe_fd,
+		t_shell *shell)
+{
+	int	status;
+	int	input_fd;
+	int	output_fd;
+
+	input_fd = get_input_fd(prev_pipe);
+	output_fd = get_output_fd(pipe_fd);
+	if (!setup_pipe_io(input_fd, output_fd))
+	{
+		handle_pipe_io_error(prev_pipe, pipe_fd);
+	}
+	close_pipe_ends(prev_pipe);
+	if (pipe_fd)
+		close(pipe_fd[0]);
+	if (!setup_redirections(cmd))
+		exit(1);
+	setup_child_signal();
+	status = execute_single_command(cmd, shell);
+	exit(status);
 }

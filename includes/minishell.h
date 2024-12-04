@@ -208,6 +208,9 @@ char							**insert_arg_array(char **orig_args, int pos,
 int								create_pipe(int pipe_fd[2], t_shell *shell);
 void							close_pipe_ends(int pipe_fd[2]);
 int								setup_pipe_io(int in_fd, int out_fd);
+int								get_input_fd(int *prev_pipe);
+int								get_output_fd(int *pipe_fd);
+void							handle_pipe_io_error(int *prev_pipe, int *pipe_fd);
 
 /*PARSER*/
 t_command						*parse_command(t_token **token);
