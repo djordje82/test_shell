@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 16:29:55 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 18:08:13 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define MINISHELL_H
 
 # include "../libft/inc/libft.h"
-# include <dirent.h> //for wildcard expansion opendir(), readdir(), closedir()
 # include <errno.h>
 # include <fcntl.h>
 # include <limits.h>

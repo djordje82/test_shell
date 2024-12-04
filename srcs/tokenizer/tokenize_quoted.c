@@ -102,7 +102,7 @@ t_token *tokenize_quoted_str(char *input, int *i, t_shell *shell)
 	quote_type = input[*i];
 	value = extract_quoted(input, i, quote_type);
 	if (!value)
-		return (cleanup_and_exit(ERR_QUOTE, NULL, 1, shell), NULL);
+		return (NULL);
 	if (quote_type == '"')
 	{
 		expanded = expand_env_vars(value, shell);

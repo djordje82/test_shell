@@ -6,42 +6,13 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:23 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/15 18:04:25 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/11/28 18:06:47 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*This function handles wildcard expansion. It expands wildcard characters in command arguments and updates the command structure.*/
-/* int	handle_wildcard_expansion(t_command *cmd, t_shell *shell)
-{
-	char	**expanded_args;
-	int		i;
-	int		expanded_count;
-
-	if (!cmd || !cmd->args || !shell)
-		return (0);
-	i = 1;
-	while (cmd->args[i])
-	{
-		if (ft_strchr(cmd->args[i], '*'))
-		{
-			expanded_args = expand_wildcards(cmd->args[i]);
-			if (!expanded_args)
-				continue ;
-			expanded_count = update_command_args(cmd, expanded_args, i, shell);
-			if (expanded_count < 0)
-			{
-				ft_free_array((void **)expanded_args, -1);
-				return (0);
-			}
-			i += expanded_count - 1;
-			ft_free_array((void **)expanded_args, -1);
-		}
-		i++;
-	}
-	return (1);
-} */
 
 void	handle_command_errors(char *cmd_path, char *cmd_name) // TODO: Remove use of stat() function
 {
