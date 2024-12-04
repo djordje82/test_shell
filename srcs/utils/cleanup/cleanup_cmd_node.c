@@ -6,13 +6,12 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 19:07:08 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/17 19:08:17 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/04 15:11:42 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function closes and frees the file descriptors arrays associated with a command node.*/
 void	cleanup_fd_arrays(t_node *node)
 {
 	int	i;
@@ -36,7 +35,6 @@ void	cleanup_fd_arrays(t_node *node)
 	}
 }
 
-/*This function frees the file resources associated with a command node.*/
 void	cleanup_file_resources(t_node *node)
 {
 	if (!node)
@@ -61,7 +59,6 @@ void	cleanup_file_resources(t_node *node)
 	cleanup_fd_arrays(node);
 }
 
-/*This function frees all resources associated with a command node structure.*/
 void	cleanup_command_node(t_node *node)
 {
 	if (!node)
@@ -76,10 +73,5 @@ void	cleanup_command_node(t_node *node)
 		ft_free_array((void **)node->args, -1);
 		node->args = NULL;
 	}
-	/* if (node->hd_pipe)
-	{
-		ft_free_array((void **)node->hd_pipe, node->n_input);
-		node->hd_pipe = NULL;
-	} */
 	free(node);
 }
