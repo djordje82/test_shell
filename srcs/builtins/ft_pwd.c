@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:52:37 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 16:47:54 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 16:02:16 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function is used to print the current working directory.*/
 int	ft_pwd(char **args, t_shell *shell)
 {
 	char	*current_dir;

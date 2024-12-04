@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:51:35 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 15:50:37 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 16:01:54 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function is used to get the home directory of the user.*/
 char	*get_home_dir(t_shell *shell)
 {
 	char	*home;
@@ -23,7 +22,6 @@ char	*get_home_dir(t_shell *shell)
 	return (ft_strdup(home));
 }
 
-/*This function is used to update the PWD and OLDPWD environment variables.*/
 int	update_pwd_vars(t_shell *shell)
 {
 	char	*old_pwd;
@@ -42,7 +40,6 @@ int	update_pwd_vars(t_shell *shell)
 	return (0);
 }
 
-/*This function is used to expand the path of the current directory.*/
 char	*expand_path(char *path, t_shell *shell)
 {
 	char	*expanded;
@@ -67,7 +64,6 @@ char	*expand_path(char *path, t_shell *shell)
 	return (ft_strdup(path));
 }
 
-/*This function is used to print the error message for the cd command.*/
 static void	print_cd_error(char *path)
 {
 	ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
@@ -83,7 +79,6 @@ static void	print_cd_error(char *path)
 		ft_putendl_fd("Error changing directory", STDERR_FILENO);
 }
 
-/*This function is used to change the current directory of the user.*/
 int	ft_cd(char **args, t_shell *shell)
 {
 	int		ret;
