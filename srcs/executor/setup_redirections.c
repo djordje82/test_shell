@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:00 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 15:12:42 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 16:35:24 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ static int	handle_input_redirection(t_command *cmd)
 
 static int	handle_output_redirection(t_command *cmd)
 {
-	int	fd;
-	int	flags;
+	int		fd;
+	int		flags;
 
 	if (!cmd->outfile || !cmd->out_type)
 		return (1);
@@ -68,7 +68,12 @@ static int	handle_output_redirection(t_command *cmd)
 	if (fd == -1)
 	{
 		g_exit_status = 1;
-		print_file_error(cmd->outfile, strerror(errno));
+		if (errno == EACCES)
+			print_file_error(cmd->outfile, "Permission denied");
+		else if (errno == ENOENT)
+			print_file_error(cmd->outfile, "No fucking file!!");
+		else
+			print_file_error(cmd->outfile, strerror(errno));
 		return (0);
 	}
 	if (dup2(fd, STDOUT_FILENO) == -1)
@@ -84,6 +89,16 @@ static int	handle_output_redirection(t_command *cmd)
 
 int	setup_redirections(t_command *cmd)
 {
+	int	stdin_backup;
+	int	stdout_backup;
+
+	stdin_backup = dup(STDIN_FILENO);
+	stdout_backup = dup(STDOUT_FILENO);
+	if (stdin_backup == -1 || stdout_backup == -1)
+	{
+		g_exit_status = 1;
+		return (0);
+	}
 	if (!cmd)
 		return (0);
 	if (cmd->infile)
@@ -104,5 +119,7 @@ int	setup_redirections(t_command *cmd)
 			return (0);
 		}
 	}
+	close(stdin_backup);
+	close(stdout_backup);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:23 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 15:30:52 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 15:55:19 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,21 +37,15 @@ void	handle_command_errors(char *cmd_path, char *cmd_name)
 It sets up child signals, handles redirections, and executes the command.*/
 void	execute_external_child(t_command *cmd, char *cmd_path, t_shell *shell)
 {
-	int	redirection_status;
-	int	exec_status;
-
 	setup_child_signal();
-	redirection_status = setup_redirections(cmd);
 	if (!setup_redirections(cmd))
 	{
 		perror("redirection failed");
 		exit(1);
 	}
-	exec_status = execve(cmd_path, cmd->args, shell->envp);
-	if (exec_status == -1)
-	{
-		handle_command_errors(cmd_path, cmd->args[0]);
-	}
+	execve(cmd_path, cmd->args, shell->envp);
+	handle_command_errors(cmd_path, cmd->args[0]);
+	exit(g_exit_status);
 }
 
 /*This function prints a command not found error. It checks if 
@@ -59,13 +53,20 @@ the command is the first in a pipeline and prints
 an error message accordingly.*/
 int	print_command_not_found(t_command *cmd)
 {
+	struct stat	path_stat;
+
 	if (!cmd || !cmd->args || !cmd->args[0] || !cmd->args[0][0])
 	{
-		ft_putstr_fd("Invalid cmd\n", STDERR_FILENO);
+		ft_putstr_fd("minishell: Invalid cmd\n", STDERR_FILENO);
 		return (127);
 	}
-	if (!cmd->prev && ft_strchr(cmd->args[0], '/'))
+	if (ft_strchr(cmd->args[0], '/'))
 	{
+		if (stat(cmd->args[0], &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
+		{
+			print_command_error(cmd->args[0], ": Is a directory");
+			return (126);
+		}
 		print_command_error(cmd->args[0], ": No such file or directory");
 		return (127);
 	}
