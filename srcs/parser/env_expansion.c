@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:12 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 18:46:14 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 15:11:25 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*get_env_value_expanded(char *name, t_shell *shell)
 	if (value)
 		return (ft_strdup(value));
 	else
-		return (ft_strdup(" "));
+		return (ft_strdup(""));
 }
 
 /*This function is used to get the content of a variable.*/

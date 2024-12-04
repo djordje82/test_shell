@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:53:32 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 16:55:10 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 14:43:11 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_unset(char **args, t_shell *shell)
 	int	i;
 	int	status;
 
-	if (!args || !shell)
+	if (!args || !shell || !args[0])
 		return (1);
 	if (!args[1])
 		return (0);
@@ -39,7 +39,13 @@ int	ft_unset(char **args, t_shell *shell)
 			status = 1;
 		}
 		else
-			remove_env_var(args[i], shell);
+		{
+			if (remove_env_var(args[i], shell) == -1)
+			{
+				print_identifier_error(args[i]);
+				status = 1;
+			}
+		}
 		i++;
 	}
 	return (status);
