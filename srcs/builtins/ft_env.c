@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:54:00 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 16:22:06 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 15:56:38 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function checks the number of arguments passed to the env command. If there are more than one argument,
-	it prints an error message and returns 0.*/
 int	check_env_args(char **args)
 {
 	if (args[1])

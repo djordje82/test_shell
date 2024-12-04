@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_quoted.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 19:12:08 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 15:16:57 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*This function is used to extract a quoted string from the input string.
-It handles both single and double quotes.*/
 
 char	*extract_quoted(char *input, int *pos, char quote_type)
 {
@@ -43,9 +40,9 @@ char	*extract_quoted(char *input, int *pos, char quote_type)
 		{
 			content[i++] = input[*pos];
 		}
-		else if (quote_type == '"' && input[*pos] == '\\'
-			&& (input[*pos + 1] == '"' || input[*pos + 1] == '\\' 
-				|| input[*pos + 1] == '$'))
+		else if (quote_type == '"' && input[*pos] == '\\' && (input[*pos
+				+ 1] == '"' || input[*pos + 1] == '\\' || input[*pos
+				+ 1] == '$'))
 		{
 			(*pos)++;
 			content[i++] = input[*pos];
@@ -60,14 +57,12 @@ char	*extract_quoted(char *input, int *pos, char quote_type)
 	return (content);
 }
 
-/*This function is used to tokenize a quoted strings in shell input. \ 
-It handles both single and double quotes.*/
 t_token	*tokenize_quoted_str(char *input, int *i, t_shell *shell)
 {
-	char		*value;
-	char		*expanded;
-	t_token		*token;
-	char		quote_type;
+	char	*value;
+	char	*expanded;
+	t_token	*token;
+	char	quote_type;
 
 	quote_type = input[*i];
 	value = extract_quoted(input, i, quote_type);
@@ -83,7 +78,7 @@ t_token	*tokenize_quoted_str(char *input, int *i, t_shell *shell)
 		free(value);
 		value = expanded;
 	}
-	else 
+	else
 	{
 		expanded = ft_strdup(value);
 	}

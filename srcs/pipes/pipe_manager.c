@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_manager.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 14:43:39 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/30 18:20:16 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 15:40:34 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Creates a new pipe and handles errors
 int	create_pipe(int pipe_fd[2], t_shell *shell)
 {
 	if (!pipe_fd)
@@ -21,7 +20,6 @@ int	create_pipe(int pipe_fd[2], t_shell *shell)
 	{
 		pipe_fd[0] = -1;
 		pipe_fd[1] = -1;
-		//return (cleanup_and_exit("pipe failed", NULL, 1, shell));
 		if (shell)
 			perror("pipe failed");
 		return (0);
@@ -29,7 +27,6 @@ int	create_pipe(int pipe_fd[2], t_shell *shell)
 	return (1);
 }
 
-// Safely closes pipe file descriptors
 void	close_pipe_ends(int pipe_fd[2])
 {
 	if (!pipe_fd)
@@ -46,7 +43,6 @@ void	close_pipe_ends(int pipe_fd[2])
 	}
 }
 
-// Sets up pipe redirections for input and output
 int	setup_pipe_io(int in_fd, int out_fd)
 {
 	if (in_fd != -1)
@@ -74,6 +70,7 @@ int	setup_pipe_io(int in_fd, int out_fd)
 	return (1);
 }
 
+//TO DO: SPLIT
 void	handle_pipeline_child(t_command *cmd, int *prev_pipe, int *pipe_fd,
 		t_shell *shell)
 {

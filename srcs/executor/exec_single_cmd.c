@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   exec_single_cmd.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:09:35 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/30 15:24:54 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 15:49:56 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function cleans up an empty command. It shifts
- the arguments to remove the empty command.*/
 static void	cleanup_empty_command(char **args)
 {
 	int	i;
@@ -29,9 +27,6 @@ static void	cleanup_empty_command(char **args)
 	args[i] = NULL;
 }
 
-/*This function executes a command based on its type.
- It handles built-in commands,
-	external commands, and exits the shell if the command is "exit".*/
 static int	execute_command_type(t_command *cmd, t_shell *shell, int stdin_fd,
 		int stdout_fd)
 {
@@ -51,8 +46,6 @@ static int	execute_command_type(t_command *cmd, t_shell *shell, int stdin_fd,
 	return (status);
 }
 
-/*This function executes a single command. It handles redirections,
-	command execution, and cleanup.*/
 int	execute_single_command(t_command *cmd, t_shell *shell)
 {
 	int	stdin_fd;

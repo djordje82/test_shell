@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:54:29 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 16:39:40 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 15:57:06 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
- 
+
 static void	print_exit_error(char *arg)
 {
 	ft_putstr_fd("minishell: exit: ", STDERR_FILENO);

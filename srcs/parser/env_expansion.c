@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_expansion.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:12 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 18:46:14 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 15:44:16 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ char	*get_env_value_expanded(char *name, t_shell *shell)
 		return (ft_strdup(" "));
 }
 
-/*This function is used to get the content of a variable.*/
 static char	*get_var_content(char *str, int *i, t_shell *shell)
 {
 	char	*var_name;
@@ -47,8 +46,7 @@ static char	*get_var_content(char *str, int *i, t_shell *shell)
 	return (value);
 }
 
-/*This function is used to expand the environment
-variables in the input string.*/
+// TO DO: SPLIT
 char	*expand_env_vars(char *str, t_shell *shell)
 {
 	char	*result;

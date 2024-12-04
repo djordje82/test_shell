@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   extract_word.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:20:46 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 17:53:19 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 15:41:02 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function is used to append a part of the input string to the result.*/
 char	*append_word_part(char *result, const char *input, int start, int len)
 {
 	char	*temp;
@@ -33,8 +32,6 @@ char	*append_word_part(char *result, const char *input, int start, int len)
 	return (new_result);
 }
 
-/*This function is used to append an 
-unquoted part of the input string to the result.*/
 static char	*append_unquoted_part(char *result, const char *input, int *start,
 		int *len)
 {
@@ -51,11 +48,9 @@ static char	*append_unquoted_part(char *result, const char *input, int *start,
 	return (result);
 }
 
-/*This function is used to process a quoted segment of the input string.
-It appends the part of the string that is not quoted to the result.*/
-
-char	*process_quoted_segment(char *result, const char *input,
-	int *start, int *len)
+//TO DO: SPLIT
+char	*process_quoted_segment(char *result, const char *input, int *start,
+		int *len)
 {
 	char	quote_type;
 	int		quote_pos;
@@ -85,8 +80,7 @@ char	*process_quoted_segment(char *result, const char *input,
 	return (result);
 }
 
-/*This function is used to process the content of a word in the input string.
-It handles both quoted and unquoted parts.*/
+//TO DO: SPLIT
 static char	*process_word_content(const char *input, int *start, int *len)
 {
 	char	*result;
@@ -120,8 +114,6 @@ static char	*process_word_content(const char *input, int *start, int *len)
 	return (result);
 }
 
-/*This function is used to extract a word from the input string.
-It handles both quoted and unquoted parts of the string.*/
 char	*extract_word(const char *input, int *pos)
 {
 	char	*result;

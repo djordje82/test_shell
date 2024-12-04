@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:10:01 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/30 15:10:50 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 15:52:57 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ int	handle_builtin_cmd(t_command *cmd, t_shell *shell)
 	command execution, and cleanup.*/
 int	execute_single_builtin(t_command *cmd, t_shell *shell)
 {
-	int status;
-	int stdin_fd;
-	int stdout_fd;
+	int	status;
+	int	stdin_fd;
+	int	stdout_fd;
 
 	stdin_fd = dup(STDIN_FILENO);
 	stdout_fd = dup(STDOUT_FILENO);

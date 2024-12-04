@@ -3,18 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:16 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 19:25:01 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 15:13:59 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function retrieves the next token from the input string \ 
-based on the current position. It identifies the type of shell character \ 
-at the current position and handles different types of tokens accordingly.*/
 t_token	*get_token_type(const char *input, int *pos, t_shell *shell)
 {
 	t_token_type	type;
@@ -37,8 +34,8 @@ t_token	*get_token_type(const char *input, int *pos, t_shell *shell)
 	return (tokenize_word(input, pos, shell));
 }
 
-/*This function appends a new token to the end of a linked list of tokens.*/
-static void	add_token_to_list(t_token **head, t_token **current, t_token *new_token)
+static void	add_token_to_list(t_token **head, t_token **current,
+		t_token *new_token)
 {
 	if (!new_token)
 	{
@@ -97,13 +94,12 @@ static int	initialize_tokenization(const char *input, t_shell *shell)
 	return (1);
 }
 
-/*This function tokenizes the input string into a linked list of tokens.*/
 t_token	*tokenize_input(const char *input, t_shell *shell)
 {
-	t_token		*head;
-	t_token		*current;
-	t_token		*new_token;
-	int			pos;
+	t_token	*head;
+	t_token	*current;
+	t_token	*new_token;
+	int		pos;
 
 	if (!initialize_tokenization(input, shell))
 		return (NULL);

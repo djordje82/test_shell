@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sig_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:32 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/30 18:26:47 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 15:36:07 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	wait_for_children(pid_t last_pid)
 			break ;
 		if (WIFSIGNALED(status))
 		{
-			g_exit_status = 0; //+ WTERMSIG(status);
+			g_exit_status = 0;
 			if (WTERMSIG(status) == SIGQUIT)
 				write(STDERR_FILENO, "Quit (core dumped)\n", 18);
 			else if (WTERMSIG(status) == SIGINT)

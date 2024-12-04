@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   env_modify.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:47:04 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/30 13:10:45 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 15:55:26 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function updates the value of an environment variable.*/
 int	update_env_value(char *name, char *value, t_shell *shell)
 {
 	int		index;
@@ -31,6 +30,7 @@ int	update_env_value(char *name, char *value, t_shell *shell)
 	return (0);
 }
 
+//TO DO: SPLIT
 int	add_new_var(char *arg, t_shell *shell)
 {
 	char	**new_env;
@@ -64,8 +64,6 @@ int	add_new_var(char *arg, t_shell *shell)
 	return (1);
 }
 
-/*This function creates a new environment variable string by concatenating \
-the name and value with an equal sign.*/
 char	*create_env_string(char *name, char *value)
 {
 	char	*result;
@@ -85,7 +83,6 @@ char	*create_env_string(char *name, char *value)
 	return (result);
 }
 
-/*This function removes an environment variable.*/
 int	remove_env_var(char *name, t_shell *shell)
 {
 	int	i;
@@ -98,7 +95,7 @@ int	remove_env_var(char *name, t_shell *shell)
 	{
 		if (ft_strncmp(shell->envp[i], name, name_len) == 0
 			&& (shell->envp[i][name_len] == '='
-				|| shell->envp[i][name_len] == '\0'))
+			|| shell->envp[i][name_len] == '\0'))
 		{
 			free(shell->envp[i]);
 			j = i;

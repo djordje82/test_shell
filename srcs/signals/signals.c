@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:42 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/30 19:12:41 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 15:37:38 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,21 @@ void	setup_signals(void)
 	struct sigaction	sa;
 
 	ft_memset(&sa, 0, sizeof(struct sigaction));
-	sa.sa_flags = SA_RESTART; // Remove SA_RESTART;
+	sa.sa_flags = SA_RESTART;
 	sigemptyset(&sa.sa_mask);
-	// Interactive mode handler
 	sa.sa_handler = interactive_signal_handler;
 	sigaction(SIGINT, &sa, NULL);
-	// Ignore SIGQUIT (Ctrl+\)
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sa, NULL);
-	// Disable ctrl character echoing
-	// disable_ctrl_chars();
 }
 
 void	setup_child_signal(void)
 {
-	struct sigaction sa;
+	struct sigaction	sa;
 
-	sa.sa_flags = 0; // Remove SA_RESTART
+	sa.sa_flags = 0;
 	sigemptyset(&sa.sa_mask);
-	sa.sa_handler = SIG_DFL; 
+	sa.sa_handler = SIG_DFL;
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
 }
@@ -47,7 +43,6 @@ void	setup_execution_signals(struct sigaction *sa_old_int,
 {
 	struct sigaction	sa;
 
-	// Save old handlers
 	sigaction(SIGINT, NULL, sa_old_int);
 	sigaction(SIGQUIT, NULL, sa_old_quit);
 	ft_memset(&sa, 0, sizeof(struct sigaction));

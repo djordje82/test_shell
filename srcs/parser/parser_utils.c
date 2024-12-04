@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:58:19 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/30 18:05:59 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 15:43:06 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function is used to copy existing arguments to the new array.*/
 static char	**copy_existing_args(char **new_args, char **args, int *i)
 {
 	while (args && args[*i])
@@ -28,7 +27,6 @@ static char	**copy_existing_args(char **new_args, char **args, int *i)
 	return (new_args);
 }
 
-/*This function is used to create a new array with the given count.*/
 static char	**create_new_array(char **args, int count)
 {
 	char	**new_args;
@@ -40,7 +38,7 @@ static char	**create_new_array(char **args, int count)
 	return (new_args);
 }
 
-/*This function is used to add a new argument to the command's argument list.*/
+// TO DO: SPLIT
 static char	**add_cmd_argument(char **args, char *new_arg)
 {
 	char	**new_args;
@@ -72,7 +70,6 @@ static char	**add_cmd_argument(char **args, char *new_arg)
 	return (new_args);
 }
 
-/*This function is used to process the value of a token.*/
 static char	*process_token_value(char *value, t_token_type type)
 {
 	char	*result;
@@ -90,7 +87,6 @@ static char	*process_token_value(char *value, t_token_type type)
 	return (result);
 }
 
-/*This function is used to parse the arguments of a command.*/
 int	parse_cmd_arguments(t_token **token, t_command *cmd)
 {
 	char	**new_args;

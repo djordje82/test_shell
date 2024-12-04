@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   setup_redirections.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:00 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 15:12:42 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 15:46:02 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function handles regular input redirection. It opens the input file with the appropriate flags and duplicates the file descriptor to stdin.*/
 static int	handle_regular_input(t_command *cmd)
 {
 	int	fd;
@@ -40,9 +39,6 @@ static int	handle_regular_input(t_command *cmd)
 	return (1);
 }
 
-/*This function handles input redirection. It opens the
-input file with the appropriate flags and duplicates
-the file descriptor to stdin.*/
 static int	handle_input_redirection(t_command *cmd)
 {
 	if (cmd->in_type == REDIR_INPUT)
@@ -52,6 +48,7 @@ static int	handle_input_redirection(t_command *cmd)
 	return (1);
 }
 
+// TO DO: SPLIT
 static int	handle_output_redirection(t_command *cmd)
 {
 	int	fd;

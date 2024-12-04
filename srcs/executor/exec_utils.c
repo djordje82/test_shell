@@ -63,7 +63,7 @@ char	*find_command_path(char *cmd, t_shell *shell)
 		return (NULL);
 	if (ft_strchr(cmd, '/'))
 	{
-		if (access(cmd, F_OK) == 0) // hould be F_OK | X_OK but execute throws error???
+		if (access(cmd, F_OK) == 0)
 			return (ft_strdup(cmd));
 		return (NULL);
 	}
