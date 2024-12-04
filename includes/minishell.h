@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 12:27:09 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 13:18:47 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@
 
 /*ERROR MESSAGES*/
 # define ERR_MEM "minishell: memory allocation error"
+# define ERR_INVALID "minishell: invalid argument"
 # define ERR_SYNTAX "minishell: syntax error"
 # define ERR_PIPE "minishell: pipe error"
 # define ERR_FORK "minishell: fork error"
@@ -138,7 +139,6 @@ typedef struct s_command
 	char						**args;
 	char						*infile;
 	char						*outfile;
-	// int			is_valid;
 	int							in_type;
 	int							out_type;
 	bool						is_valid;

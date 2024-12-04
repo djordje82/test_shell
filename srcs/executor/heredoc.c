@@ -1,22 +1,32 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/04 14:31:34 by jadyar            #+#    #+#             */
+/*   Updated: 2024/12/04 14:32:33 by jadyar           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-/*This function writes a line to a heredoc pipe.*/
 static int	write_to_heredoc(int fd, char *line)
 {
 	size_t	len;
 
 	len = ft_strlen(line);
-	if (write(fd, line, len) == -1)
+	if (!line)
 		return (0);
-	if (write(fd, "\n", 1) == -1)
+	if (write(fd, line, len) == -1 || write(fd, "\n", 1) == -1)
+	{
+		free(line);
 		return (0);
+	}
 	free(line);
 	return (1);
 }
-
-/*This function sets up a heredoc for a command. It creates a pipe,
-	reads lines from the user,
-	and writes them to the pipe until the delimiter is matched.*/
 
 int	setup_heredoc(t_command *cmd)
 {
@@ -24,7 +34,6 @@ int	setup_heredoc(t_command *cmd)
 	char	*line;
 	size_t	len_delimiter;
 
-	// Use our unified pipe creation function
 	if (!create_pipe(heredoc_pipe, NULL))
 		return (0);
 	len_delimiter = ft_strlen(cmd->infile);
@@ -39,12 +48,18 @@ int	setup_heredoc(t_command *cmd)
 			free(line);
 			break ;
 		}
-		write_to_heredoc(heredoc_pipe[1], line);
+		if (!write_to_heredoc(heredoc_pipe[1], line))
+		{
+			close(heredoc_pipe[1]);
+			close(heredoc_pipe[0]);
+			return (0);
+		}
 	}
-	// Close write end first
 	close(heredoc_pipe[1]);
-	// Setup the pipe for input and close remaining fds
 	if (!setup_pipe_io(heredoc_pipe[0], -1))
+	{
+		close(heredoc_pipe[0]);
 		return (0);
+	}
 	return (1);
 }

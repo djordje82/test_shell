@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 15:30:00 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 13:47:12 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 	if (pid == 0)
 	{
 		setup_child_signal();
-		if (!current) //is_Valid check maybe
+		if (!current->is_valid) //is_Valid check maybe
 		{
 			cleanup_pipeline_resources(prev_pipe, pipe_fd);
 			exit(127);
@@ -127,7 +127,6 @@ void	execute_pipeline_cmd(t_command *cmd, char *cmd_path, t_shell *shell)
 	}
 	if (!execve(cmd_path, cmd->args, shell->envp))
 	{
-		//perror("execve failed");
 		close(STDIN_FILENO);
 		close(STDOUT_FILENO);
 		free(cmd_path);

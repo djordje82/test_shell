@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:01:11 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 16:11:59 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:41:20 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,9 @@ void	run_shell_loop(t_shell *shell)
 		if (!input)
 		{
 			if (isatty(STDIN_FILENO))
-				write(2, "exit\n", 6);
-			exit(0);
+				write(2, "exit\n", 5);
+			cleanup_shell_data(shell);
+			exit(shell->exit_status);
 		}
 		process_shell_input(input, shell);
 		free(input);

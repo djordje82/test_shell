@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:00:54 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/29 17:31:00 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/03 19:36:15 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,11 @@ char	**insert_arg_array(char **orig_args, int pos, char **to_insert)
 
 	orig_count = ft_count_args(orig_args);
 	insert_count = ft_count_args(to_insert);
-	new_args = malloc(sizeof(char *) * (orig_count + insert_count));
+	new_args = malloc(sizeof(char *) * (orig_count + insert_count + 1));
 	if (!new_args)
 		return (NULL);
-	i = -1;
-	while (++i < pos)
+	i = 0;
+	while (i < pos)
 		new_args[i] = ft_strdup(orig_args[i]);
 	j = 0;
 	while (to_insert[j])
@@ -47,6 +47,8 @@ int	update_command_args(t_command *cmd, char **expanded, int pos,
 {
 	char	**new_args;
 
+	if (!cmd || !expanded || !shell || !cmd->args)
+		return (cleanup_and_exit(ERR_INVALID, NULL, 1, shell));
 	new_args = insert_arg_array(cmd->args, pos, expanded);
 	if (!new_args)
 	{

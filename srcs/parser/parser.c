@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:03:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 12:20:17 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 13:51:16 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ static int	build_command_list(t_token *tokens, t_shell *shell)
 			if (shell->cmnd_lst)
 				cleanup_cmd_list(shell->cmnd_lst);
 			shell->cmnd_lst = NULL;
+			ft_putendl_fd("minishell: failed to parse cmd", STDERR_FILENO);
 			return (0);
 		}
 		add_cmd_node(&shell->cmnd_lst, cmd);
@@ -88,6 +89,7 @@ static int	validate_pipe_syntax(t_token *tokens)
 	if (tokens->type == TOKEN_PIPE)
 	{
 		print_syntx_err("syntax error near unexpected token `|'", NULL);
+		return (0);
 	}
 	while (tokens && tokens->next)
 	{
