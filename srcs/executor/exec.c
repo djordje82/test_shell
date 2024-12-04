@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:13 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 20:00:58 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 17:21:52 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function executes commands. It handles single commands, pipelines,
-	and signals.*/
+//TO DO: SPLIT
 int	execute_commands(t_shell *shell)
 {
 	t_command			*current;

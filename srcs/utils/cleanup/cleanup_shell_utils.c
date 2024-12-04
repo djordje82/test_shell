@@ -6,13 +6,12 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:39 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 13:54:17 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:05:16 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function frees a linked list of commands.*/
 void	cleanup_cmd_list(t_command *cmd)
 {
 	t_command	*temp;
@@ -33,11 +32,10 @@ void	cleanup_cmd_list(t_command *cmd)
 	}
 }
 
-/*This function frees a linked list of tokens.*/
 void	cleanup_token_list(t_token *tokens)
 {
-	t_token *current;
-	t_token *next;
+	t_token	*current;
+	t_token	*next;
 
 	if (!tokens)
 		return ;
@@ -52,7 +50,6 @@ void	cleanup_token_list(t_token *tokens)
 	}
 }
 
-/*This function frees process ID's and pipe arrays from the shell struct.*/
 void	cleanup_execution_data(t_shell *shell)
 {
 	if (shell->pid)
@@ -67,7 +64,6 @@ void	cleanup_execution_data(t_shell *shell)
 	}
 }
 
-/*This function frees the environment variables array.*/
 void	cleanup_envp(t_shell *shell)
 {
 	if (shell->envp)
@@ -75,8 +71,6 @@ void	cleanup_envp(t_shell *shell)
 	shell->envp = NULL;
 }
 
-/*This function performs cleanup of the shell data. \ 
-It frees the command list | token list | and clears the history.*/
 void	cleanup_shell_data(t_shell *shell)
 {
 	if (!shell)

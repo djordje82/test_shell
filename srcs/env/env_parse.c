@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   env_parse.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:12:38 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 13:50:03 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 17:31:49 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function extracts the name of an environment variable from a string.*/
 char	*extract_env_var_name(const char *str)
 {
 	int	len;
@@ -29,9 +28,6 @@ char	*extract_env_var_name(const char *str)
 	return (ft_substr(str, 0, len));
 }
 
-/*This function extracts the value of an assignment from a given string. \
-It returns a new string containing the value, \
-or an empty string if no assignment is found.*/
 char	*extract_env_var_value(char *arg)
 {
 	char	*equals;
@@ -44,10 +40,6 @@ char	*extract_env_var_value(char *arg)
 	return (ft_strdup(equals + 1));
 }
 
-/*This function checks if a variable name is valid. 
-It checks if the name is not empty | if the first character
- is a digit | 
-if the name contains an equal sign.*/
 int	validate_env_var(char *name)
 {
 	int	i;

@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:01:11 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 19:41:20 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 16:53:59 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function resets the shell state by freeing the command list and the tokens. Frees command list and tokens | Resets command list and tokens to NULL.*/
 void	reset_shell_state(t_shell *shell)
 {
 	if (shell->cmnd_lst)
@@ -27,10 +26,6 @@ void	reset_shell_state(t_shell *shell)
 	}
 }
 
-/*This function processes a single line of input from the user. \ 
-It checks if the input is not empty | Adds it to the history \ 
-Tokenizes the input | Parses the tokens | Executes the commands \ 
-Cleans up the command data.*/
 void	process_shell_input(char *input, t_shell *shell)
 {
 	if (*input)
@@ -46,8 +41,6 @@ void	process_shell_input(char *input, t_shell *shell)
 	}
 }
 
-/*This function starts the shell loop. \ 
-It reads input from the user | processes the input | and frees the input.*/
 void	run_shell_loop(t_shell *shell)
 {
 	char	*input;
@@ -67,7 +60,6 @@ void	run_shell_loop(t_shell *shell)
 	}
 }
 
-/*This function initializes the shell struct.*/
 void	initialize_shell(t_shell *shell, char **envp)
 {
 	shell->cmnd_lst = NULL;
@@ -83,11 +75,6 @@ void	initialize_shell(t_shell *shell, char **envp)
 		exit(EXIT_FAILURE);
 	update_shell_level(shell);
 }
-
-/*This function initializes entire minishell program. \ 
-It checks if the number of arguments is not 1 \ 
-Initializes the shell struct \ Sets up the signals \ 
-Sets the running flag to true.*/
 
 int	main(int argc, char **argv, char **env)
 {

@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:00:15 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/28 13:46:11 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:04:11 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,10 @@ void	print_error_msg(char *err_msg, char *src)
 int	cleanup_and_exit(char *err_msg, char *src, int err_code, t_shell *shell)
 {
 	print_error_msg(err_msg, src);
-
 	if (shell)
 	{
 		shell->exit_status = err_code;
 		cleanup_shell_data(shell);
 	}
-
 	exit(err_code);
 }

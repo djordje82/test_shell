@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_external_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:23 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 15:55:19 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 17:25:22 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ void	handle_command_errors(char *cmd_path, char *cmd_name)
 	}
 }
 
-/*This function executes an external command in a child process. 
-It sets up child signals, handles redirections, and executes the command.*/
 void	execute_external_child(t_command *cmd, char *cmd_path, t_shell *shell)
 {
 	setup_child_signal();
@@ -48,9 +46,6 @@ void	execute_external_child(t_command *cmd, char *cmd_path, t_shell *shell)
 	exit(g_exit_status);
 }
 
-/*This function prints a command not found error. It checks if 
-the command is the first in a pipeline and prints 
-an error message accordingly.*/
 int	print_command_not_found(t_command *cmd)
 {
 	struct stat	path_stat;

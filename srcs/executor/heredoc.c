@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 14:31:34 by jadyar            #+#    #+#             */
-/*   Updated: 2024/12/04 14:32:33 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 17:21:16 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static int	write_to_heredoc(int fd, char *line)
 	return (1);
 }
 
+//TO DO: SPLIT
 int	setup_heredoc(t_command *cmd)
 {
 	int		heredoc_pipe[2];

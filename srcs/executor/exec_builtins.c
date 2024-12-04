@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:10:01 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/30 15:10:50 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 17:26:02 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function checks if a command is a builtin command.*/
 int	is_builtin(char *cmd)
 {
 	return (ft_strncmp(cmd, "cd", 3) == 0 || ft_strncmp(cmd, "pwd", 4) == 0
@@ -21,7 +20,6 @@ int	is_builtin(char *cmd)
 		|| ft_strncmp(cmd, "exit", 5) == 0);
 }
 
-/*This function routes a builtin command to the appropriate handler function.*/
 int	handle_builtin_cmd(t_command *cmd, t_shell *shell)
 {
 	if (ft_strncmp(cmd->args[0], "echo", 5) == 0)
@@ -41,13 +39,11 @@ int	handle_builtin_cmd(t_command *cmd, t_shell *shell)
 	return (1);
 }
 
-/*This function executes a single builtin command. It handles redirections,
-	command execution, and cleanup.*/
 int	execute_single_builtin(t_command *cmd, t_shell *shell)
 {
-	int status;
-	int stdin_fd;
-	int stdout_fd;
+	int	status;
+	int	stdin_fd;
+	int	stdout_fd;
 
 	stdin_fd = dup(STDIN_FILENO);
 	stdout_fd = dup(STDOUT_FILENO);

@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   args_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:00:54 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 19:36:15 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 16:56:01 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function inserts an array of arguments into another array of arguments \ 
-at a specified position. It returns the new array of arguments.*/
 char	**insert_arg_array(char **orig_args, int pos, char **to_insert)
 {
 	char	**new_args;
@@ -39,9 +37,6 @@ char	**insert_arg_array(char **orig_args, int pos, char **to_insert)
 	return (new_args);
 }
 
-/*This function processes expanded arguments by inserting them into the
-original command arguments at a specified position.
-It returns the number of expanded arguments.*/
 int	update_command_args(t_command *cmd, char **expanded, int pos,
 		t_shell *shell)
 {

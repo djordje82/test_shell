@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:58:51 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 12:42:45 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 17:07:35 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function creates a new token with the given value and type.*/
 t_token	*create_token(const char *value, t_token_type type)
 {
 	t_token	*token;
@@ -33,7 +32,6 @@ t_token	*create_token(const char *value, t_token_type type)
 	return (token);
 }
 
-/*This function skips over any whitespace characters in the input string.*/
 void	skip_whitespace(const char *input, int *pos)
 {
 	while (input[*pos] && ft_is_whitespace(input[*pos]))

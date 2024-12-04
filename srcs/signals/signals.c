@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:42 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 20:02:38 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 17:13:38 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	setup_signals(void)
 
 void	setup_child_signal(void)
 {
-	struct sigaction sa;
+	struct sigaction	sa;
 
 	ft_memset(&sa, 0, sizeof(struct sigaction));
 	sa.sa_handler = SIG_DFL;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_operators.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:58:42 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 12:53:41 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 17:10:39 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ t_token	*create_operator_token(const char *value, t_token_type type,
 	return (token);
 }
 
-// Function: Tokenize double-character operators (e.g., >>, <<)
 t_token	*tokenize_double_operator(const char *input, int *pos,
 		const char *op_str, t_token_type type)
 {
@@ -49,7 +48,6 @@ t_token	*tokenize_double_operator(const char *input, int *pos,
 	return (create_operator_token(op_str, type, 2, pos));
 }
 
-// Function: Tokenize single-character operators (e.g., >, <, |)
 t_token	*tokenize_single_operator(const char *input, int *i)
 {
 	char			value[2];

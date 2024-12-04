@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:03:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 13:51:16 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 17:16:55 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function is used to parse a command from a list of tokens.*/
-
+// TO DO: SPLIT
 t_command	*parse_command(t_token **token)
 {
 	t_command	*cmd;

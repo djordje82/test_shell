@@ -1,18 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_external.c                                     :+:      :+:    :+:   */
+/*   exec_external.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:39 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/15 18:04:42 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:24:49 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function executes a single external command. It forks a child process, executes the command, and handles errors.*/
 int	execute_external_single_cmd(t_command *cmd, char *cmd_path, t_shell *shell)
 {
 	pid_t	pid;
@@ -32,8 +31,6 @@ int	execute_external_single_cmd(t_command *cmd, char *cmd_path, t_shell *shell)
 	return (g_exit_status);
 }
 
-/*This function executes an external command. 
-, checks for command not found, and sets up pipeline execution if necessary.*/
 int	handle_external_cmd(t_command *cmd, t_shell *shell)
 {
 	char	*cmd_path;

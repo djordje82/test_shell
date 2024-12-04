@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:53:32 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 14:43:11 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/04 18:04:23 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	print_identifier_error(char *arg)
 	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 }
 
-/*This function is used to remove an environment variable.*/
+// TO DO: SPLIT
 int	ft_unset(char **args, t_shell *shell)
 {
 	int	i;
