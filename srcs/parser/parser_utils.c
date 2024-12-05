@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:58:19 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 17:18:05 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/05 14:44:35 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ static char	*process_token_value(char *value, t_token_type type)
 	return (result);
 }
 
-/*This function is used to parse the arguments of a command.*/
 int	parse_cmd_arguments(t_token **token, t_command *cmd)
 {
 	char	**new_args;
