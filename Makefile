@@ -6,7 +6,7 @@
 #    By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 14:34:50 by j                 #+#    #+#              #
-#    Updated: 2024/12/05 14:28:53 by dodordev         ###   ########.fr        #
+#    Updated: 2024/12/05 16:14:02 by dodordev         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,6 +55,7 @@ SRCS =	main.c \
 		utils/checkers.c \
 		parser/parser.c \
 		parser/parser_utils.c \
+		parser/parse_cmd_arguments.c \
 		parser/parse_redirections.c \
 		parser/command_utils.c \
 		parser/env_expansion.c \

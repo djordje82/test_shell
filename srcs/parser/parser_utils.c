@@ -6,13 +6,13 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:58:19 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/05 14:44:35 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/05 16:24:47 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	**copy_existing_args(char **new_args, char **args, int *i)
+char	**copy_existing_args(char **new_args, char **args, int *i)
 {
 	while (args && args[*i])
 	{
@@ -27,7 +27,7 @@ static char	**copy_existing_args(char **new_args, char **args, int *i)
 	return (new_args);
 }
 
-static char	**create_new_array(char **args, int count)
+char	**create_new_array(char **args, int count)
 {
 	char	**new_args;
 
@@ -39,7 +39,7 @@ static char	**create_new_array(char **args, int count)
 }
 
 // TO DO: SPLIT
-static char	**add_cmd_argument(char **args, char *new_arg)
+/* static char	**add_cmd_argument(char **args, char *new_arg)
 {
 	char	**new_args;
 	int		i;
@@ -68,40 +68,35 @@ static char	**add_cmd_argument(char **args, char *new_arg)
 	new_args[i + 1] = NULL;
 	ft_free_array((void **)args, -1);
 	return (new_args);
-}
-
-static char	*process_token_value(char *value, t_token_type type)
+} */
+char	**add_new_argument(char **new_args, char *new_arg, int i)
 {
-	char	*result;
-
-	if (type == TOKEN_SQUOTE || type == TOKEN_DQUOTE)
+	new_args[i] = ft_strdup(new_arg);
+	if (!new_args[i])
 	{
-		if (ft_strlen(value) < 2)
-			return (ft_strdup(""));
-		result = ft_substr(value, 1, ft_strlen(value) - 2);
+		ft_free_array((void **)new_args, i);
+		return (NULL);
 	}
-	else
-	{
-		result = ft_strdup(value);
-	}
-	return (result);
+	new_args[i + 1] = NULL;
+	return (new_args);
 }
 
-int	parse_cmd_arguments(t_token **token, t_command *cmd)
+char	**add_cmd_argument(char **args, char *new_arg)
 {
 	char	**new_args;
-	char	*processed_value;
+	int		i;
 
-	if (!*token || !(*token) || !cmd)
-		return (0);
-	processed_value = process_token_value((*token)->value, (*token)->type);
-	if (!processed_value)
-		return (0);
-	new_args = add_cmd_argument(cmd->args, processed_value);
-	free(processed_value);
+	if (!new_arg)
+		return (args);
+	i = ft_count_args(args);
+	new_args = create_new_array(args, i);
 	if (!new_args)
-		return (0);
-	cmd->args = new_args;
-	*token = (*token)->next;
-	return (1);
+	{
+		ft_free_array((void **)args, -1);
+		return (NULL);
+	}
+	i = 0;
+	if (!copy_existing_args(new_args, args, &i))
+		return (NULL);
+	return (add_new_argument(new_args, new_arg, i));
 }

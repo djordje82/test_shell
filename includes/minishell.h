@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/05 14:30:14 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/05 16:22:12 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,6 +229,10 @@ int								parse_cmd_arguments(t_token **token,
 									t_command *cmd);
 int								parse_redirections(t_token **token,
 									t_command *cmd);
+char							**add_cmd_argument(char **args, char *new_arg);
+char	**add_new_argument(char **new_args, char *new_arg, int i);
+char	**create_new_array(char **args, int count);
+char	**copy_existing_args(char **new_args, char **args, int *i);
 
 
 /*PARSING /ENV_EXPANSION*/
