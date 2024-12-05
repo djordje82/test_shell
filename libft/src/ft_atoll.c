@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:42:26 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/26 15:17:06 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/05 13:04:47 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 long long	ft_atoll(const char *str)
 {
-	long long result;
-	int sign;
-	int i;
+	long long	result;
+	int			sign;
+	int			i;
 
 	result = 0;
 	sign = 1;

@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:47:04 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 17:28:45 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/05 14:15:21 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,18 @@ int	update_env_value(char *name, char *value, t_shell *shell)
 	return (0);
 }
 
-//TO DO: SPLIT
+static int	add_variable(char **new_env, int i, char *arg)
+{
+	new_env[i] = ft_strdup(arg);
+	if (!new_env[i])
+	{
+		ft_free_array((void **)new_env, i);
+		return (0);
+	}
+	new_env[i + 1] = NULL;
+	return (1);
+}
+
 int	add_new_var(char *arg, t_shell *shell)
 {
 	char	**new_env;
@@ -52,13 +63,8 @@ int	add_new_var(char *arg, t_shell *shell)
 		}
 		i++;
 	}
-	new_env[i] = ft_strdup(arg);
-	if (!new_env[i])
-	{
-		ft_free_array((void **)new_env, i);
+	if (!add_variable(new_env, i, arg))
 		return (0);
-	}
-	new_env[i + 1] = NULL;
 	ft_free_array((void **)shell->envp, -1);
 	shell->envp = new_env;
 	return (1);

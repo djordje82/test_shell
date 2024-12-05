@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:18:35 by dodordev          #+#    #+#             */
-/*   Updated: 2024/11/26 15:18:16 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/05 13:04:38 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_count_args(char **args)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (args && args[i])

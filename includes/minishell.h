@@ -190,6 +190,8 @@ char							*process_quoted_segment(char *result,
 char							*extract_quoted(char *input, int *pos,
 									char quote_type);
 char							*extract_word(const char *input, int *pos);
+char							*handle_word_part(char *result,
+									const char *input, int *start, int *len);
 
 /*TOKENIZER /UTILS*/
 t_token_type					get_operator_type(char c);
