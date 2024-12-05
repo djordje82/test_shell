@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/05 16:22:12 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/05 16:41:45 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,6 @@
 # define ERR_QUOTE "minishell: unclosed quote"
 # define ERR_TOKEN "minishell: syntax error near unexpected token"
 # define ERR_SYNTAX_PIPE "minishell: syntax error near unexpected token `|'"
-# define ERR_SYNTAX_NEWLINE "minishell: syntax error near unexpected token `newline'"
-# define ERR_SYNTAX_REDIR "minishell: syntax error near unexpected token `redirection'"
 # define ERR_CMD "minishell: command not found"
 # define ERR_BATCH "minishell: arguments not allowed  extra!!"
 
@@ -93,7 +91,7 @@ typedef enum e_char_type
 	CHAR_SQUOTE,
 	CHAR_DQUOTE,
 	CHAR_NORMAL
-}			t_char_type;
+}								t_char_type;
 
 typedef enum e_token_type
 {
@@ -108,7 +106,7 @@ typedef enum e_token_type
 	TOKEN_SQUOTE,
 	TOKEN_DQUOTE,
 	TOKEN_ENV
-}					t_token_type;
+}								t_token_type;
 
 /*STRUCTS*/
 typedef struct s_node
@@ -120,7 +118,6 @@ typedef struct s_node
 	char						**outfile;
 	char						**heredoc;
 	int							*append;
-	// int		**hd_pipe;
 	int							*fd_in;
 	int							*fd_out;
 	int							n_input;
@@ -169,8 +166,8 @@ void							reset_shell_state(t_shell *shell);
 
 /*TOKENIZER*/
 char							*ft_strjoin_free(char *s1, char *s2);
-t_token							*create_token(const char *value, \
-								t_token_type type);
+t_token							*create_token(const char *value,
+									t_token_type type);
 t_token							*tokenize_input(const char *input,
 									t_shell *shell);
 t_token							*tokenize_word(const char *input, int *i,
@@ -212,7 +209,8 @@ void							close_pipe_ends(int pipe_fd[2]);
 int								setup_pipe_io(int in_fd, int out_fd);
 int								get_input_fd(int *prev_pipe);
 int								get_output_fd(int *pipe_fd);
-void							handle_pipe_io_error(int *prev_pipe, int *pipe_fd);
+void							handle_pipe_io_error(int *prev_pipe,
+									int *pipe_fd);
 
 /*PARSER*/
 t_command						*parse_command(t_token **token);
@@ -230,10 +228,11 @@ int								parse_cmd_arguments(t_token **token,
 int								parse_redirections(t_token **token,
 									t_command *cmd);
 char							**add_cmd_argument(char **args, char *new_arg);
-char	**add_new_argument(char **new_args, char *new_arg, int i);
-char	**create_new_array(char **args, int count);
-char	**copy_existing_args(char **new_args, char **args, int *i);
-
+char							**add_new_argument(char **new_args,
+									char *new_arg, int i);
+char							**create_new_array(char **args, int count);
+char							**copy_existing_args(char **new_args,
+									char **args, int *i);
 
 /*PARSING /ENV_EXPANSION*/
 char							*extract_env_var_name(const char *str);
@@ -286,13 +285,14 @@ void							print_file_error(const char *filename,
 									const char *error_msg);
 
 /*UTILS /SIGNALS*/
-void				setup_signals(void);
-void				setup_child_signal(void);
-void				handle_eof(t_shell *shell);
-void				disable_ctrl_chars(void);
-void				interactive_signal_handler(int signum);
-void				signal_handler_child(int signum);
-void				setup_execution_signals(struct sigaction *sa_old_int, struct sigaction *sa_old_quit);
+void							setup_signals(void);
+void							setup_child_signal(void);
+void							handle_eof(t_shell *shell);
+void							disable_ctrl_chars(void);
+void							interactive_signal_handler(int signum);
+void							signal_handler_child(int signum);
+void							setup_execution_signals(struct sigaction *sa_old_int,
+									struct sigaction *sa_old_quit);
 
 /*UTILS /SHELL*/
 void							run_shell_loop(t_shell *shell);
@@ -365,7 +365,8 @@ int								setup_pipeline_steps(t_command *current,
 									int *prev_pipe, pid_t *last_pid,
 									t_shell *shell);
 void							close_pipe(int *prev_pipe, int *pipe_fd);
-void				cleanup_pipeline_resources(int *prev_pipe, int *pipe_fd);
+void							cleanup_pipeline_resources(int *prev_pipe,
+									int *pipe_fd);
 
 /*EXECUTOR /PROCESSES*/
 int								create_process(pid_t *pid, t_shell *shell);
