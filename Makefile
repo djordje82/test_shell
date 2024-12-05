@@ -6,7 +6,7 @@
 #    By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 14:34:50 by j                 #+#    #+#              #
-#    Updated: 2024/12/04 18:21:54 by dodordev         ###   ########.fr        #
+#    Updated: 2024/12/05 14:28:53 by dodordev         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,7 @@ SRCS =	main.c \
 		executor/exec_single_cmd.c \
 		executor/exec_builtins.c \
 		executor/exec_pipeline.c \
+		executor/exec_pipeline_utils.c \
 		executor/heredoc.c \
 		utils/cleanup/cleanup_shell.c \
 		utils/cleanup/cleanup_shell_utils.c \

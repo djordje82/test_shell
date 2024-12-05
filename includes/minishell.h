@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 13:18:47 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/05 14:30:14 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -361,6 +361,7 @@ int								setup_pipeline_steps(t_command *current,
 									int *prev_pipe, pid_t *last_pid,
 									t_shell *shell);
 void							close_pipe(int *prev_pipe, int *pipe_fd);
+void				cleanup_pipeline_resources(int *prev_pipe, int *pipe_fd);
 
 /*EXECUTOR /PROCESSES*/
 int								create_process(pid_t *pid, t_shell *shell);
