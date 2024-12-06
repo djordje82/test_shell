@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+         #
+#    By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 14:34:50 by j                 #+#    #+#              #
-#    Updated: 2024/12/05 16:14:02 by dodordev         ###   ########.fr        #
+#    Updated: 2024/12/06 15:31:24 by jadyar           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,7 @@ SRCS =	main.c \
 		builtins/ft_unset.c \
 		executor/exec.c \
 		executor/setup_redirections.c \
+		executor/setup_redirection_utils.c \
 		executor/exec_utils.c \
 		executor/exec_external.c \
 		executor/exec_external_utils.c \

@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/06 14:22:07 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/06 15:32:27 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -286,8 +286,8 @@ void							setup_signals(void);
 void							setup_child_signal(void);
 void							handle_eof(t_shell *shell);
 void							interactive_signal_handler(int signum);
-void							setup_execution_signals(struct sigaction *sa_old_int,
-									struct sigaction *sa_old_quit);
+void							setup_execution_signals(struct sigaction \
+								*sa_old_int, struct sigaction *sa_old_quit);
 
 /*UTILS /SHELL*/
 void							run_shell_loop(t_shell *shell);
@@ -348,6 +348,10 @@ int								validate_env_var(char *name);
 /*EXECUTOR /REDIRECTIONS*/
 int								setup_redirections(t_command *cmd);
 void							restore_std_fds(int stdin_fd, int stdout_fd);
+int								redirect_output(int fd, char *outfile);
+int								backup_std_fds(int *stdin_backup, \
+								int *stdout_backup);
+int								open_output_file(char *outfile, int flags);
 
 /*EXECUTOR /PIPELINE*/
 int								setup_pipeline_steps(t_command *current,

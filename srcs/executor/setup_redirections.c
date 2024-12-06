@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:00 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/06 14:42:45 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/06 15:29:36 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ static int	handle_input_redirection(t_command *cmd)
 	return (1);
 }
 
-//TO DO: SPLIT
 static int	handle_output_redirection(t_command *cmd)
 {
 	int		fd;
@@ -61,40 +60,12 @@ static int	handle_output_redirection(t_command *cmd)
 		flags |= O_TRUNC;
 	else if (cmd->out_type == REDIR_APPEND)
 		flags |= O_APPEND;
-	fd = open(cmd->outfile, flags, FILE_PERMS);
+	fd = open_output_file(cmd->outfile, flags);
 	if (fd == -1)
-	{
-		g_exit_status = 1;
-		if (errno == EACCES)
-			print_file_error(cmd->outfile, "Permission denied");
-		else if (errno == ENOENT)
-			print_file_error(cmd->outfile, "No fucking file!!");
-		else
-			print_file_error(cmd->outfile, strerror(errno));
 		return (0);
-	}
-
-static int	redirect_output(int fd, )
-	if (dup2(fd, STDOUT_FILENO) == -1)
-	{
-		print_command_error(cmd->outfile, "Error duplicating file descriptor");
-		close(fd);
-		g_exit_status = 1;
+	if (!redirect_output(fd, cmd->outfile))
 		return (0);
-	}
-	close(fd);
-	return (1);
-}
-
-int	backup_std_fds(int *stdin_backup, int *stdout_backup)
-{
-	*stdin_backup = dup(STDIN_FILENO);
-	*stdout_backup = dup(STDOUT_FILENO);
-	if (*stdin_backup == -1 || *stdout_backup == -1)
-	{
-		g_exit_status = 1;
-		return (0);
-	}
+	close (fd);
 	return (1);
 }
 
