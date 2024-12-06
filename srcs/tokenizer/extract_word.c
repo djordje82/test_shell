@@ -3,74 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   extract_word.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:20:46 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 17:12:35 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/06 15:51:18 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*append_word_part(char *result, const char *input, int start, int len)
-{
-	char	*temp;
-	char	*new_result;
-
-	if (!result || !input)
-		return (NULL);
-	temp = ft_substr(input, start, len);
-	if (!temp)
-	{
-		free(result);
-		return (NULL);
-	}
-	new_result = ft_strjoin_free(result, temp);
-	if (!new_result)
-		return (NULL);
-	free(temp);
-	return (new_result);
-}
-
-static char	*append_unquoted_part(char *result, const char *input, int *start,
-		int *len)
-{
-	if (!result || !input || !start || !len)
-		return (NULL);
-	if (*len > 0)
-	{
-		result = append_word_part(result, input, *start, *len);
-		if (!result)
-			return (NULL);
-		*start += *len;
-		*len = 0;
-	}
-	return (result);
-}
-
-// TO DO: SPLIT
-char	*process_quoted_segment(char *result, const char *input, int *start,
+char	*process_quoted_content(char *result, const char *input, int *start,
 		int *len)
 {
 	char	quote_type;
 	int		quote_pos;
 	char	*quoted_content;
 
-	if (!result || !input || !start || !len)
-		return (NULL);
-	result = append_unquoted_part(result, input, start, len);
-	if (!result)
-		return (NULL);
 	quote_type = input[*start + *len];
 	quote_pos = *start + *len;
 	quoted_content = extract_quoted((char *)input, &quote_pos, quote_type);
 	if (!quoted_content)
-	{
-		ft_putendl_fd("minishell: syntax error: unclosed quotes", 2);
-		g_exit_status = 2;
-		free(result);
-		return (NULL);
-	}
+		return (handle_quote_error(result));
 	result = ft_strjoin_free(result, quoted_content);
 	free(quoted_content);
 	if (!result)
@@ -80,17 +33,22 @@ char	*process_quoted_segment(char *result, const char *input, int *start,
 	return (result);
 }
 
-// TO DO: SPLIT
-static char	*process_word_content(const char *input, int *start, int *len)
+char	*process_quoted_segment(char *result, const char *input, int *start,
+		int *len)
 {
-	char	*result;
-	char	curr_char;
-
-	if (!input || !start || !len)
+	if (!result || !input || !start || !len)
 		return (NULL);
-	result = ft_strdup("");
+	result = append_unquoted_part(result, input, start, len);
 	if (!result)
 		return (NULL);
+	return (process_quoted_content(result, input, start, len));
+}
+
+char	*process_word_loop(const char *input, char *result, int *start,
+		int *len)
+{
+	char	curr_char;
+
 	while (input[*start + *len])
 	{
 		curr_char = input[*start + *len];
@@ -105,12 +63,23 @@ static char	*process_word_content(const char *input, int *start, int *len)
 			break ;
 		(*len)++;
 	}
+	return (result);
+}
+
+static char	*process_word_content(const char *input, int *start, int *len)
+{
+	char	*result;
+
+	if (!input || !start || !len)
+		return (NULL);
+	result = ft_strdup("");
+	if (!result)
+		return (NULL);
+	result = process_word_loop(input, result, start, len);
+	if (!result)
+		return (NULL);
 	if (*len > 0)
-	{
 		result = append_word_part(result, input, *start, *len);
-		if (!result)
-			return (NULL);
-	}
 	return (result);
 }
 

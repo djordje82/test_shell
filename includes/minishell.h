@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/06 15:32:27 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/06 15:54:31 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,6 +202,9 @@ int								handle_quotes(char *input, int *i,
 									char quote_type);
 char							**insert_arg_array(char **orig_args, int pos,
 									char **expanded);
+char							*handle_quote_error(char *result);
+char							*append_unquoted_part(char *result, const \
+								char *input, int *start, int *len);
 
 /*PIPES*/
 int								create_pipe(int pipe_fd[2], t_shell *shell);
