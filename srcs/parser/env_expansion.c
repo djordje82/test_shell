@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:12 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/06 14:18:12 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/06 14:29:08 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ char	*process_char(char *str, int *i, char *result, t_shell *shell)
 	return (result);
 }
 
-char *expand_env_vars(char *str, t_shell *shell)
+char	*expand_env_vars(char *str, t_shell *shell)
 {
 	char	*result;
 	char	*temp;

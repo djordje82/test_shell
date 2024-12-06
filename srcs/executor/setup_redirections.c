@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_redirections.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:00 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 17:20:34 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/06 14:42:45 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ static int	handle_output_redirection(t_command *cmd)
 			print_file_error(cmd->outfile, strerror(errno));
 		return (0);
 	}
+
+static int	redirect_output(int fd, )
 	if (dup2(fd, STDOUT_FILENO) == -1)
 	{
 		print_command_error(cmd->outfile, "Error duplicating file descriptor");
@@ -84,38 +86,36 @@ static int	handle_output_redirection(t_command *cmd)
 	return (1);
 }
 
-//TO DO: SPLIT
+int	backup_std_fds(int *stdin_backup, int *stdout_backup)
+{
+	*stdin_backup = dup(STDIN_FILENO);
+	*stdout_backup = dup(STDOUT_FILENO);
+	if (*stdin_backup == -1 || *stdout_backup == -1)
+	{
+		g_exit_status = 1;
+		return (0);
+	}
+	return (1);
+}
+
 int	setup_redirections(t_command *cmd)
 {
 	int	stdin_backup;
 	int	stdout_backup;
 
-	stdin_backup = dup(STDIN_FILENO);
-	stdout_backup = dup(STDOUT_FILENO);
-	if (stdin_backup == -1 || stdout_backup == -1)
+	if (!backup_std_fds(&stdin_backup, &stdout_backup) || !cmd)
+		return (0);
+	if (cmd->infile && (!handle_input_redirection(cmd)))
 	{
 		g_exit_status = 1;
+		restore_std_fds(STDIN_FILENO, STDOUT_FILENO);
 		return (0);
 	}
-	if (!cmd)
+	if (cmd->outfile && (!handle_output_redirection(cmd)))
+	{
+		g_exit_status = 1;
+		restore_std_fds(STDIN_FILENO, STDOUT_FILENO);
 		return (0);
-	if (cmd->infile)
-	{
-		if (!handle_input_redirection(cmd))
-		{
-			g_exit_status = 1;
-			restore_std_fds(STDIN_FILENO, STDOUT_FILENO);
-			return (0);
-		}
-	}
-	if (cmd->outfile)
-	{
-		if (!handle_output_redirection(cmd))
-		{
-			g_exit_status = 1;
-			restore_std_fds(STDIN_FILENO, STDOUT_FILENO);
-			return (0);
-		}
 	}
 	close(stdin_backup);
 	close(stdout_backup);
