@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_expansion.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:12 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 17:18:49 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/06 14:18:12 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,46 +46,71 @@ static char	*get_var_content(char *str, int *i, t_shell *shell)
 	return (value);
 }
 
-//TO DO: SPLIT
-char	*expand_env_vars(char *str, t_shell *shell)
+static char	*handle_dollar(char *str, int *i, t_shell *shell)
+{
+	char	*temp;
+
+	if (str[*i + 1] == '?')
+	{
+		temp = ft_itoa(shell->exit_status);
+		*i += 2;
+	}
+	else if (ft_isalnum(str[*i + 1]) || str[*i + 1] == '_')
+	{
+		temp = get_var_content(str, i, shell);
+		if (!temp)
+			temp = ft_strdup("");
+	}
+	else
+	{
+		temp = ft_strdup("$");
+		(*i)++;
+	}
+	return (temp);
+}
+
+char	*process_char(char *str, int *i, char *result, t_shell *shell)
+{
+	char	*temp;
+
+	if (str[*i] == '\\' && (str[*i + 1] == '$' || str[*i + 1] == '\\'))
+	{
+		temp = handle_escape(i);
+	}
+	else if (str[*i] == '$')
+	{
+		temp = handle_dollar(str, i, shell);
+	}
+	else
+	{
+		temp = ft_substr(str, (*i)++, 1);
+	}
+	result = ft_strjoin_free(result, temp);
+	free(temp);
+	return (result);
+}
+
+char *expand_env_vars(char *str, t_shell *shell)
 {
 	char	*result;
 	char	*temp;
 	int		i;
 
-	if (!str)
+	if (!str || !shell)
 		return (NULL);
 	result = ft_strdup("");
+	if (!result)
+		return (NULL);
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '\\' && (str[i + 1] == '$' || str[i + 1] == '\\'))
+		temp = process_char(str, &i, result, shell);
+		if (!temp)
 		{
-			temp = ft_strdup("$");
-			i += 2;
+			free(result);
+			return (NULL);
 		}
-		else if (str[i] == '$' && str[i + 1] == '?')
-		{
-			temp = ft_itoa(shell->exit_status);
-			i += 2;
-		}
-		else if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
-		{
-			temp = get_var_content(str, &i, shell);
-			if (!temp)
-				temp = ft_strdup("");
-		}
-		else if (str[i] == '$')
-		{
-			temp = ft_strdup("$");
-			i++;
-		}
-		else
-		{
-			temp = ft_substr(str, i++, 1);
-		}
-		result = ft_strjoin_free(result, temp);
-		free(temp);
+		result = temp;
 	}
 	return (result);
 }
