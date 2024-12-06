@@ -6,11 +6,25 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 14:31:34 by jadyar            #+#    #+#             */
-/*   Updated: 2024/12/04 17:21:16 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/06 13:52:57 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	handle_heredoc_line(char *line, const char *delimiter, 
+								size_t len_delimiter)
+{
+	if (!line)
+		return (0);
+	if (ft_strlen(line) == len_delimiter && 
+		ft_strncmp(line, delimiter, len_delimiter) == 0)
+	{
+		free(line);
+		return (0);
+	}
+	return (1);
+}
 
 static int	write_to_heredoc(int fd, char *line)
 {
@@ -28,7 +42,17 @@ static int	write_to_heredoc(int fd, char *line)
 	return (1);
 }
 
-//TO DO: SPLIT
+static int	cleanup_heredoc(int *heredoc_pipe)
+{
+	close(heredoc_pipe[1]);
+	if (!setup_pipe_io(heredoc_pipe[0], -1))
+	{
+		close(heredoc_pipe[0]);
+		return (0);
+	}
+	return (1);
+}
+
 int	setup_heredoc(t_command *cmd)
 {
 	int		heredoc_pipe[2];
@@ -41,14 +65,8 @@ int	setup_heredoc(t_command *cmd)
 	while (1)
 	{
 		line = readline("> ");
-		if (!line)
+		if (!handle_heredoc_line(line, cmd->infile, len_delimiter))
 			break ;
-		if (ft_strlen(line) == len_delimiter && ft_strncmp(line, cmd->infile,
-				len_delimiter) == 0)
-		{
-			free(line);
-			break ;
-		}
 		if (!write_to_heredoc(heredoc_pipe[1], line))
 		{
 			close(heredoc_pipe[1]);
@@ -56,11 +74,5 @@ int	setup_heredoc(t_command *cmd)
 			return (0);
 		}
 	}
-	close(heredoc_pipe[1]);
-	if (!setup_pipe_io(heredoc_pipe[0], -1))
-	{
-		close(heredoc_pipe[0]);
-		return (0);
-	}
-	return (1);
+	return (cleanup_heredoc(heredoc_pipe));
 }
