@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/05 16:41:45 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/06 14:22:07 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,10 +251,6 @@ int								ft_env(char **args, t_shell *shell);
 int								check_env_args(char **args);
 int								ft_exit(char **args, t_shell *shell);
 
-/*ERROR HANDLING*/
-int								minishell_clean(t_shell *shell, int exit_code);
-void							minishell_reset(t_shell *shell);
-
 /*CLEANUP*/
 void							cleanup_execution_data(t_shell *shell);
 void							cleanup_envp(t_shell *shell);
@@ -269,9 +265,10 @@ int								cleanup_and_exit(char *err_msg, char *src,
 
 /*UTILS*/
 t_char_type						find_special_chars(char c);
+char							*handle_escape(int *i);
 
 /*UTILS /CHECKERS*/
-int								is_whitespace(char c);
+int								ft_is_whitespace(char c);
 int								is_quote(char c);
 int								is_special_char(char c);
 int								is_word_delimiter(char c);
@@ -288,16 +285,12 @@ void							print_file_error(const char *filename,
 void							setup_signals(void);
 void							setup_child_signal(void);
 void							handle_eof(t_shell *shell);
-void							disable_ctrl_chars(void);
 void							interactive_signal_handler(int signum);
-void							signal_handler_child(int signum);
 void							setup_execution_signals(struct sigaction *sa_old_int,
 									struct sigaction *sa_old_quit);
 
 /*UTILS /SHELL*/
 void							run_shell_loop(t_shell *shell);
-int								prevent_batch_and_init(t_shell *shell,
-									char **env, int argc, char **argv);
 void							initialize_shell(t_shell *shell, char **envp);
 int								validate_env_var(char *name);
 
@@ -309,7 +302,6 @@ int								update_env_value(char *name, char *value,
 int								remove_env_var(char *name, t_shell *shell);
 
 /*ENVIRONMENT /UTILS*/
-int								count_envp(char **envp);
 
 /*ENVIRONMENT /UTILS*/
 char							*get_home_dir(t_shell *shell);
@@ -330,7 +322,6 @@ int								ft_env(char **args, t_shell *shell);
 
 /*BUILTINS /UTILS*/
 int								is_valid_n_flag(char *arg);
-void							print_args(char **args, int start, int n_flag);
 
 /*BUILTINS /EXECUTION*/
 int								handle_builtin_cmd(t_command *cmd,
@@ -359,12 +350,9 @@ int								setup_redirections(t_command *cmd);
 void							restore_std_fds(int stdin_fd, int stdout_fd);
 
 /*EXECUTOR /PIPELINE*/
-void							setup_pipe_redirections(int *prev_pipe,
-									int *pipe_fd);
 int								setup_pipeline_steps(t_command *current,
 									int *prev_pipe, pid_t *last_pid,
 									t_shell *shell);
-void							close_pipe(int *prev_pipe, int *pipe_fd);
 void							cleanup_pipeline_resources(int *prev_pipe,
 									int *pipe_fd);
 
@@ -385,7 +373,6 @@ char							*get_cmd_path(char *cmd, char **paths);
 char							*find_command_path(char *cmd, t_shell *shell);
 
 /*EXECUTOR /EXEC*/
-int								execute_command(t_command *cmd, t_shell *shell);
 int								execute_single_command(t_command *cmd,
 									t_shell *shell);
 int								execute_single_builtin(t_command *cmd,
