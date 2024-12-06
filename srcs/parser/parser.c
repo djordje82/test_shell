@@ -6,55 +6,11 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:03:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 17:16:55 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/06 13:17:37 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// TO DO: SPLIT
-t_command	*parse_command(t_token **token)
-{
-	t_command	*cmd;
-
-	if (!token || !*token)
-		return (NULL);
-	cmd = create_cmd_node();
-	if (!cmd)
-		return (NULL);
-	cmd->is_valid = true;
-	while (*token && (*token)->type != TOKEN_PIPE)
-	{
-		if ((*token)->type == TOKEN_REDIR_IN
-			|| (*token)->type == TOKEN_REDIR_OUT
-			|| (*token)->type == TOKEN_APPEND
-			|| (*token)->type == TOKEN_HEREDOC)
-		{
-			if (!parse_redirections(token, cmd))
-			{
-				cmd->is_valid = false;
-				cleanup_cmd_list(cmd);
-				return (NULL);
-			}
-			continue ;
-		}
-		else if ((*token)->type == TOKEN_WORD || (*token)->type == TOKEN_SQUOTE
-			|| (*token)->type == TOKEN_DQUOTE)
-		{
-			if (!parse_cmd_arguments(token, cmd))
-			{
-				cmd->is_valid = false;
-				cleanup_cmd_list(cmd);
-				return (NULL);
-			}
-			continue ;
-		}
-		*token = (*token)->next;
-	}
-	if (!cmd->args || !cmd->args[0])
-		cmd->is_valid = false;
-	return (cmd);
-}
 
 static int	build_command_list(t_token *tokens, t_shell *shell)
 {

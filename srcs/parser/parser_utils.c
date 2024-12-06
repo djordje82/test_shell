@@ -38,37 +38,6 @@ char	**create_new_array(char **args, int count)
 	return (new_args);
 }
 
-// TO DO: SPLIT
-/* static char	**add_cmd_argument(char **args, char *new_arg)
-{
-	char	**new_args;
-	int		i;
-
-	(void)args;
-	if (!new_arg)
-		return (args);
-	i = 0;
-	while (args && args[i])
-		i++;
-	new_args = create_new_array(args, i);
-	if (!new_args)
-	{
-		ft_free_array((void **)args, -1);
-		return (NULL);
-	}
-	i = 0;
-	if (!copy_existing_args(new_args, args, &i))
-		return (NULL);
-	new_args[i] = ft_strdup(new_arg);
-	if (!new_args[i])
-	{
-		ft_free_array((void **)new_args, i);
-		return (NULL);
-	}
-	new_args[i + 1] = NULL;
-	ft_free_array((void **)args, -1);
-	return (new_args);
-} */
 char	**add_new_argument(char **new_args, char *new_arg, int i)
 {
 	new_args[i] = ft_strdup(new_arg);

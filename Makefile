@@ -55,6 +55,7 @@ SRCS =	main.c \
 		utils/checkers.c \
 		parser/parser.c \
 		parser/parser_utils.c \
+		parser/parse_command.c \
 		parser/parse_cmd_arguments.c \
 		parser/parse_redirections.c \
 		parser/command_utils.c \
