@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 14:43:39 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/09 12:36:41 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/09 13:25:06 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ int	setup_pipe_io(int in_fd, int out_fd)
 		if (dup2(out_fd, STDOUT_FILENO) == -1)
 		{
 			perror("dup2 failed out_fd");
-			//close(out_fd);
 			return (0);
 		}
 		close(out_fd);

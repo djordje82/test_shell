@@ -6,11 +6,24 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:32 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/09 12:05:51 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/09 13:24:38 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	setup_heredoc_signals(void)
+{
+	struct sigaction	sa;
+
+	ft_memset(&sa, 0, sizeof(struct sigaction));
+	sa.sa_handler = SIG_IGN;
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
+	return (1);
+}
 
 void	wait_for_children(pid_t last_pid)
 {
