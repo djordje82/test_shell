@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:13 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/06 13:42:46 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/09 13:35:24 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,8 @@ static int	execute_pipeline(t_command *current, t_shell *shell,
 		if (!setup_pipeline_steps(current, prev_pipe, &last_pid, shell))
 		{
 			g_exit_status = 1;
-			sigaction(SIGINT, sa_old_int, NULL);
-			sigaction(SIGQUIT, sa_old_quit, NULL);
-			return (g_exit_status);
+			if (!current->next)  // Only break if this is the last command
+                break;
 		}
 		current = current->next;
 	}
@@ -45,10 +44,12 @@ int	execute_commands(t_shell *shell)
 	struct sigaction	sa_old_quit;
 
 	current = shell->cmnd_lst;
-	if (current && !current->is_valid)
+	if (!current)
+        return (0);
+	if (!current->is_valid)
 	{
-		print_command_not_found(current);
-		g_exit_status = 127;
+		//print_command_not_found(current);
+		g_exit_status = 1;
 		return (g_exit_status);
 	}
 	setup_execution_signals(&sa_old_int, &sa_old_quit);

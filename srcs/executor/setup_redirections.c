@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_redirections.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:00 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/06 15:29:36 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/09 13:22:30 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,14 +78,14 @@ int	setup_redirections(t_command *cmd)
 		return (0);
 	if (cmd->infile && (!handle_input_redirection(cmd)))
 	{
-		g_exit_status = 1;
-		restore_std_fds(STDIN_FILENO, STDOUT_FILENO);
+		//g_exit_status = 1;
+		restore_std_fds(stdin_backup, stdout_backup);
 		return (0);
 	}
 	if (cmd->outfile && (!handle_output_redirection(cmd)))
 	{
 		g_exit_status = 1;
-		restore_std_fds(STDIN_FILENO, STDOUT_FILENO);
+		restore_std_fds(stdin_backup, stdout_backup);
 		return (0);
 	}
 	close(stdin_backup);
