@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:58:19 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/05 16:24:47 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/09 12:48:22 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,11 @@ char	**create_new_array(char **args, int count)
 	new_args = malloc(sizeof(char *) * (count + 2));
 	if (!new_args)
 		return (NULL);
+	while (count >= 0)
+	{
+		new_args[count] = NULL;
+		count--;
+	}
 	return (new_args);
 }
 

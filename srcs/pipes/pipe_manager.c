@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_manager.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 14:43:39 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 18:23:17 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/09 12:36:41 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,6 @@ int	setup_pipe_io(int in_fd, int out_fd)
 		if (dup2(in_fd, STDIN_FILENO) == -1)
 		{
 			perror("dup2 failed in_fd");
-			close(in_fd);
-			if (out_fd != -1)
-				close(out_fd);
 			return (0);
 		}
 		close(in_fd);
@@ -62,7 +59,7 @@ int	setup_pipe_io(int in_fd, int out_fd)
 		if (dup2(out_fd, STDOUT_FILENO) == -1)
 		{
 			perror("dup2 failed out_fd");
-			close(out_fd);
+			//close(out_fd);
 			return (0);
 		}
 		close(out_fd);
@@ -73,7 +70,7 @@ int	setup_pipe_io(int in_fd, int out_fd)
 void	handle_parent_process(int *prev_pipe, int *pipe_fd)
 {
 	close_pipe_ends(prev_pipe);
-	if (pipe_fd && pipe_fd[1] != -1)
+	if (pipe_fd && pipe_fd[1] != -1 && pipe_fd[0] != -1)
 	{
 		prev_pipe[0] = pipe_fd[0];
 		prev_pipe[1] = pipe_fd[1];

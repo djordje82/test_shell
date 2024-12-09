@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:42 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 17:13:38 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/09 12:38:53 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,19 @@ void	setup_child_signal(void)
 	sigemptyset(&sa.sa_mask);
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
+}
+
+int setup_heredoc_signals(void)
+{
+	struct sigaction	sa;
+
+	ft_memset(&sa, 0, sizeof(struct sigaction));
+	sa.sa_handler = SIG_IGN;
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
+	return (1);
 }
 
 void	setup_execution_signals(struct sigaction *sa_old_int,
