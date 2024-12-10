@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 14:31:34 by jadyar            #+#    #+#             */
-/*   Updated: 2024/12/09 12:38:09 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/10 15:42:29 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	setup_heredoc(t_command *cmd)
 			return (0);
 		}
 		if (!handle_heredoc_line(line, cmd->infile, len_delimiter))
-			break ;
+			return (0);
 		if (!write_to_heredoc(heredoc_pipe[1], line))
 		{
 			close_pipe_ends(heredoc_pipe);
