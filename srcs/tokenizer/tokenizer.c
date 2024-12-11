@@ -114,6 +114,7 @@ t_token	*tokenize_input(const char *input, t_shell *shell)
 			cleanup_token_list(head);
 			return (NULL);
 		}
+		//fprintf(stderr, "DEBUG: Created token: type=%d, value=%s\n", new_token->type, new_token->value);
 		add_token_to_list(&head, &current, new_token);
 		skip_whitespace(input, &pos);
 	}
