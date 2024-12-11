@@ -45,7 +45,7 @@ LIBFT_FILES = isalpha isdigit isalnum isnumber \
 		putstr_fd split strchr \
 		strdup striteri strjoin strjoin_free \
 		strlcat strlcpy strlen \
-		strmapi strncmp strnstr \
+		strmapi strncmp strcmp strnstr \
 		strrchr strtrim substr \
 		tolower toupper\
 		lstnew lstadd_front lstsize \

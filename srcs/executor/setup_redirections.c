@@ -39,13 +39,63 @@ static int	handle_regular_input(t_command *cmd)
 	return (1);
 }
 
-static int	handle_input_redirection(t_command *cmd)
+/* static int	handle_input_redirection(t_command *cmd)
 {
 	if (cmd->in_type == REDIR_INPUT)
 		return (handle_regular_input(cmd));
 	else if (cmd->in_type == REDIR_HEREDOC)
-		return (setup_heredoc(cmd));
+	{
+		if (!setup_heredoc(cmd))
+		{
+			g_exit_status = 1;
+			return (0);
+		}
+		return (1);
+	}
 	return (1);
+} */
+
+/* static int handle_input_redirection(t_command *cmd)
+{
+    fprintf(stderr, "DEBUG: Handling input redirection, type: %d\n", cmd->in_type);
+    if (cmd->in_type == REDIR_INPUT)
+        return (handle_regular_input(cmd));
+    else if (cmd->in_type == REDIR_HEREDOC)
+    {
+        fprintf(stderr, "DEBUG: Setting up heredoc for delimiter: %s\n", cmd->infile);
+        if (!setup_heredoc(cmd))
+        {
+            fprintf(stderr, "DEBUG: Heredoc setup failed\n");
+            g_exit_status = 1;
+            return (0);
+        }
+        fprintf(stderr, "DEBUG: Heredoc setup successful\n");
+		free(cmd->infile);
+		cmd->infile = NULL;
+        return (1);
+    }
+    return (1);
+} */
+
+static int handle_input_redirection(t_command *cmd)
+{
+    static bool heredoc_processed = false;
+
+    if (cmd->in_type == REDIR_INPUT)
+        return (handle_regular_input(cmd));
+    else if (cmd->in_type == REDIR_HEREDOC)
+    {
+        if (heredoc_processed)
+            return (1);
+        if (!setup_heredoc(cmd))
+        {
+            g_exit_status = 1;
+            return (0);
+        }
+        heredoc_processed = true;
+        return (1);
+    }
+    return (1);
 }
 
 static int	handle_output_redirection(t_command *cmd)

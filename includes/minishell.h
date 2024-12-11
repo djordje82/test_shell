@@ -72,11 +72,12 @@
 # define ERR_CMD "minishell: command not found"
 # define ERR_BATCH "minishell: arguments not allowed  extra!!"
 
-# define REDIR_TRUNC 1
-# define REDIR_APPEND 667
 # define FILE_PERMS 0644
-# define REDIR_INPUT 1
-# define REDIR_HEREDOC 666
+# define REDIR_TRUNC 1
+# define REDIR_APPEND 2
+# define REDIR_INPUT 3
+# define REDIR_OUTPUT 4
+# define REDIR_HEREDOC 5
 
 /*GLOBAL VARIABLE*/
 
