@@ -29,7 +29,9 @@ void	wait_for_children(pid_t last_pid)
 {
 	int		status;
 	pid_t	wpid;
+	bool	nl_printed;
 
+	nl_printed = false;
 	while (1)
 	{
 		wpid = wait(&status);
@@ -40,8 +42,11 @@ void	wait_for_children(pid_t last_pid)
 			g_exit_status = 0;
 			if (WTERMSIG(status) == SIGQUIT)
 				write(STDERR_FILENO, "Quit (core dumped)\n", 18);
-			else if (WTERMSIG(status) == SIGINT)
+			else if (WTERMSIG(status) == SIGINT && !nl_printed)
+			{
 				write(STDERR_FILENO, "\n", 1);
+				nl_printed = true;
+			}
 		}
 		else if (WIFEXITED(status))
 		{

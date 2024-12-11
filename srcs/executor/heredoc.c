@@ -18,7 +18,7 @@ static int	handle_heredoc_line(char *line, const char *delimiter,
 	size_t	line_len;
 
 	if (!line)
-		return (0);
+		return (-1);
 	line_len = ft_strlen(line);
 	if (line_len > 0 && line[line_len - 1] == '\n')
 		line[line_len - 1] = '\0';
@@ -35,9 +35,9 @@ static int	write_to_heredoc(int fd, char *line)
 {
 	size_t	len;
 
-	len = ft_strlen(line);
 	if (!line)
 		return (0);
+	len = ft_strlen(line);
 	if (write(fd, line, len) == -1 || write(fd, "\n", 1) == -1)
 	{
 		free(line);
@@ -64,6 +64,7 @@ int	setup_heredoc(t_command *cmd)
 	int		heredoc_pipe[2];
 	char	*line;
 	size_t	len_delimiter;
+	int		heredoc_status;
 
 	if (!create_pipe(heredoc_pipe, NULL))
 		return (0);
@@ -72,18 +73,19 @@ int	setup_heredoc(t_command *cmd)
 	while (1)
 	{
 		line = readline("> ");
-		if (!line)
+		heredoc_status = handle_heredoc_line(line, cmd->infile, len_delimiter);
+		if (heredoc_status == -1)
 		{
 			close_pipe_ends(heredoc_pipe);
 			return (0);
 		}
-		if (!handle_heredoc_line(line, cmd->infile, len_delimiter))
-			return (0);
+		else if (heredoc_status == 0)
+			return (cleanup_heredoc(heredoc_pipe));
 		if (!write_to_heredoc(heredoc_pipe[1], line))
 		{
 			close_pipe_ends(heredoc_pipe);
 			return (0);
 		}
 	}
-	return (cleanup_heredoc(heredoc_pipe));
+	//return (cleanup_heredoc(heredoc_pipe));
 }

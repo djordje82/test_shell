@@ -32,9 +32,9 @@ static int	execute_pipeline(t_command *current, t_shell *shell,
 		}
 		current = current->next;
 	}
+	wait_for_children(last_pid);
 	sigaction(SIGINT, sa_old_int, NULL);
 	sigaction(SIGQUIT, sa_old_quit, NULL);
-	wait_for_children(last_pid);
 	return (g_exit_status);
 }
 
