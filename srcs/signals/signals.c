@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:42 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 17:13:38 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/11 12:16:41 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	setup_signals(void)
 
 	ft_memset(&sa, 0, sizeof(struct sigaction));
 	sa.sa_handler = interactive_signal_handler;
-	sa.sa_flags = 0;
+	sa.sa_flags = SA_RESTART;
 	sigemptyset(&sa.sa_mask);
 	sigaction(SIGINT, &sa, NULL);
 	sa.sa_handler = SIG_IGN;
@@ -50,7 +50,7 @@ void	setup_child_signal(void)
 
 	ft_memset(&sa, 0, sizeof(struct sigaction));
 	sa.sa_handler = SIG_DFL;
-	sa.sa_flags = 0;
+	sa.sa_flags = SA_RESTART;
 	sigemptyset(&sa.sa_mask);
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
