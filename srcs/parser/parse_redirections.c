@@ -12,10 +12,10 @@
 
 #include "minishell.h"
 
-static void	set_redirection(t_command *cmd, char *filename, t_token_type type)
+static int	set_redirection(t_command *cmd, char *filename, t_token_type type)
 {
 	if (!filename)
-		return ;
+		return (0);
 	if (type == TOKEN_REDIR_IN || type == TOKEN_HEREDOC)
 	{
 		if (cmd->infile)
@@ -32,7 +32,11 @@ static void	set_redirection(t_command *cmd, char *filename, t_token_type type)
 	}
 	else if (type == TOKEN_REDIR_OUT || type == TOKEN_APPEND)
 	{
-		free(cmd->outfile);
+		if (cmd->outfile)
+		{
+			free(cmd->outfile);
+			cmd->outfile = NULL;
+		}
 		cmd->outfile = filename;
 		if (type == TOKEN_REDIR_OUT)
 			cmd->out_type = REDIR_TRUNC;
@@ -40,7 +44,11 @@ static void	set_redirection(t_command *cmd, char *filename, t_token_type type)
 			cmd->out_type = REDIR_APPEND;
 	}
 	else 
+	{
 		free(filename);
+		return (0);
+	}
+	return (1);
 }
 
 /*This function is used to parse the redirections of a command.*/
@@ -64,7 +72,12 @@ int	parse_redirections(t_token **token, t_command *cmd)
 		print_syntx_err("malloc failed", NULL);
 		return (0);
 	}
-	set_redirection(cmd, temp_file, type);
+	if (!set_redirection(cmd, temp_file, type))
+	{
+		free(temp_file);
+		return (0);
+	}
 	*token = (*token)->next;
 	return (1);
 }
+

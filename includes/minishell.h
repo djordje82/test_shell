@@ -139,6 +139,7 @@ typedef struct s_command
 	char						*outfile;
 	int							in_type;
 	int							out_type;
+	int							curr_fd;
 	bool						is_valid;
 	struct s_command			*next;
 	struct s_command			*prev;

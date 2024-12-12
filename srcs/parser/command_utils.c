@@ -27,6 +27,7 @@ t_command	*create_cmd_node(void)
 	cmd->outfile = NULL;
 	cmd->in_type = 0;
 	cmd->out_type = 0;
+	cmd->curr_fd = -1;
 	cmd->is_valid = false;
 	cmd->next = NULL;
 	cmd->prev = NULL;

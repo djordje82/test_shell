@@ -26,6 +26,8 @@ int	backup_std_fds(int *stdin_backup, int *stdout_backup)
 
 int	redirect_output(int fd, char *outfile)
 {
+	if (fd < 0)
+		return (0);
 	if (dup2(fd, STDOUT_FILENO) == -1)
 	{
 		print_command_error(outfile, "Error duplicating file descriptor");
@@ -43,13 +45,22 @@ int	open_output_file(char *outfile, int flags)
 	fd = open(outfile, flags, FILE_PERMS);
 	if (fd == -1)
 	{
-		g_exit_status = 1;
+		//g_exit_status = 1;
 		if (errno == EACCES)
+		{
 			print_file_error(outfile, "Permission denied");
+			g_exit_status = 1;
+		}
 		else if (errno == ENOENT)
-			print_file_error(outfile, "No such file");
+		{	
+			print_file_error(outfile, "No such file or directory");
+			g_exit_status = 1;
+		}
 		else
+		{
 			print_file_error(outfile, strerror(errno));
+			g_exit_status = 1;
+		}
 	}
 	return (fd);
 }

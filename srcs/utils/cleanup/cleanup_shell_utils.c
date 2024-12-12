@@ -27,6 +27,8 @@ void	cleanup_cmd_list(t_command *cmd)
 			free(cmd->infile);
 		if (cmd->outfile)
 			free(cmd->outfile);
+		if (cmd->curr_fd > 2)
+			close(cmd->curr_fd);
 		free(cmd);
 		cmd = temp;
 	}
