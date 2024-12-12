@@ -6,14 +6,14 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 14:31:34 by jadyar            #+#    #+#             */
-/*   Updated: 2024/12/12 13:23:04 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/13 11:29:46 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* static int	handle_heredoc_line(char *line, const char *delimiter, 
-								size_t len_delimiter)
+static int	handle_heredoc_line(char *line, const char *delimiter,
+		size_t len_delimiter)
 {
 	size_t	line_len;
 
@@ -22,48 +22,12 @@
 	line_len = ft_strlen(line);
 	if (line_len > 0 && line[line_len - 1] == '\n')
 		line[line_len - 1] = '\0';
-	if (ft_strlen(line) == len_delimiter && 
-		ft_strcmp(line, delimiter) == 0)
+	if (ft_strlen(line) == len_delimiter && ft_strcmp(line, delimiter) == 0)
 	{
 		free(line);
 		return (0);
 	}
 	return (1);
-} */
-
-static int handle_heredoc_line(char *line, const char *delimiter, 
-                             size_t len_delimiter)
-{
-    size_t line_len;
-
-    if (!line)
-        return (-1);
-        
-    // Debug print for input line
-    //fprintf(stderr, "DEBUG: Input line: '%s'\n", line);
-    //fprintf(stderr, "DEBUG: Current delimiter: '%s'\n", delimiter);
-    
-    line_len = ft_strlen(line);
-    if (line_len > 0 && line[line_len - 1] == '\n')
-        line[line_len - 1] = '\0';
-        
-    // Debug print after newline removal
-    //fprintf(stderr, "DEBUG: Line after newline removal: '%s'\n", line);
-    //fprintf(stderr, "DEBUG: Line length: %zu, Delimiter length: %zu\n", 
-    //        ft_strlen(line), len_delimiter);
-            
-    if (ft_strlen(line) == len_delimiter && 
-        ft_strcmp(line, delimiter) == 0)
-    {
-        // Debug print for match
-        //fprintf(stderr, "DEBUG: Delimiter match found!\n");
-        free(line);
-        return (0);
-    }
-    
-    // Debug print for no match
-    //fprintf(stderr, "DEBUG: No delimiter match\n");
-    return (1);
 }
 
 static int	write_to_heredoc(int fd, char *line)
@@ -87,7 +51,6 @@ static int	cleanup_heredoc(int *heredoc_pipe, bool is_last)
 	close(heredoc_pipe[1]);
 	if (is_last)
 	{
-		//if (!setup_pipe_io(heredoc_pipe[0], -1))
 		if (dup2(heredoc_pipe[0], STDIN_FILENO) == -1)
 		{
 			close(heredoc_pipe[0]);

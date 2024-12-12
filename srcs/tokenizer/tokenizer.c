@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:16 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 17:07:16 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/12 14:12:46 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,6 @@ t_token	*tokenize_input(const char *input, t_shell *shell)
 			cleanup_token_list(head);
 			return (NULL);
 		}
-		//fprintf(stderr, "DEBUG: Created token: type=%d, value=%s\n", new_token->type, new_token->value);
 		add_token_to_list(&head, &current, new_token);
 		skip_whitespace(input, &pos);
 	}
