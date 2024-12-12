@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/12 16:25:40 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/12 17:43:31 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,41 @@ static void	handle_child_process(t_command *current, int *prev_pipe,
 	
 }
 
-int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
+// New function in exec_pipeline.c or a new file heredoc_pipeline.c
+static int handle_pipeline_heredocs(t_command *command_list)
+{
+    t_command *current;
+    pid_t heredoc_pid;
+    int status;
+
+    current = command_list;
+    while (current)
+    {
+        if (current->in_type == REDIR_HEREDOC)
+        {
+            heredoc_pid = fork();
+            if (heredoc_pid == -1)
+                return (0);
+            
+            if (heredoc_pid == 0)
+            {
+                setup_heredoc_signals();
+                if (!setup_heredoc(current))
+                    exit(1);
+                exit(0);
+            }
+            
+            // Parent waits for each heredoc to complete
+            waitpid(heredoc_pid, &status, 0);
+            if (WIFSIGNALED(status) || WEXITSTATUS(status) != 0)
+                return (0);
+        }
+        current = current->next;
+    }
+    return (1);
+}
+
+/* int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 		t_shell *shell)
 {
 	int		pipe_fd[2];
@@ -83,9 +117,44 @@ int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 		*last_pid = pid;
 	handle_parent_process(prev_pipe, pipe_fd);
 	return (1);
+} */
+
+int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
+		t_shell *shell)
+{
+	int		pipe_fd[2];
+	pid_t	pid;
+	static bool	heredoc_handled;
+
+	pipe_fd[0] = -1;
+	pipe_fd[1] = -1;
+	heredoc_handled = false;
+	// Handle all heredocs in the pipeline first
+    if (!heredoc_handled)
+    {
+        if (!handle_pipeline_heredocs(shell->cmnd_lst))
+            return (0);
+        heredoc_handled = true;
+    }
+	if (!handle_invalid_command(current))
+		return (0);
+	signal(SIGINT, SIG_IGN);
+	if (!init_pipeline(current, pipe_fd, shell))
+		return (0);
+	if (!create_process(&pid, shell))
+	{
+		cleanup_pipeline_resources(prev_pipe, pipe_fd);
+		return (0);
+	}
+	if (pid == 0)
+		handle_child_process(current, prev_pipe, pipe_fd, shell);
+	if (!current->next)
+		*last_pid = pid;
+	handle_parent_process(prev_pipe, pipe_fd);
+	return (1);
 }
 
-/* int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
+/* int	masha_setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 		t_shell *shell)
 {
 	int		pipe_fd[2];

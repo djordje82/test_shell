@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 14:31:34 by jadyar            #+#    #+#             */
-/*   Updated: 2024/12/13 11:29:46 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/13 11:31:49 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,12 @@ static int	cleanup_heredoc(int *heredoc_pipe, bool is_last)
 	return (1);
 }
 
-int	setup_heredoc(t_command *cmd)
+int	setup_heredoc(t_command *cmd) fd779f71879c924d2595fbbfced2ad9bb6da83cf
 {
-	int		heredoc_pipe[2];
-	char	*line;
-	size_t	len_delimiter;
-	int		heredoc_status;
+	int heredoc_pipe[2];
+	char *line;
+	size_t len_delimiter;
+	int heredoc_status;
 
 	if (!create_pipe(heredoc_pipe, NULL))
 		return (0);
