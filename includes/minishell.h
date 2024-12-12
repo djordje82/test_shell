@@ -6,11 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/12/12 16:11:15 by jadyar           ###   ########.fr       */
-=======
-/*   Updated: 2024/12/12 12:06:10 by jadyar           ###   ########.fr       */
->>>>>>> 936e186 (quoted issue in tokenizer resolved)
+/*   Updated: 2024/12/12 18:11:44 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,7 +247,6 @@ char							**copy_existing_args(char **new_args,
 
 /*PARSING /ENV_EXPANSION*/
 char							*extract_env_var_name(const char *str);
-char							*expand_env_vars(const char *str, t_shell *shell);
 char							*expand_env_vars(const char *str, t_shell *shell);
 
 /*EXECUTOR*/

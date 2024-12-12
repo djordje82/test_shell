@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/12 18:06:49 by jadyar            #+#    #+#             */
-/*   Updated: 2024/12/12 18:06:51 by jadyar           ###   ########.fr       */
+/*   Created: 2024/11/15 17:59:16 by dodordev          #+#    #+#             */
+/*   Updated: 2024/12/12 18:12:43 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,7 @@ int	initialize_tokenization(const char *input, t_shell *shell)
 		return (0);
 	if (!check_quotes(input))
 	{
-		ft_putendl_fd("minishell: syntax error: \
-			unclosed quotes", STDERR_FILENO);
+		ft_putendl_fd("minishell: syntax error:unclosed quotes", STDERR_FILENO);
 		g_exit_status = 2;
 		return (0);
 	}
