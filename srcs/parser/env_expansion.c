@@ -6,11 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:12 by dodordev          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/12/12 14:48:57 by jadyar           ###   ########.fr       */
-=======
-/*   Updated: 2024/12/11 18:06:46 by jadyar           ###   ########.fr       */
->>>>>>> 936e186 (quoted issue in tokenizer resolved)
+/*   Updated: 2024/12/12 16:12:58 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +86,10 @@ char	*process_char(char *str, int *i, char *result, t_shell *shell)
 	return (result);
 }
 
+char *expand_env_vars(const char *str, t_shell *shell) {
+    char *result = ft_strdup("");
+    char *temp;
+    int i = 0;
 char *expand_env_vars(const char *str, t_shell *shell) {
     char *result = ft_strdup("");
     char *temp;

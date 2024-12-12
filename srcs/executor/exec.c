@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/15 18:04:13 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/12 15:58:54 by jadyar           ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2024/12/12 16:11:40 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -32,7 +33,6 @@ static int	execute_pipeline(t_command *current, t_shell *shell,
 		}
 		current = current->next;
 	}
-	wait_for_children(last_pid);
 	wait_for_children(last_pid);
 	sigaction(SIGINT, sa_old_int, NULL);
 	sigaction(SIGQUIT, sa_old_quit, NULL);
