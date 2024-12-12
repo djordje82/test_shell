@@ -1,2 +1,6 @@
 .vscode
 *.o
+.vscode/
+objs/
+minishell_tester/
+minishell
