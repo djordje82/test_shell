@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:13 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/06 13:42:46 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/12 13:25:22 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ static int	execute_pipeline(t_command *current, t_shell *shell,
 		}
 		current = current->next;
 	}
+	wait_for_children(last_pid);
 	sigaction(SIGINT, sa_old_int, NULL);
 	sigaction(SIGQUIT, sa_old_quit, NULL);
-	wait_for_children(last_pid);
 	return (g_exit_status);
 }
 
