@@ -47,7 +47,11 @@ LIBFT_FILES = isalpha isdigit isalnum isnumber \
 		strlcat strlcpy strlen \
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		strmapi strncmp strcmp strnstr \
+=======
+		strmapi strncmp strnstr strncat strncpy \
+>>>>>>> 936e186 (quoted issue in tokenizer resolved)
 =======
 		strmapi strncmp strnstr strncat strncpy \
 >>>>>>> 936e186 (quoted issue in tokenizer resolved)

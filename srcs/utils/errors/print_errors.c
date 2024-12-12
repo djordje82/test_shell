@@ -5,16 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/15 18:00:33 by dodordev          #+#    #+#             */
-<<<<<<< HEAD
-<<<<<<< HEAD
-/*   Updated: 2024/12/12 14:56:31 by jadyar           ###   ########.fr       */
-=======
-/*   Updated: 2024/12/12 12:40:57 by jadyar           ###   ########.fr       */
->>>>>>> 936e186 (quoted issue in tokenizer resolved)
-=======
-/*   Updated: 2024/12/12 14:56:31 by jadyar           ###   ########.fr       */
->>>>>>> 8b78f6f (obj and quoting handled)
+/*   Created: 2024/12/12 18:04:00 by jadyar            #+#    #+#             */
+/*   Updated: 2024/12/12 18:04:02 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
