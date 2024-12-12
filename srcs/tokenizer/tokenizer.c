@@ -6,7 +6,11 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:16 by dodordev          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/12/12 15:54:44 by jadyar           ###   ########.fr       */
+=======
+/*   Updated: 2024/12/12 12:18:04 by jadyar           ###   ########.fr       */
+>>>>>>> 936e186 (quoted issue in tokenizer resolved)
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +40,12 @@ int	initialize_tokenization(const char *input, t_shell *shell)
 		return (0);
 	if (!check_quotes(input))
 	{
+<<<<<<< HEAD
 		ft_putendl_fd("minishell: syntax error:unclosed quotes", STDERR_FILENO);
+=======
+		ft_putendl_fd("minishell: syntax error: \
+			unclosed quotes", STDERR_FILENO);
+>>>>>>> 936e186 (quoted issue in tokenizer resolved)
 		g_exit_status = 2;
 		return (0);
 	}
