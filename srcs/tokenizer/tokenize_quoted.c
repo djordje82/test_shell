@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/12 14:42:50 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/12 16:06:15 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*process_quoted_content(const char *input, int *start, int *len)
 	{
 		if (input[*start] == quote_type)
 		{
-			(*start)++;
+			++(*start);
 			break ;
 		}
 		if (quote_type == '"' && input[*start] == '\\' && (input[*start
