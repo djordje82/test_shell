@@ -11,7 +11,7 @@
       "stopAtEntry": false,
       "externalConsole": false,
       "program": "${workspaceFolder}/minishell",
-      "cwd": "/home/jadyar/Desktop/test_shell_1/srcs/executor",
+      "cwd": "/home/jadyar/Desktop/test_shell_1/srcs",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

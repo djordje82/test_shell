@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/09 12:39:23 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/12 12:06:10 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define MINISHELL_H
 
 # include "../libft/inc/libft.h"
-# include <dirent.h> //for wildcard expansion opendir(), readdir(), closedir()
+# include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <limits.h>
@@ -73,10 +73,11 @@
 # define ERR_BATCH "minishell: arguments not allowed  extra!!"
 
 # define REDIR_TRUNC 1
-# define REDIR_APPEND 667
+# define REDIR_APPEND 2
+# define REDIR_INPUT 3
+# define REDIR_OUTPUT 4
+# define REDIR_HEREDOC 5
 # define FILE_PERMS 0644
-# define REDIR_INPUT 1
-# define REDIR_HEREDOC 666
 
 /*GLOBAL VARIABLE*/
 
@@ -91,7 +92,7 @@ typedef enum e_char_type
 	CHAR_SQUOTE,
 	CHAR_DQUOTE,
 	CHAR_NORMAL
-}								t_char_type;
+}				t_char_type;
 
 typedef enum e_token_type
 {
@@ -173,7 +174,7 @@ t_token							*tokenize_input(const char *input,
 t_token							*tokenize_word(const char *input, int *i,
 									t_shell *shell);
 t_token							*tokenize_pipe(const char *input, int *pos);
-t_token							*tokenize_quoted_str(char *input, int *i,
+t_token							*tokenize_quoted_str(const char *input, int *i,
 									t_shell *shell);
 t_token							*get_token_type(const char *input, int *pos,
 									t_shell *shell);
@@ -184,12 +185,19 @@ char							*append_word_part(char *result,
 									const char *input, int start, int len);
 char							*process_quoted_segment(char *result,
 									const char *input, int *start, int *len);
-char							*extract_quoted(char *input, int *pos,
+char							*extract_quoted(const char *input, int *pos,
 									char quote_type);
 char							*extract_word(const char *input, int *pos);
 char							*handle_word_part(char *result,
 									const char *input, int *start, int *len);
-
+//char							*process_quoted_content(const char *input, 
+//									int *start, int *len);
+//int								process_word_content(const char *input, 
+//									int *pos, char *result);
+int								initialize_tokenization(const char *input,
+									t_shell *shell);
+char							*process_quoted_content(const char *input, 
+									int *start, int *len);
 /*TOKENIZER /UTILS*/
 t_token_type					get_operator_type(char c);
 t_token							*tokenize_single_operator(const char *input,
@@ -202,9 +210,9 @@ int								handle_quotes(char *input, int *i,
 									char quote_type);
 char							**insert_arg_array(char **orig_args, int pos,
 									char **expanded);
-char							*handle_quote_error(char *result);
-char							*append_unquoted_part(char *result, const \
-								char *input, int *start, int *len);
+char							*handle_quote_error(const char *result);
+char							*append_unquoted_part(char *result,
+									const char *input, int *start, int *len);
 
 /*PIPES*/
 int								create_pipe(int pipe_fd[2], t_shell *shell);
@@ -289,8 +297,8 @@ void							setup_signals(void);
 void							setup_child_signal(void);
 void							handle_eof(t_shell *shell);
 void							interactive_signal_handler(int signum);
-void							setup_execution_signals(struct sigaction \
-								*sa_old_int, struct sigaction *sa_old_quit);
+void							setup_execution_signals(struct sigaction *sa_old_int,
+									struct sigaction *sa_old_quit);
 int								setup_heredoc_signals(void);
 /*UTILS /SHELL*/
 void							run_shell_loop(t_shell *shell);
@@ -352,8 +360,8 @@ int								validate_env_var(char *name);
 int								setup_redirections(t_command *cmd);
 void							restore_std_fds(int stdin_fd, int stdout_fd);
 int								redirect_output(int fd, char *outfile);
-int								backup_std_fds(int *stdin_backup, \
-								int *stdout_backup);
+int								backup_std_fds(int *stdin_backup,
+									int *stdout_backup);
 int								open_output_file(char *outfile, int flags);
 
 /*EXECUTOR /PIPELINE*/

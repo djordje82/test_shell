@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:54:29 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 18:03:41 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:57:49 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,17 @@ static void	print_exit_error(char *arg)
 
 int	ft_exit(char **args, t_shell *shell)
 {
-	int	exit_code;
+	int	exit_status;
 
 	if (!args || !shell)
 		return (EXIT_ERROR_NUMERIC);
 	ft_putendl_fd("exit", STDOUT_FILENO);
 	if (!args[1])
-		exit_code = g_exit_status;
+		exit_status = g_exit_status;
 	else if (!ft_isnumber(args[1]))
 	{
 		print_exit_error(args[1]);
-		exit_code = EXIT_ERROR_NUMERIC;
+		exit_status = EXIT_ERROR_NUMERIC;
 	}
 	else if (args[2])
 	{
@@ -40,7 +40,7 @@ int	ft_exit(char **args, t_shell *shell)
 		return (EXIT_ERROR_ARGS);
 	}
 	else
-		exit_code = (ft_atoi(args[1]) & 0xFF);
+		exit_status = (ft_atoi(args[1]) & 0xFF);
 	cleanup_shell_data(shell);
-	exit(exit_code);
+	exit(exit_status);
 }

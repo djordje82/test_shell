@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:20:05 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 12:21:12 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/11 17:47:34 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ static void	set_redirection(t_command *cmd, char *filename, t_token_type type)
 		free(filename);
 }
 
-/*This function is used to parse the redirections of a command.*/
 int	parse_redirections(t_token **token, t_command *cmd)
 {
 	t_token_type	type;

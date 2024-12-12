@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:12 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/06 14:29:08 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/11 18:06:46 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,7 @@ char	*process_char(char *str, int *i, char *result, t_shell *shell)
 {
 	char	*temp;
 
-	if (str[*i] == '\\' && (str[*i + 1] == '$' || str[*i + 1] == '\\'))
-	{
-		temp = handle_escape(i);
-	}
-	else if (str[*i] == '$')
+	if (str[*i] == '$')
 	{
 		temp = handle_dollar(str, i, shell);
 	}
