@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/12 15:16:50 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/12 15:57:23 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,7 +247,7 @@ char							**copy_existing_args(char **new_args,
 
 /*PARSING /ENV_EXPANSION*/
 char							*extract_env_var_name(const char *str);
-char							*expand_env_vars(char *str, t_shell *shell);
+char							*expand_env_vars(const char *str, t_shell *shell);
 
 /*EXECUTOR*/
 int								execute_commands(t_shell *shell);
