@@ -18,12 +18,17 @@ static void	set_redirection(t_command *cmd, char *filename, t_token_type type)
 		return ;
 	if (type == TOKEN_REDIR_IN || type == TOKEN_HEREDOC)
 	{
-		free(cmd->infile);
+		if (cmd->infile)
+			free(cmd->infile);
 		cmd->infile = filename;
 		if (type == TOKEN_REDIR_IN)
+		{
 			cmd->in_type = REDIR_INPUT;
+		}
 		else
+		{
 			cmd->in_type = REDIR_HEREDOC;
+		}
 	}
 	else if (type == TOKEN_REDIR_OUT || type == TOKEN_APPEND)
 	{
