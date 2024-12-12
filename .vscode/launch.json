@@ -11,7 +11,11 @@
       "stopAtEntry": false,
       "externalConsole": false,
       "program": "${workspaceFolder}/minishell",
+<<<<<<< HEAD
       "cwd": "/home/dodordev/Documents/Github/test_shell",
+=======
+      "cwd": "/home/jadyar/Desktop/test_shell_1/srcs",
+>>>>>>> 936e186 (quoted issue in tokenizer resolved)
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

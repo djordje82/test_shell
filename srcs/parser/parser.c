@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:03:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/06 13:17:37 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/11 19:40:17 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,29 +37,31 @@ static int	build_command_list(t_token *tokens, t_shell *shell)
 	return (1);
 }
 
+static int	is_pipe_token(t_token *token)
+{
+	return (token && token->type == TOKEN_PIPE);
+}
+
 static int	validate_pipe_syntax(t_token *tokens)
 {
 	if (!tokens)
-		return (0);
-	if (tokens->type == TOKEN_PIPE)
 	{
-		print_syntx_err("syntax error near unexpected token `|'", NULL);
+		ft_putendl_fd("minishell: syntax error: empty", STDERR_FILENO);
 		return (0);
 	}
+	if (is_pipe_token(tokens))
+		return (print_syntx_err("syntax error near unexpected \
+			token `|'", NULL));
 	while (tokens && tokens->next)
 	{
-		if (tokens->type == TOKEN_PIPE && tokens->next->type == TOKEN_PIPE)
-		{
-			print_syntx_err("syntax error near unexpected token `|'", NULL);
-			return (0);
-		}
+		if (is_pipe_token(tokens) && is_pipe_token(tokens->next))
+			return (print_syntx_err("syntax error near \
+				unexpected token `|'", NULL));
 		tokens = tokens->next;
 	}
-	if (tokens && tokens->type == TOKEN_PIPE)
-	{
-		print_syntx_err("syntax error near unexpected token `|'", NULL);
-		return (0);
-	}
+	if (is_pipe_token(tokens))
+		return (print_syntx_err("syntax error near \
+			unexpected token `|'", NULL));
 	return (1);
 }
 

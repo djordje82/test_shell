@@ -6,17 +6,11 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:53:04 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/06 14:18:28 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/11 19:43:41 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*handle_escape(int *i)
-{
-	*i += 2;
-	return (ft_strdup("$"));
-}
 
 static int	process_export_var(char *arg, t_shell *shell)
 {

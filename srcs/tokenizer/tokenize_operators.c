@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_operators.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:58:42 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 17:10:39 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/11 19:40:58 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ t_token_type	get_operator_type(char c)
 		return (TOKEN_REDIR_IN);
 	if (c == '|')
 		return (TOKEN_PIPE);
-	return (TOKEN_UNKNOWN);
+	else
+		return (TOKEN_UNKNOWN);
 }
 
 t_token	*create_operator_token(const char *value, t_token_type type,
