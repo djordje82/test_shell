@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:58:51 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 17:07:35 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/12 14:51:12 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,3 +37,4 @@ void	skip_whitespace(const char *input, int *pos)
 	while (input[*pos] && ft_is_whitespace(input[*pos]))
 		(*pos)++;
 }
+/*   Updated: 2024/12/12 14:05:58 by jadyar           ###   ########.fr       */
