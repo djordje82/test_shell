@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:13 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/13 11:26:48 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/13 11:31:13 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,11 @@ static int	execute_pipeline(t_command *current, t_shell *shell,
 	int		prev_pipe[2];
 	pid_t	last_pid;
 
+	// int		status;
 	prev_pipe[0] = -1;
 	prev_pipe[1] = -1;
 	last_pid = 0;
+	// status = -1;
 	while (current)
 	{
 		if (!setup_pipeline_steps(current, prev_pipe, &last_pid, shell))
@@ -30,6 +32,7 @@ static int	execute_pipeline(t_command *current, t_shell *shell,
 			sigaction(SIGQUIT, sa_old_quit, NULL);
 			return (g_exit_status);
 		}
+		// waitpid(last_pid, &status, 0);
 		current = current->next;
 	}
 	wait_for_children(last_pid);

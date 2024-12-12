@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/12 14:58:30 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/12 16:25:40 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,41 @@ int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 	}
 	if (pid == 0)
 		handle_child_process(current, prev_pipe, pipe_fd, shell);
-	wait_for_children(pid);
 	if (!current->next)
 		*last_pid = pid;
 	handle_parent_process(prev_pipe, pipe_fd);
 	return (1);
 }
+
+/* int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
+		t_shell *shell)
+{
+	int		pipe_fd[2];
+	pid_t	pid;
+
+	(void) prev_pipe;
+	(void) last_pid;
+	if (pipe(pipe_fd) == -1)
+		;//TO DO CLEAN EXIT
+	pid = fork();
+	if (pid == -1)
+		;//TO DO CLEAN EXIT
+	if (pid == 0)
+	{
+		close(pipe_fd[0]);
+		dup2(pipe_fd[1], 1);
+		close(pipe_fd[1]);
+		execute_single_command(current, shell);
+	}
+	else
+	{
+		close(pipe_fd[1]);
+		dup2(pipe_fd[0], 0);
+		close(pipe_fd[0]);
+		waitpid(pid, NULL, 0);
+	}
+	return (1);
+} */
 
 void	execute_pipeline_cmd(t_command *cmd, char *cmd_path, t_shell *shell)
 {
