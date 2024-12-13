@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_redirections.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:20:05 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/13 11:52:08 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/13 12:45:36 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,7 @@ static void	set_redirection(t_command *cmd, char *filename, t_token_type type)
 			cmd->in_type = REDIR_INPUT;
 		}
 		else
-		{
 			cmd->in_type = REDIR_HEREDOC;
-		}
 	}
 	else if (type == TOKEN_REDIR_OUT || type == TOKEN_APPEND)
 	{
@@ -80,10 +78,8 @@ int	parse_redirections(t_token **token, t_command *cmd)
 		return (0);
 	type = (*token)->type;
 	if (!(*token)->next || (*token)->next->type != TOKEN_WORD)
-	{
-		print_syntx_err("syntax error near unexpected token `newline'", NULL);
-		return (0);
-	}
+		return (print_syntx_err("syntax error near unexpected token `newline'", \
+			NULL));
 	*token = (*token)->next;
 	temp_file = ft_strdup((*token)->value);
 	if (!temp_file)
@@ -91,7 +87,6 @@ int	parse_redirections(t_token **token, t_command *cmd)
 		print_syntx_err("malloc failed", NULL);
 		return (0);
 	}
-	// Check output files first
 	if (!check_output_file(temp_file, type))
 	{
 		free(temp_file);
