@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_redirections.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:20:05 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/03 12:21:12 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/13 16:13:48 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int	set_redirection(t_command *cmd, char *filename, t_token_type type)
 		else
 			cmd->out_type = REDIR_APPEND;
 	}
-	else 
+	else
 	{
 		free(filename);
 		return (0);
@@ -51,7 +51,34 @@ static int	set_redirection(t_command *cmd, char *filename, t_token_type type)
 	return (1);
 }
 
-/*This function is used to parse the redirections of a command.*/
+static int	check_output_file(char *filename, t_token_type type)
+{
+	int	flags;
+	int	fd;
+
+	if (type != TOKEN_REDIR_OUT && type != TOKEN_APPEND)
+		return (1);
+	flags = O_WRONLY | O_CREAT;
+	if (type == TOKEN_REDIR_OUT)
+		flags |= O_TRUNC;
+	else
+		flags |= O_APPEND;
+	fd = open(filename, flags, FILE_PERMS);
+	if (fd == -1)
+	{
+		if (errno == ENOENT)
+		{
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			ft_putstr_fd(filename, STDERR_FILENO);
+			ft_putendl_fd(": No such file or directory", STDERR_FILENO);
+			return (0);
+		}
+	}
+	if (fd != -1)
+		close(fd);
+	return (1);
+}
+
 int	parse_redirections(t_token **token, t_command *cmd)
 {
 	t_token_type	type;
@@ -72,12 +99,12 @@ int	parse_redirections(t_token **token, t_command *cmd)
 		print_syntx_err("malloc failed", NULL);
 		return (0);
 	}
-	if (!set_redirection(cmd, temp_file, type))
+	if (!check_output_file(temp_file, type))
 	{
 		free(temp_file);
 		return (0);
 	}
+	set_redirection(cmd, temp_file, type);
 	*token = (*token)->next;
 	return (1);
 }
-
