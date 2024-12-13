@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/12 18:11:44 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/13 16:22:30 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ typedef enum e_char_type
 	CHAR_SQUOTE,
 	CHAR_DQUOTE,
 	CHAR_NORMAL
-}				t_char_type;
+}								t_char_type;
 
 typedef enum e_token_type
 {
@@ -190,13 +190,13 @@ char							*extract_quoted(const char *input, int *pos,
 char							*extract_word(const char *input, int *pos);
 char							*handle_word_part(char *result,
 									const char *input, int *start, int *len);
-//char							*process_quoted_content(const char *input, 
+// char							*process_quoted_content(const char *input,
 //									int *start, int *len);
-//int								process_word_content(const char *input, 
+// int								process_word_content(const char *input,
 //									int *pos, char *result);
 int								initialize_tokenization(const char *input,
 									t_shell *shell);
-char							*process_quoted_content(const char *input, 
+char							*process_quoted_content(const char *input,
 									int *start, int *len);
 /*TOKENIZER /UTILS*/
 t_token_type					get_operator_type(char c);
@@ -247,7 +247,8 @@ char							**copy_existing_args(char **new_args,
 
 /*PARSING /ENV_EXPANSION*/
 char							*extract_env_var_name(const char *str);
-char							*expand_env_vars(const char *str, t_shell *shell);
+char							*expand_env_vars(const char *str,
+									t_shell *shell);
 
 /*EXECUTOR*/
 int								execute_commands(t_shell *shell);
