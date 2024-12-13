@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+         #
+#    By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/30 12:10:30 by dodordev          #+#    #+#              #
-#    Updated: 2024/12/12 11:08:28 by jadyar           ###   ########.fr        #
+#    Updated: 2024/12/13 11:53:06 by dodordev         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,19 +45,7 @@ LIBFT_FILES = isalpha isdigit isalnum isnumber \
 		putstr_fd split strchr \
 		strdup striteri strjoin strjoin_free \
 		strlcat strlcpy strlen \
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-		strmapi strncmp strcmp strnstr \
-=======
-		strmapi strncmp strnstr strncat strncpy \
->>>>>>> 936e186 (quoted issue in tokenizer resolved)
-=======
-		strmapi strncmp strnstr strncat strncpy \
->>>>>>> 936e186 (quoted issue in tokenizer resolved)
-=======
-		strmapi strncmp strnstr strncat strncpy \
->>>>>>> 936e186 (quoted issue in tokenizer resolved)
+		strmapi strncmp strcmp strnstr strncat strncpy \
 		strrchr strtrim substr \
 		tolower toupper\
 		lstnew lstadd_front lstsize \

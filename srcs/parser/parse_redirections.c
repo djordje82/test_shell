@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:20:05 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/13 11:40:48 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/13 11:52:08 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,35 +43,11 @@ static void	set_redirection(t_command *cmd, char *filename, t_token_type type)
 		free(filename);
 }
 
-/*This function is used to parse the redirections of a command.*/
-/* int	parse_redirections(t_token **token, t_command *cmd)
-{
-	t_token_type	type;
-	char			*temp_file;
-	int				flags;
-	int				fd;
-
-	if (!*token || !(*token) || !cmd)
-		return (0);
-	type = (*token)->type;
-	if (!(*token)->next || (*token)->next->type != TOKEN_WORD)
-	{
-		print_syntx_err("syntax error near unexpected token `newline'", NULL);
-		return (0);
-	}
-	*token = (*token)->next;
-	temp_file = ft_strdup((*token)->value);
-	if (!temp_file)
-	{
-		print_syntx_err("malloc failed", NULL);
-		return (0);
-	}
-	set_redirection(cmd, temp_file, type);
-	*token = (*token)->next;
-	return (1);
-} */
 static int	check_output_file(char *filename, t_token_type type)
 {
+	int	flags;
+	int	fd;
+
 	if (type != TOKEN_REDIR_OUT && type != TOKEN_APPEND)
 		return (1);
 	flags = O_WRONLY | O_CREAT;
