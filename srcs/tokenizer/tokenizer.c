@@ -6,11 +6,52 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:16 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 17:07:16 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/16 19:00:55 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int check_invalid_redirection(const char *input, int pos)
+{
+    if (input[pos] == '>' && input[pos + 1] == '>' && input[pos + 2] == '>')
+    {
+        ft_putendl_fd("minishell: syntax error near unexpected token `>'", STDERR_FILENO);
+        g_exit_status = 2;
+        return (1);
+    }
+    if (input[pos] == '<' && input[pos + 1] == '<' && input[pos + 2] == '<')
+    {
+        ft_putendl_fd("minishell: syntax error near unexpected token `<'", STDERR_FILENO);
+        g_exit_status = 2;
+        return (1);
+    }
+    return (0);
+}
+
+static int check_consecutive_redirections(const char *input, int *pos)
+{
+    int i = *pos;
+
+    // Skip current redirection operator
+    if (input[i] == '>' || input[i] == '<')
+        i++;
+    if (input[i] == '>' || input[i] == '<')  // Skip second char for >> or 
+        i++;
+        
+    // Skip whitespace
+    while (input[i] && ft_is_whitespace(input[i]))
+        i++;
+
+    // Check if next non-whitespace char is a redirection
+    if (input[i] == '>' || input[i] == '<')
+    {
+        ft_putendl_fd("minishell: syntax error near unexpected token `>'", STDERR_FILENO);
+        g_exit_status = 2;
+        return (1);
+    }
+    return (0);
+}
 
 t_token	*get_token_type(const char *input, int *pos, t_shell *shell)
 {
@@ -23,6 +64,10 @@ t_token	*get_token_type(const char *input, int *pos, t_shell *shell)
 	type = get_operator_type(input[*pos]);
 	if (type == TOKEN_PIPE || type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT)
 	{
+		if (check_invalid_redirection(input, *pos))
+            return (NULL);
+		if (check_consecutive_redirections(input, pos))
+            return (NULL);
 		if (input[*pos] == '>' && input[*pos + 1] == '>')
 			return (tokenize_double_operator(input, pos, ">>", TOKEN_APPEND));
 		if (input[*pos] == '<' && input[*pos + 1] == '<')
@@ -114,7 +159,6 @@ t_token	*tokenize_input(const char *input, t_shell *shell)
 			cleanup_token_list(head);
 			return (NULL);
 		}
-		//fprintf(stderr, "DEBUG: Created token: type=%d, value=%s\n", new_token->type, new_token->value);
 		add_token_to_list(&head, &current, new_token);
 		skip_whitespace(input, &pos);
 	}
