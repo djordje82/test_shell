@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:16 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/12 18:12:43 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/15 17:00:51 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,14 @@ static int	check_quotes(const char *input)
 			quote = 0;
 		i++;
 	}
-	return (!quote);
+	if (quote)
+	{
+		ft_putendl_fd("minishell: syntax error: unclosed quotes", \
+			STDERR_FILENO);
+		g_exit_status = 2;
+		return (0);
+	}
+	return (1);
 }
 
 int	initialize_tokenization(const char *input, t_shell *shell)
@@ -36,7 +43,6 @@ int	initialize_tokenization(const char *input, t_shell *shell)
 		return (0);
 	if (!check_quotes(input))
 	{
-		ft_putendl_fd("minishell: syntax error:unclosed quotes", STDERR_FILENO);
 		g_exit_status = 2;
 		return (0);
 	}
@@ -78,6 +84,8 @@ t_token	*get_token_type(const char *input, int *pos, t_shell *shell)
 			return (tokenize_double_operator(input, pos, ">>", TOKEN_APPEND));
 		if (input[*pos] == '<' && input[*pos + 1] == '<')
 			return (tokenize_double_operator(input, pos, "<<", TOKEN_HEREDOC));
+		if (input[*pos] == '\'' || input[*pos] == '"')
+			return (tokenize_adjacent_quotes(input, pos, shell));
 		return (tokenize_single_operator(input, pos));
 	}
 	if (type == TOKEN_SQUOTE || type == TOKEN_DQUOTE)
@@ -107,6 +115,8 @@ t_token	*tokenize_input(const char *input, t_shell *shell)
 		}
 		add_token_to_list(&head, &current, new_token);
 		skip_whitespace(input, &pos);
+		if (!head && *input == '\0')
+			head = create_token("", TOKEN_WORD);
 	}
 	return (head);
 }

@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:20:05 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/13 12:45:36 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/15 15:07:45 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ static void	set_redirection(t_command *cmd, char *filename, t_token_type type)
 	}
 	else if (type == TOKEN_REDIR_OUT || type == TOKEN_APPEND)
 	{
-		free(cmd->outfile);
+		if (cmd->outfile)
+			free(cmd->outfile);
 		cmd->outfile = filename;
 		if (type == TOKEN_REDIR_OUT)
 			cmd->out_type = REDIR_TRUNC;
@@ -76,10 +77,10 @@ int	parse_redirections(t_token **token, t_command *cmd)
 
 	if (!*token || !(*token) || !cmd)
 		return (0);
-	type = (*token)->type;
 	if (!(*token)->next || (*token)->next->type != TOKEN_WORD)
 		return (print_syntx_err("syntax error near unexpected token `newline'", \
 			NULL));
+	type = (*token)->type;
 	*token = (*token)->next;
 	temp_file = ft_strdup((*token)->value);
 	if (!temp_file)

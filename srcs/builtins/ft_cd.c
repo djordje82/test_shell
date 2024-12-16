@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:51:35 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 18:13:22 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/14 19:38:06 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@
 char	*get_home_dir(t_shell *shell)
 {
 	char	*home;
+	char	*result;
 
 	home = get_env_value("HOME", shell);
 	if (!home)
 		return (ft_strdup(getenv("HOME")));
-	return (ft_strdup(home));
+	result = ft_strdup(home);
+	return (result);
 }
 
 int	update_pwd_vars(t_shell *shell)
@@ -105,5 +107,6 @@ int	ft_cd(char **args, t_shell *shell)
 	}
 	else
 		ret = update_pwd_vars(shell);
+	free(path);
 	return (ret);
 }

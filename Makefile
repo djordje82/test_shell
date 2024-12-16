@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+         #
+#    By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 14:34:50 by j                 #+#    #+#              #
-#    Updated: 2024/12/13 11:49:36 by dodordev         ###   ########.fr        #
+#    Updated: 2024/12/15 16:21:01 by jadyar           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,6 @@ SRCS =	main.c \
 		executor/exec_builtins.c \
 		executor/exec_pipeline.c \
 		executor/exec_pipeline_utils.c \
-		executor/heredoc.c \
 		utils/cleanup/cleanup_shell.c \
 		utils/cleanup/cleanup_shell_utils.c \
 		utils/cleanup/cleanup_cmd_node.c \
@@ -56,6 +55,7 @@ SRCS =	main.c \
 		utils/checkers.c \
 		parser/parser.c \
 		parser/parser_utils.c \
+		parser/heredoc.c \
 		parser/parse_command.c \
 		parser/parse_cmd_arguments.c \
 		parser/parse_redirections.c \

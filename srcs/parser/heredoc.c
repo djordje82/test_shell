@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 14:31:34 by jadyar            #+#    #+#             */
-/*   Updated: 2024/12/12 17:40:18 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/15 16:49:19 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,30 +66,34 @@ int	setup_heredoc(t_command *cmd)
 	int		heredoc_pipe[2];
 	char	*line;
 	size_t	len_delimiter;
-	int		heredoc_status;
 
 	if (!create_pipe(heredoc_pipe, NULL))
-		return (0);
+		return (cleanup_pipeline_resources(NULL, heredoc_pipe), 0);
 	len_delimiter = ft_strlen(cmd->infile);
 	setup_heredoc_signals();
 	while (1)
 	{
 		line = readline("> ");
-		heredoc_status = handle_heredoc_line(line, cmd->infile, len_delimiter);
-		if (heredoc_status == -1)
+		if (!line)
 		{
-			close_pipe_ends(heredoc_pipe);
-			return (0);
+			write(STDERR_FILENO, "minishell: EOF\n", 15);
+			break ;
 		}
-		else if (heredoc_status == 0)
-		{
-			return (cleanup_heredoc(heredoc_pipe, true));
-		}
+		if (handle_heredoc_line(line, cmd->infile, len_delimiter) == 0)
+			break ;
 		if (!write_to_heredoc(heredoc_pipe[1], line))
 		{
+			free(line);
 			close_pipe_ends(heredoc_pipe);
 			return (0);
 		}
 	}
+	close(heredoc_pipe[1]);
+	if (dup2(heredoc_pipe[0], STDIN_FILENO) == -1)
+	{
+		close_pipe_ends(heredoc_pipe);
+		return (0);
+	}
+	close(heredoc_pipe[0]);
 	return (cleanup_heredoc(heredoc_pipe, true));
 }

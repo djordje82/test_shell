@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/12 18:12:21 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/16 11:56:15 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,24 +50,52 @@ char	*extract_quoted(const char *input, int *pos, char quote_type)
 	if (!input || !pos || input[*pos] != quote_type)
 		return (NULL);
 	content = process_quoted_content(input, pos, &len);
+	if (!content)
+		return (NULL);
 	return (content);
+}
+
+t_token *tokenize_adjacent_quotes(const char *input, int *pos, t_shell *shell)
+{
+	char	buffer[1024];
+	int		len;
+	t_token	*token;
+	char	*temp;
+
+	(void)shell;
+	len = 0;
+	while (input[*pos] == '\'' || input[*pos] == '"')
+	{
+		temp = extract_quoted(input, pos, input[*pos]);
+		if (!temp)
+			return (NULL);
+		ft_strlcpy(buffer + len, temp, sizeof(buffer) - len);
+		len += ft_strlen(temp);
+		free(temp);
+	}
+	token = create_token(buffer, TOKEN_WORD);
+	return (token);
 }
 
 t_token	*tokenize_quoted_str(const char *input, int *pos, t_shell *shell)
 {
 	char	*value;
-	char	*expanded;
+	char	*processed;
 	t_token	*token;
+	char	quote_type;
 
+	if (!input || !pos)
+		return (NULL);
+	quote_type = input[*pos];
 	value = extract_quoted(input, pos, input[*pos]);
 	if (!value)
 		return (NULL);
-	if (input[*pos - 1] == '"')
-		expanded = expand_env_vars(value, shell);
+	if (quote_type == '"')
+		processed = expand_env_vars(value, shell);
 	else
-		expanded = ft_strdup(value);
-	free(value);
-	token = create_token(expanded, TOKEN_WORD);
-	free(expanded);
+		processed = value;
+	token = create_token(processed, TOKEN_WORD);
+	if (quote_type == '"')
+		free(processed);
 	return (token);
 }

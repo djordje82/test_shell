@@ -6,18 +6,27 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:32 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/13 12:37:33 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/15 13:35:48 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	heredoc_signal_handler(int signum)
+{
+	if (signum == SIGINT)
+	{
+		g_exit_status = 130;
+		write(STDERR_FILENO, "\n", 1);
+	}
+}
 
 int	setup_heredoc_signals(void)
 {
 	struct sigaction	sa;
 
 	ft_memset(&sa, 0, sizeof(struct sigaction));
-	sa.sa_handler = SIG_IGN;
+	sa.sa_handler = heredoc_signal_handler;
 	sa.sa_flags = 0;
 	sigemptyset(&sa.sa_mask);
 	sigaction(SIGINT, &sa, NULL);

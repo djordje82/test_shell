@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/13 12:52:29 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/15 14:55:27 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,6 @@ void	execute_pipeline_cmd(t_command *cmd, char *cmd_path, t_shell *shell)
 	setup_child_signal();
 	if (!setup_redirections(cmd))
 	{
-		perror("redirection failed");
 		close(STDIN_FILENO);
 		close(STDOUT_FILENO);
 		free(cmd_path);

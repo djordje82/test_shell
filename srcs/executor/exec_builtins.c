@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:10:01 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 17:26:02 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/14 19:01:28 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int	is_builtin(char *cmd)
 		|| ft_strncmp(cmd, "unset", 6) == 0 || ft_strncmp(cmd, "env", 4) == 0
 		|| ft_strncmp(cmd, "exit", 5) == 0);
 }
+
+
 
 int	handle_builtin_cmd(t_command *cmd, t_shell *shell)
 {

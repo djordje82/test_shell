@@ -3,28 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipeline_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 14:20:10 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/05 14:30:52 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/14 20:05:04 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	restore_std_fds(int stdin_fd, int stdout_fd)
-{
-	if (dup2(stdin_fd, STDIN_FILENO) == -1)
-	{
-		exit(1);
-	}
-	if (dup2(stdout_fd, STDOUT_FILENO) == -1)
-	{
-		exit(1);
-	}
-	close(stdin_fd);
-	close(stdout_fd);
-}
 
 int	create_process(pid_t *pid, t_shell *shell)
 {

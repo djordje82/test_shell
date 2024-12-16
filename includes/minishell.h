@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/12 18:11:44 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/15 16:59:52 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,9 @@ typedef struct s_command
 	char						*outfile;
 	int							in_type;
 	int							out_type;
+	int							heredoc_fd;
 	bool						is_valid;
+	int							curr_fd;
 	struct s_command			*next;
 	struct s_command			*prev;
 }								t_command;
@@ -166,6 +168,7 @@ void							process_shell_input(char *input,
 void							reset_shell_state(t_shell *shell);
 
 /*TOKENIZER*/
+t_token *tokenize_adjacent_quotes(const char *input, int *pos, t_shell *shell);
 char							*ft_strjoin_free(char *s1, char *s2);
 t_token							*create_token(const char *value,
 									t_token_type type);
@@ -251,7 +254,13 @@ char							*expand_env_vars(const char *str, t_shell *shell);
 
 /*EXECUTOR*/
 int								execute_commands(t_shell *shell);
-
+int setup_redirections(t_command *cmd);
+void restore_std_fds(int stdin_fd, int stdout_fd);
+int redirect_output(int fd, char *outfile);
+int open_output_file(const char *outfile, int flags);
+int open_input_file(const char *infile);
+int handle_regular_input(const char *infile);
+int redirect_fd(int fd, int target_fd, const char *file);
 /*BUILTINS*/
 int								ft_cd(char **args, t_shell *shell);
 int								ft_pwd(char **args, t_shell *shell);
@@ -362,7 +371,7 @@ void							restore_std_fds(int stdin_fd, int stdout_fd);
 int								redirect_output(int fd, char *outfile);
 int								backup_std_fds(int *stdin_backup,
 									int *stdout_backup);
-int								open_output_file(char *outfile, int flags);
+//int								open_output_file(char *outfile, int flags);
 
 /*EXECUTOR /PIPELINE*/
 int								setup_pipeline_steps(t_command *current,

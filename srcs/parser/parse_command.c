@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:15:54 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/06 13:17:18 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/15 14:53:15 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,10 @@ t_command	*parse_command(t_token **token)
 	while (*token && (*token)->type != TOKEN_PIPE)
 	{
 		if (!process_token(token, cmd))
+		{
+			cleanup_cmd_list(cmd);
 			return (NULL);
+		}
 	}
 	if (!cmd->args || !cmd->args[0])
 		cmd->is_valid = false;

@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:58:19 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/09 12:48:22 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/15 14:59:53 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,9 @@ char	**add_cmd_argument(char **args, char *new_arg)
 	}
 	i = 0;
 	if (!copy_existing_args(new_args, args, &i))
+	{
+		ft_free_array((void **)args, -1);
 		return (NULL);
+	}
 	return (add_new_argument(new_args, new_arg, i));
 }

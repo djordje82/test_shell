@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:57:58 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/06 13:37:52 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/14 19:22:25 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ t_command	*create_cmd_node(void)
 	cmd->in_type = 0;
 	cmd->out_type = 0;
 	cmd->is_valid = false;
+	cmd->curr_fd = -1;
 	cmd->next = NULL;
 	cmd->prev = NULL;
 	return (cmd);

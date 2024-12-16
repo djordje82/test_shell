@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:58:51 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/12 14:51:12 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/15 16:27:40 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_token	*create_token(const char *value, t_token_type type)
 
 void	skip_whitespace(const char *input, int *pos)
 {
-	while (input[*pos] && ft_is_whitespace(input[*pos]))
+	while (input[*pos] && (input[*pos] == ' ' || input[*pos] == '\t'
+			|| input[*pos] == '\r' || input[*pos] == '\n'))
 		(*pos)++;
 }
-/*   Updated: 2024/12/12 14:05:58 by jadyar           ###   ########.fr       */
