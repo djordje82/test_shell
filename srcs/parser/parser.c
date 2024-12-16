@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:03:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/06 13:17:37 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:15:00 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ int	parse_tokens(t_shell *shell)
 		return (1);
 	if (!validate_pipe_syntax(shell->tokens))
 	{
-		g_exit_status = 2;
+		//g_exit_status = 2;
+		shell->exit_status = 2;
 		return (0);
 	}
 	if (!build_command_list(shell->tokens, shell))

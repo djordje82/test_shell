@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:01:11 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 16:53:59 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:12:59 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ void	process_shell_input(char *input, t_shell *shell)
 			shell->exit_status = execute_commands(shell);
 			g_exit_status = shell->exit_status;
 		}
+		else
+			g_exit_status = 1;
 		reset_shell_state(shell);
 	}
 }
