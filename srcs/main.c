@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:01:11 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/16 18:38:00 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/17 15:27:18 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,18 @@ void	reset_shell_state(t_shell *shell)
 	}
 }
 
-/* void	process_shell_input(char *input, t_shell *shell)
+void	process_shell_input(char *input, t_shell *shell)
 {
 	if (*input)
 	{
 		add_history(input);
 		shell->tokens = tokenize_input(input, shell);
-		if (shell->tokens && parse_tokens(shell))
+		if (!shell->tokens)
+		{
+			g_exit_status = 2;
+			return ;
+		}
+		if (parse_tokens(shell))
 		{
 			shell->exit_status = execute_commands(shell);
 			g_exit_status = shell->exit_status;
@@ -41,30 +46,7 @@ void	reset_shell_state(t_shell *shell)
 			g_exit_status = 1;
 		reset_shell_state(shell);
 	}
-} */
-
-void process_shell_input(char *input, t_shell *shell)
-{
-    if (*input)
-    {
-        add_history(input);
-        shell->tokens = tokenize_input(input, shell);
-        if (!shell->tokens)
-        {
-            g_exit_status = 2;  // Set appropriate error status
-            return;
-        }
-        if (parse_tokens(shell))
-        {
-            shell->exit_status = execute_commands(shell);
-            g_exit_status = shell->exit_status;
-        }
-		else
-			g_exit_status = 1;
-        reset_shell_state(shell);
-    }
 }
-
 
 void	run_shell_loop(t_shell *shell)
 {
