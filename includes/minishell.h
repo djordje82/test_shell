@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/17 12:32:54 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/17 13:16:13 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -296,6 +296,7 @@ void							interactive_signal_handler(int signum);
 void							setup_execution_signals(struct sigaction \
 								*sa_old_int, struct sigaction *sa_old_quit);
 int								setup_heredoc_signals(void);
+void							restore_default_signals(void);
 /*UTILS /SHELL*/
 void							run_shell_loop(t_shell *shell);
 void							initialize_shell(t_shell *shell, char **envp);

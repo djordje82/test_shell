@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:45 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/17 11:59:04 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/17 13:02:02 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	process_quotes(const char *input, int *pos, char *result, int *len)
 			(*pos)++;
 		}
 	}
-	handle_quote_error(result);
+	//handle_quote_error(result);
 	return (1);
 }
 

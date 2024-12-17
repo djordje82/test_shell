@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_expansion.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:12 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/06 14:29:08 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/17 14:12:17 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,11 @@ char	*process_char(char *str, int *i, char *result, t_shell *shell)
 {
 	char	*temp;
 
-	if (str[*i] == '\\' && (str[*i + 1] == '$' || str[*i + 1] == '\\'))
+	/* if (str[*i] == '\\' && (str[*i + 1] == '$' || str[*i + 1] == '\\'))
 	{
 		temp = handle_escape(i);
-	}
-	else if (str[*i] == '$')
+	} */
+	if (str[*i] == '$')
 	{
 		temp = handle_dollar(str, i, shell);
 	}

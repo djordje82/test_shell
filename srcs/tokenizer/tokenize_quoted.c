@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/17 12:24:47 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/17 13:01:05 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,18 +90,18 @@ t_token *tokenize_adjacent_quotes(const char *input, int *pos, t_shell *shell)
 	char	buffer[1024];
 	int		len;
 	t_token	*token;
-	char	*temp;
+	char	*quoted;
 
 	(void)shell;
 	len = 0;
 	while (input[*pos] == '\'' || input[*pos] == '"')
 	{
-		temp = extract_quoted(input, pos, input[*pos]);
-		if (!temp)
+		quoted = extract_quoted(input, pos, input[*pos]);
+		if (!quoted)
 			return (NULL);
-		ft_strlcpy(buffer + len, temp, sizeof(buffer) - len);
-		len += ft_strlen(temp);
-		free(temp);
+		ft_strlcpy(buffer + len, quoted, sizeof(buffer) - len);
+		len += ft_strlen(quoted);
+		free(quoted);
 	}
 	token = create_token(buffer, TOKEN_WORD);
 	return (token);
@@ -125,7 +125,7 @@ t_token	*tokenize_quoted_str(char *input, int *pos, t_shell *shell)
 	else
 		processed = value;
 	token = create_token(processed, TOKEN_WORD);
-	if (quote_type == '"')
+	if (quote_type == '"' && quote_type + 1 == '"')
 		free(processed);
 	return (token);
 }

@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:51:35 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/17 11:40:21 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/17 14:09:18 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,17 +68,14 @@ char	*expand_path(char *path, t_shell *shell)
 
 static void	print_cd_error(char *path)
 {
-	ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
-	ft_putstr_fd(path, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
 	if (errno == ENOENT)
-		ft_putendl_fd("No such file or directory", STDERR_FILENO);
-	else if (errno == EACCES)
-		ft_putendl_fd("Permission denied", STDERR_FILENO);
+		print_file_error(path, "No such file or directory");
 	else if (errno == ENOTDIR)
-		ft_putendl_fd("Not a directory", STDERR_FILENO);
+		print_file_error(path, "Not a directory");
+	else if (errno == EACCES)
+		print_file_error(path, "Permission denied");
 	else
-		ft_putendl_fd("Error changing directory", STDERR_FILENO);
+		print_file_error(path, "Error changing directory");
 }
 
 int	ft_cd(char **args, t_shell *shell)
