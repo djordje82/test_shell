@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:16 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/16 19:00:55 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/17 11:55:15 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static void	add_token_to_list(t_token **head, t_token **current,
 {
 	if (!new_token)
 	{
-		ft_putendl_fd("Error: Null token", 2);
+		ft_putendl_fd("Error: Null token", STDERR_FILENO);
 		return ;
 	}
 	if (!*head)
@@ -99,7 +99,7 @@ static void	add_token_to_list(t_token **head, t_token **current,
 	}
 }
 
-static int	check_quotes(const char *input)
+/* static int	check_quotes(const char *input)
 {
 	int		i;
 	char	quote;
@@ -119,6 +119,31 @@ static int	check_quotes(const char *input)
 		i++;
 	}
 	return (!quote);
+} */
+
+static int	check_quotes(const char *input)
+{
+	int		i;
+	char	quote;
+
+	i = 0;
+	quote = 0;
+	while (input[i])
+	{
+		if ((input[i] == '\'' || input[i] == '"') && !quote)
+			quote = input[i];
+		else if (input[i] == quote)
+			quote = 0;
+		i++;
+	}
+	if (quote)
+	{
+		ft_putendl_fd("minishell: syntax error: unclosed quotes", \
+			STDERR_FILENO);
+		g_exit_status = 2;
+		return (0);
+	}
+	return (1);
 }
 
 static int	initialize_tokenization(const char *input, t_shell *shell)
@@ -132,7 +157,7 @@ static int	initialize_tokenization(const char *input, t_shell *shell)
 	}
 	if (!check_quotes(input))
 	{
-		ft_putendl_fd("minishell: syntax error: unclosed quotes", 2);
+		//ft_putendl_fd("minishell: syntax error: unclosed quotes", 2);
 		g_exit_status = 2;
 		return (0);
 	}
@@ -146,11 +171,11 @@ t_token	*tokenize_input(const char *input, t_shell *shell)
 	t_token	*new_token;
 	int		pos;
 
-	if (!initialize_tokenization(input, shell))
-		return (NULL);
 	head = NULL;
 	current = NULL;
 	pos = 0;
+	if (!initialize_tokenization(input, shell))
+		return (NULL);
 	while (input[pos])
 	{
 		new_token = get_token_type(input, &pos, shell);
@@ -161,6 +186,8 @@ t_token	*tokenize_input(const char *input, t_shell *shell)
 		}
 		add_token_to_list(&head, &current, new_token);
 		skip_whitespace(input, &pos);
+		if (!head && *input == '\0')
+			head = create_token("", TOKEN_WORD);
 	}
 	return (head);
 }

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_quoted.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/06 14:08:56 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/17 12:24:47 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*handle_escaped_chars(char *input, int *pos, char *content, int *i)
+/* static char	*handle_escaped_chars(char *input, int *pos, char *content, int *i)
 {
 	if (input[*pos] == '\\' && (input[*pos + 1] == '"' || input[*pos
 				+ 1] == '\\' || input[*pos + 1] == '$'))
@@ -23,52 +23,52 @@ static char	*handle_escaped_chars(char *input, int *pos, char *content, int *i)
 	}
 	content[(*i)++] = input[*pos];
 	return (content);
-}
+} */
 
-static char	*process_quoted_content(char *input, int *pos, char quote_type,
-		int *i)
+char	*process_quoted_content(const char *input, int *start, int *len)
 {
-	char	*content;
-
-	content = malloc(sizeof(char) * (ft_strlen(input) + 1));
-	if (!content)
-		return (NULL);
-	while (input[*pos])
-	{
-		if (input[*pos] == quote_type)
-		{
-			if (input[*pos + 1] == quote_type)
-			{
-				(*pos)++;
-				continue ;
-			}
-			(*pos)++;
-			break ;
-		}
-		if (quote_type == '"')
-			content = handle_escaped_chars(input, pos, content, i);
-		else
-			content[(*i)++] = input[*pos];
-		(*pos)++;
-	}
-	content[*i] = '\0';
-	return (content);
-}
-
-char	*extract_quoted(char *input, int *pos, char quote_type)
-{
+	char	quote_type;
 	char	*content;
 	int		i;
 
+	quote_type = input[*start];
+	content = malloc(ft_strlen(input) + 1);
 	i = 0;
-	if (!input || !pos)
+	if (!content)
 		return (NULL);
-	(*pos)++;
-	content = process_quoted_content(input, pos, quote_type, &i);
+	(*start)++;
+	while (input[*start])
+	{
+		if (input[*start] == quote_type)
+		{
+			(*start)++;
+			break ;
+		}
+		if (quote_type == '"' && input[*start] == '\\' && (input[*start
+					+ 1] == '"' || input[*start + 1] == '$'))
+			(*start)++;
+		content[i++] = input[(*start)++];
+	}
+	content[i] = '\0';
+	*len = i;
 	return (content);
 }
 
-static char	*handle_quote_expansion(char *value, char quote_type,
+char	*extract_quoted(const char *input, int *pos, char quote_type)
+{
+	char	*content;
+	int		len;
+
+	len = 0;
+	if (!input || !pos || input[*pos] != quote_type)
+		return (NULL);
+	content = process_quoted_content(input, pos, &len);
+	if (!content)
+		return (NULL);
+	return (content);
+}
+
+/* static char	*handle_quote_expansion(char *value, char quote_type,
 		t_shell *shell)
 {
 	char	*expanded;
@@ -83,21 +83,49 @@ static char	*handle_quote_expansion(char *value, char quote_type,
 	else
 		expanded = ft_strdup(value);
 	return (expanded);
+} */
+
+t_token *tokenize_adjacent_quotes(const char *input, int *pos, t_shell *shell)
+{
+	char	buffer[1024];
+	int		len;
+	t_token	*token;
+	char	*temp;
+
+	(void)shell;
+	len = 0;
+	while (input[*pos] == '\'' || input[*pos] == '"')
+	{
+		temp = extract_quoted(input, pos, input[*pos]);
+		if (!temp)
+			return (NULL);
+		ft_strlcpy(buffer + len, temp, sizeof(buffer) - len);
+		len += ft_strlen(temp);
+		free(temp);
+	}
+	token = create_token(buffer, TOKEN_WORD);
+	return (token);
 }
 
-t_token	*tokenize_quoted_str(char *input, int *i, t_shell *shell)
+t_token	*tokenize_quoted_str(char *input, int *pos, t_shell *shell)
 {
 	char	*value;
-	char	*expanded;
+	char	*processed;
 	t_token	*token;
 	char	quote_type;
 
-	quote_type = input[*i];
-	value = extract_quoted(input, i, quote_type);
+	if (!input || !pos)
+		return (NULL);
+	quote_type = input[*pos];
+	value = extract_quoted(input, pos, input[*pos]);
 	if (!value)
-		return (cleanup_and_exit(ERR_QUOTE, NULL, 1, shell), NULL);
-	expanded = handle_quote_expansion(value, quote_type, shell);
-	token = create_token(expanded, TOKEN_WORD);
-	free(expanded);
+		return (NULL);
+	if (quote_type == '"')
+		processed = expand_env_vars(value, shell);
+	else
+		processed = value;
+	token = create_token(processed, TOKEN_WORD);
+	if (quote_type == '"')
+		free(processed);
 	return (token);
 }

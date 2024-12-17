@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+         #
+#    By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 14:34:50 by j                 #+#    #+#              #
-#    Updated: 2024/12/06 15:31:24 by jadyar           ###   ########.fr        #
+#    Updated: 2024/12/17 12:29:30 by dodordev         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,7 +68,6 @@ SRCS =	main.c \
 		tokenizer/tokenizer_utils.c \
 		tokenizer/tokenize_operators.c \
 		tokenizer/tokenize_word.c \
-		tokenizer/extract_word.c \
 		pipes/pipe_manager.c \
 		pipes/pipe_manager_utils.c
 # Object files

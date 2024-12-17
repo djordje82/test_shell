@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/09 12:39:23 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/17 12:32:54 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,21 +172,23 @@ t_token							*create_token(const char *value,
 									t_token_type type);
 t_token							*tokenize_input(const char *input,
 									t_shell *shell);
-t_token							*tokenize_word(const char *input, int *i,
+t_token							*tokenize_word(const char *input, int *pos,
 									t_shell *shell);
 t_token							*tokenize_pipe(const char *input, int *pos);
-t_token							*tokenize_quoted_str(char *input, int *i,
+t_token							*tokenize_quoted_str(char *input, int *pos,
 									t_shell *shell);
 t_token							*get_token_type(const char *input, int *pos,
 									t_shell *shell);
 void							skip_whitespace(const char *input, int *pos);
+char							*process_quoted_content(const char *input, int *start, int *len);
+t_token							*tokenize_adjacent_quotes(const char *input, int *pos, t_shell *shell);
 
 /*TOKENIZER /EXTRACT WORD*/
 char							*append_word_part(char *result,
 									const char *input, int start, int len);
 char							*process_quoted_segment(char *result,
 									const char *input, int *start, int *len);
-char							*extract_quoted(char *input, int *pos,
+char							*extract_quoted(const char *input, int *pos,
 									char quote_type);
 char							*extract_word(const char *input, int *pos);
 char							*handle_word_part(char *result,
@@ -204,7 +206,6 @@ int								handle_quotes(char *input, int *i,
 									char quote_type);
 char							**insert_arg_array(char **orig_args, int pos,
 									char **expanded);
-char							*handle_quote_error(char *result);
 char							*append_unquoted_part(char *result, const \
 								char *input, int *start, int *len);
 
@@ -279,6 +280,7 @@ int								is_special_char(char c);
 int								is_word_delimiter(char c);
 
 /*UTILS ERRORS*/
+char							*handle_quote_error(const char *result);
 void							print_command_error(char *cmd, char *error_msg);
 void							print_redir_error(char *msg, char *file);
 int								print_syntx_err(char *err_msg, char *src);

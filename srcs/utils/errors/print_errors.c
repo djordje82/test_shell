@@ -6,11 +6,19 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:00:33 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 17:03:13 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/17 12:30:32 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*handle_quote_error(const char *result)
+{
+	ft_putendl_fd("minishell: syntax error: unclosed quotes", STDERR_FILENO);
+	free((char *)result);
+	g_exit_status = 2;
+	return (NULL);
+}
 
 int	print_syntx_err(char *err_msg, char *src)
 {
