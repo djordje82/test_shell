@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/15 16:59:52 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/17 12:44:33 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,16 +178,18 @@ t_token							*tokenize_word(const char *input, int *i,
 									t_shell *shell);
 t_token							*tokenize_pipe(const char *input, int *pos);
 t_token							*tokenize_quoted_str(const char *input, int *i,
+t_token							*tokenize_quoted_str(const char *input, int *i,
 									t_shell *shell);
 t_token							*get_token_type(const char *input, int *pos,
 									t_shell *shell);
 void							skip_whitespace(const char *input, int *pos);
-
+t_token							*tokenize_adjacent_quotes(const char *input, int *pos, t_shell *shell);
 /*TOKENIZER /EXTRACT WORD*/
 char							*append_word_part(char *result,
 									const char *input, int start, int len);
 char							*process_quoted_segment(char *result,
 									const char *input, int *start, int *len);
+char							*extract_quoted(const char *input, int *pos,
 char							*extract_quoted(const char *input, int *pos,
 									char quote_type);
 char							*extract_word(const char *input, int *pos);
@@ -247,6 +249,7 @@ char							**add_new_argument(char **new_args,
 char							**create_new_array(char **args, int count);
 char							**copy_existing_args(char **new_args,
 									char **args, int *i);
+int								setup_heredoc_signals(void);
 
 /*PARSING /ENV_EXPANSION*/
 char							*extract_env_var_name(const char *str);
@@ -286,6 +289,7 @@ int								cleanup_and_exit(char *err_msg, char *src,
 /*UTILS*/
 t_char_type						find_special_chars(char c);
 char							*handle_escape(int *i);
+char	*handle_escaped_chars(char *input, int *pos, char *content, int *i);
 
 /*UTILS /CHECKERS*/
 int								ft_is_whitespace(char c);

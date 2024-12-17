@@ -6,7 +6,7 @@
 #    By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 14:34:50 by j                 #+#    #+#              #
-#    Updated: 2024/12/15 16:21:01 by jadyar           ###   ########.fr        #
+#    Updated: 2024/12/17 12:44:25 by jadyar           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME = minishell
 
 # Compiler and flags
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = #-Wall -Wextra -Werror -g
 INCLUDES = -I./includes -I./libft
 LIBS = -lreadline -L$(LIBFT_DIR) -lft
 
@@ -57,6 +57,7 @@ SRCS =	main.c \
 		parser/parser_utils.c \
 		parser/heredoc.c \
 		parser/parse_command.c \
+		parser/heredoc.c \
 		parser/parse_cmd_arguments.c \
 		parser/parse_redirections.c \
 		parser/command_utils.c \

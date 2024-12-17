@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+         #
+#    By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/30 12:10:30 by dodordev          #+#    #+#              #
-#    Updated: 2024/12/13 11:53:06 by dodordev         ###   ########.fr        #
+#    Updated: 2024/12/17 12:44:48 by jadyar           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,7 +45,7 @@ LIBFT_FILES = isalpha isdigit isalnum isnumber \
 		putstr_fd split strchr \
 		strdup striteri strjoin strjoin_free \
 		strlcat strlcpy strlen \
-		strmapi strncmp strcmp strnstr strncat strncpy \
+		strmapi strcmp strncmp strnstr \
 		strrchr strtrim substr \
 		tolower toupper\
 		lstnew lstadd_front lstsize \
