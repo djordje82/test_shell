@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/05 14:41:01 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/18 12:07:42 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	init_pipeline(t_command *current, int *pipe_fd, t_shell *shell)
 	return (1);
 }
 
-static int	handle_invalid_command(t_command *current)
+/* static int	handle_invalid_command(t_command *current)
 {
 	if (!current->is_valid)
 	{
@@ -44,7 +44,7 @@ static int	handle_invalid_command(t_command *current)
 		return (0);
 	}
 	return (1);
-}
+} */
 
 static void	handle_child_process(t_command *current, int *prev_pipe,
 		int *pipe_fd, t_shell *shell)
@@ -66,8 +66,8 @@ int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 
 	pipe_fd[0] = -1;
 	pipe_fd[1] = -1;
-	if (!handle_invalid_command(current))
-		return (0);
+	/* if (!handle_invalid_command(current))
+		return (0); */
 	signal(SIGINT, SIG_IGN);
 	if (!init_pipeline(current, pipe_fd, shell))
 		return (0);

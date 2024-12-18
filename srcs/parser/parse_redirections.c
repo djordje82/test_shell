@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:20:05 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/16 17:59:03 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/17 17:43:52 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,13 @@ int	parse_redirections(t_token **token, t_command *cmd)
 		print_syntx_err("malloc failed", NULL);
 		return (0);
 	}
+	// Add new validation here - but don't return on failure yet
+	if (!validate_redirection(type, temp_file))
+	{
+		ft_putstr_fd("Notice: Early validation failed\n", 2);
+		// Don't return here yet - let the existing checks still run
+	}
+	// Keep existing validation
 	if (!check_output_file(temp_file, type))
 	{
 		free(temp_file);

@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/17 13:16:13 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/18 11:45:29 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,7 +219,7 @@ void							handle_pipe_io_error(int *prev_pipe,
 									int *pipe_fd);
 
 /*PARSER*/
-t_command						*parse_command(t_token **token);
+t_command						*parse_command(t_token **token, t_shell *shell);
 int								parse_tokens(t_shell *shell);
 bool							validate_command(t_command *cmd,
 									t_shell *shell);
@@ -239,7 +239,13 @@ char							**add_new_argument(char **new_args,
 char							**create_new_array(char **args, int count);
 char							**copy_existing_args(char **new_args,
 									char **args, int *i);
-
+//int								validate_output_path(const char *filename);
+//int								validate_input_path(const char *filename);
+//int								validate_redirection(t_token_type type, const char *filename);
+int check_parent_dir_permissions(const char *filename);
+int validate_output_permissions(const char *filename);
+int validate_input_permissions(const char *filename);
+int validate_redirection(t_token_type type, const char *filename);
 /*PARSING /ENV_EXPANSION*/
 char							*extract_env_var_name(const char *str);
 char							*expand_env_vars(char *str, t_shell *shell);

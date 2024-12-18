@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:23 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 17:25:22 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/18 12:04:45 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 void	handle_command_errors(char *cmd_path, char *cmd_name)
 {
-	struct stat	path_stat;
+	(void) cmd_path;
+	/* struct stat	path_stat;
 
 	if (access(cmd_path, F_OK) != 0)
 	{
@@ -30,7 +31,9 @@ void	handle_command_errors(char *cmd_path, char *cmd_name)
 	{
 		print_command_error(cmd_name, ": Permission denied");
 		exit(126);
-	}
+	} */
+	perror(cmd_name);
+    exit(EXIT_FAILURE);
 }
 
 void	execute_external_child(t_command *cmd, char *cmd_path, t_shell *shell)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_redirections.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:00 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/06 15:29:36 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/18 12:16:25 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static int	handle_output_redirection(t_command *cmd)
 
 	if (!cmd->outfile || !cmd->out_type)
 		return (1);
-	if (cmd->curr_fd > 2)
+	if (cmd->curr_fd > 0)
 	{
 		close(cmd->curr_fd);
 		cmd->curr_fd = -1;
@@ -98,7 +98,7 @@ static int	handle_output_redirection(t_command *cmd)
 		cmd->curr_fd = -1;
 		return (0);
 	}
-	//close (fd);
+	close (fd);
 	return (1);
 }
 
@@ -111,7 +111,7 @@ static void	close_cmd_fd(t_command *cmd)
 	}
 }
 
-static int	check_redirection_permissions(t_command *cmd)
+/* static int	check_redirection_permissions(t_command *cmd)
 {
 	struct stat	path_stat;
 	char		*parent_dir;
@@ -157,7 +157,7 @@ static int	check_redirection_permissions(t_command *cmd)
 		}
 	}
 	return (1);
-}
+} */
 
 int	setup_redirections(t_command *cmd)
 {
@@ -166,11 +166,11 @@ int	setup_redirections(t_command *cmd)
 
 	if (!backup_std_fds(&stdin_backup, &stdout_backup) || !cmd)
 		return (0);
-	if (!check_redirection_permissions(cmd))
+	/* if (!check_redirection_permissions(cmd))
 	{
 		restore_std_fds(stdin_backup, stdout_backup);
 		return (0);
-	}
+	} */
 	close_cmd_fd(cmd);
 	if (cmd->infile && (!handle_input_redirection(cmd)))
 	{

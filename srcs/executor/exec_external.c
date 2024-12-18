@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:39 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 17:24:49 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/18 12:03:06 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	execute_external_single_cmd(t_command *cmd, char *cmd_path, t_shell *shell)
 	return (g_exit_status);
 }
 
-int	handle_external_cmd(t_command *cmd, t_shell *shell)
+/* int	handle_external_cmd(t_command *cmd, t_shell *shell)
 {
 	char	*cmd_path;
 
@@ -51,4 +51,19 @@ int	handle_external_cmd(t_command *cmd, t_shell *shell)
 		return (0);
 	}
 	return (execute_external_single_cmd(cmd, cmd_path, shell));
+} */
+
+int handle_external_cmd(t_command *cmd, t_shell *shell)
+{
+    char *cmd_path;
+
+    signal(SIGINT, SIG_IGN);
+    cmd_path = find_command_path(cmd->args[0], shell);
+    if (cmd->prev || cmd->next)
+    {
+        execute_pipeline_cmd(cmd, cmd_path, shell);
+        free(cmd_path);
+        return (0);
+    }
+    return (execute_external_single_cmd(cmd, cmd_path, shell));
 }

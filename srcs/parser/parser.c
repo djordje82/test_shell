@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:03:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/16 18:15:00 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/18 12:26:20 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	build_command_list(t_token *tokens, t_shell *shell)
 	shell->cmnd_lst = NULL;
 	while (current)
 	{
-		cmd = parse_command(&current);
+		cmd = parse_command(&current, shell);
 		if (!cmd)
 		{
 			if (shell->cmnd_lst)

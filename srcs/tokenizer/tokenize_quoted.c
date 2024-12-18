@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/17 13:01:05 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/17 19:55:35 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,20 @@ char	*process_quoted_content(const char *input, int *start, int *len)
 			(*start)++;
 			break ;
 		}
-		if (quote_type == '"' && input[*start] == '\\' && (input[*start
+		/* if (quote_type == '"' && input[*start] == '\\' && (input[*start
 					+ 1] == '"' || input[*start + 1] == '$'))
 			(*start)++;
-		content[i++] = input[(*start)++];
+		content[i++] = input[(*start)++]; */
+		if (quote_type == '"' && input[*start] == '\\' && (input[*start + 1] == '"' || input[*start + 1] == '$'))
+        {
+            (*start)++;
+            content[i++] = input[*start];
+        }
+        else
+        {
+            content[i++] = input[*start];
+        }
+        (*start)++;
 	}
 	content[i] = '\0';
 	*len = i;

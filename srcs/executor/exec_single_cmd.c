@@ -6,13 +6,13 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:09:35 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 17:22:38 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/18 12:11:30 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	cleanup_empty_command(char **args)
+/* static void	cleanup_empty_command(char **args)
 {
 	int	i;
 
@@ -25,7 +25,7 @@ static void	cleanup_empty_command(char **args)
 		i++;
 	}
 	args[i] = NULL;
-}
+} */
 
 static int	execute_command_type(t_command *cmd, t_shell *shell, int stdin_fd,
 		int stdout_fd)
@@ -46,7 +46,7 @@ static int	execute_command_type(t_command *cmd, t_shell *shell, int stdin_fd,
 	return (status);
 }
 
-int	execute_single_command(t_command *cmd, t_shell *shell)
+/* int	execute_single_command(t_command *cmd, t_shell *shell)
 {
 	int	stdin_fd;
 	int	stdout_fd;
@@ -73,4 +73,27 @@ int	execute_single_command(t_command *cmd, t_shell *shell)
 	status = execute_command_type(cmd, shell, stdin_fd, stdout_fd);
 	restore_std_fds(stdin_fd, stdout_fd);
 	return (status);
+} */
+
+int execute_single_command(t_command *cmd, t_shell *shell)
+{
+    int stdin_fd;
+    int stdout_fd;
+    int status;
+
+    stdin_fd = dup(STDIN_FILENO);
+    stdout_fd = dup(STDOUT_FILENO);
+    if (stdin_fd == -1 || stdout_fd == -1)
+    {
+        perror("dup fail");
+        return (1);
+    }
+    if (!setup_redirections(cmd))
+    {
+        restore_std_fds(stdin_fd, stdout_fd);
+        return (g_exit_status);
+    }
+    status = execute_command_type(cmd, shell, stdin_fd, stdout_fd);
+    restore_std_fds(stdin_fd, stdout_fd);
+    return (status);
 }
