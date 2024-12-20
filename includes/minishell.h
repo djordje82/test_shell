@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/20 11:09:03 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/20 16:41:50 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,14 @@ typedef enum e_token_type
 	TOKEN_ENV
 }								t_token_type;
 
+typedef struct s_quote_state
+{
+	const char	*input;
+	char		*result;
+	int			pos;
+	int			len;
+}			t_quote_state;
+
 /*STRUCTS*/
 typedef struct s_node
 {
@@ -196,22 +204,25 @@ int								initialize_tokenization(const char *input,
 									t_shell *shell);
 char							*process_quoted_content(const char *input, 
 									int *start, int *len);
+int								handle_escape_sequence(t_quote_state *state,
+									char quote_type);
 /*TOKENIZER /UTILS*/
+t_token							*tokenize_adjacent_quotes(const char *input, 
+									int *pos, t_shell *shell);
 t_token_type					get_operator_type(char c);
 t_token							*tokenize_single_operator(const char *input,
 									int *i);
 t_token							*tokenize_double_operator(const char *input,
 									int *pos, const char *op_str,
 									t_token_type type);
-
-int								handle_quotes(char *input, int *i,
-									char quote_type);
+void							add_token_to_list(t_token **head, 
+									t_token **current, t_token *new_token);
 char							**insert_arg_array(char **orig_args, int pos,
 									char **expanded);
 char							*handle_quote_error(const char *result);
 char							*append_unquoted_part(char *result,
 									const char *input, int *start, int *len);
-
+int								check_quotes(const char *input);
 /*PIPES*/
 int								create_pipe(int pipe_fd[2], t_shell *shell);
 void							close_pipe_ends(int pipe_fd[2]);
@@ -267,7 +278,6 @@ void							cleanup_envp(t_shell *shell);
 void							cleanup_token_list(t_token *tokens);
 void							cleanup_fd_arrays(t_node *node);
 void							cleanup_file_resources(t_node *node);
-void							cleanup_cmd_node(t_node *node);
 void							cleanup_shell_data(t_shell *shell);
 void							cleanup_cmd_list(t_command *cmd);
 int								cleanup_and_exit(char *err_msg, char *src,
@@ -275,7 +285,6 @@ int								cleanup_and_exit(char *err_msg, char *src,
 
 /*UTILS*/
 t_char_type						find_special_chars(char c);
-char							*handle_escape(int *i);
 
 /*UTILS /CHECKERS*/
 int								ft_is_whitespace(char c);

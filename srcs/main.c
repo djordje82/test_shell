@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:01:11 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/20 10:08:39 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/20 13:19:10 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,22 @@ void	process_shell_input(char *input, t_shell *shell)
 	{
 		add_history(input);
 		shell->tokens = tokenize_input(input, shell);
-		if (shell->tokens && parse_tokens(shell))
+		if (!shell->tokens)
 		{
-			shell->exit_status = execute_commands(shell);
-			g_exit_status = shell->exit_status;
+			if (g_exit_status == 0)
+				g_exit_status = 2;
+			reset_shell_state(shell);
+			return ;
 		}
+		if (!parse_tokens(shell))
+		{
+			if (g_exit_status == 0)
+				g_exit_status = 2;
+			reset_shell_state(shell);
+			return ;
+		}
+		shell->exit_status = execute_commands(shell);
+		g_exit_status = shell->exit_status;
 		reset_shell_state(shell);
 	}
 }

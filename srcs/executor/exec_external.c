@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:39 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/19 14:51:57 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/20 15:49:57 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	handle_external_cmd(t_command *cmd, t_shell *shell)
 	if (!cmd->args || !cmd->args[0] || !cmd->args[0][0])
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		g_exit_status = 127;//maybe wrong
+		g_exit_status = 127;
 		return (127);
 	}
 	signal(SIGINT, SIG_IGN);

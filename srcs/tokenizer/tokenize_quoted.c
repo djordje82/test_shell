@@ -6,11 +6,23 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:36 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/19 18:08:31 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/20 16:13:55 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	handle_escape_sequence(t_quote_state *state, char quote_type)
+{
+	(void)quote_type;
+	state->pos++;
+	if (state->input[state->pos] == '"' || state->input[state->pos] == '$' 
+		|| state->input[state->pos] == '\\')
+		state->result[state->len++] = state->input[state->pos++];
+	else
+		state->result[state->len++] = '\\';
+	return (1);
+}
 
 char	*process_quoted_content(const char *input, int *start, int *len)
 {

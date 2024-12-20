@@ -6,13 +6,13 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:16 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/19 20:11:09 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/20 16:21:06 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	check_quotes(const char *input)
+int	check_quotes(const char *input)
 {
 	int		i;
 	char	quote;
@@ -37,48 +37,62 @@ static int	check_quotes(const char *input)
 	return (1);
 }
 
-int	initialize_tokenization(const char *input, t_shell *shell)
+static int	check_invalid_redirection(const char *input, int pos)
 {
-	if (!input || !shell || !*input)
-		return (0);
-	if (!check_quotes(input))
+	if (input[pos] == '>' && input[pos + 1] == '>' && input[pos + 2] == '>')
 	{
+		ft_putendl_fd("minishell: syntax error near unexpected token `>'",
+			STDERR_FILENO);
 		g_exit_status = 2;
-		return (0);
+		return (1);
 	}
-	return (1);
+	if (input[pos] == '<' && input[pos + 1] == '<' && input[pos + 2] == '<')
+	{
+		ft_putendl_fd("minishell: syntax error near unexpected token `<'",
+			STDERR_FILENO);
+		g_exit_status = 2;
+		return (1);
+	}
+	return (0);
 }
 
-void	add_token_to_list(t_token **head, t_token **current, t_token *new_token)
+static int	check_consecutive_redirections(const char *input, int *pos)
 {
-	if (!new_token)
+	int	i;
+
+	i = *pos;
+	if (input[i] == '>' || input[i] == '<')
+		i++;
+	if (input[i] == '>' || input[i] == '<')
+		i++;
+	while (input[i] && ft_is_whitespace(input[i]))
+		i++;
+	if (input[i] == '>' || input[i] == '<')
 	{
-		ft_putendl_fd("Error: Null token", STDERR_FILENO);
-		return ;
+		ft_putendl_fd("minishell: syntax error near unexpected token `>'",
+			STDERR_FILENO);
+		g_exit_status = 2;
+		return (1);
 	}
-	if (!*head)
-	{
-		*head = new_token;
-		*current = new_token;
-	}
-	else
-	{
-		(*current)->next = new_token;
-		*current = new_token;
-	}
+	return (0);
 }
 
+/*
+*probably should be in a separate file but fuck it...
+see how it does without the null,pos,shell,input check
+*/
 t_token	*get_token_type(const char *input, int *pos, t_shell *shell)
 {
 	t_token_type	type;
 
-	if (!input || !pos || !shell || !input[*pos])
-		return (NULL);
 	while (input[*pos] && ft_is_whitespace(input[*pos]))
 		(*pos)++;
 	type = get_operator_type(input[*pos]);
 	if (type == TOKEN_PIPE || type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT)
 	{
+		if (check_invalid_redirection(input, *pos) 
+			|| check_consecutive_redirections(input, pos))
+			return (NULL);
 		if (input[*pos] == '>' && input[*pos + 1] == '>')
 			return (tokenize_double_operator(input, pos, ">>", TOKEN_APPEND));
 		if (input[*pos] == '<' && input[*pos + 1] == '<')
@@ -86,7 +100,12 @@ t_token	*get_token_type(const char *input, int *pos, t_shell *shell)
 		return (tokenize_single_operator(input, pos));
 	}
 	if (type == TOKEN_SQUOTE || type == TOKEN_DQUOTE)
-		return (tokenize_quoted_str(input, pos, shell));
+	{
+		if (input[*pos + 1] == '\'' || input[*pos + 1] == '"')
+			return (tokenize_adjacent_quotes(input, pos, shell));
+		else
+			return (tokenize_quoted_str((char *)input, pos, shell));
+	}
 	return (tokenize_word(input, pos, shell));
 }
 

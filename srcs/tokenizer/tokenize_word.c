@@ -6,41 +6,59 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:45 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/19 18:32:09 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/20 16:19:17 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	process_quotes(const char *input, int *pos, char *result, int *len)
+static int	process_char_within_quotes(t_quote_state *state, char quote_type)
 {
-	char	quote_type;
-
-	quote_type = input[*pos];
-	(*pos)++;
-	while (input[*pos])
+	if (quote_type == '"' && state->input[state->pos] == '\\')
 	{
-		if (input[*pos] == quote_type)
+		if (!handle_escape_sequence(state, quote_type))
+			return (0);
+	}
+	else
+	{
+		state->result[state->len++] = state->input[state->pos];
+		state->pos++;
+	}
+	return (1);
+}
+
+static int	process_quote_content(t_quote_state *state, char quote_type)
+{
+	while (state->input[state->pos])
+	{
+		if (state->input[state->pos] == quote_type)
 		{
-			(*pos)++;
+			state->pos++;
 			return (1);
 		}
-		if (quote_type == '"' && input[*pos] == '\\')
-		{
-			(*pos)++;
-			if (input[*pos] == '"' || input[*pos] == '$' \
-				|| input[*pos] == '\\')
-				result[(*len)++] = input[(*pos)++];
-			else
-				result[(*len)++] = '\\';
-		}
-		else
-		{
-			result[(*len)++] = input[*pos];
-			(*pos)++;
-		}
+		if (!process_char_within_quotes(state, quote_type))
+			return (0);
 	}
-	handle_quote_error(result);
+	return (0);
+}
+
+static int	process_quotes(const char *input, int *pos, char *result, int *len)
+{
+	t_quote_state	state;
+	char			quote_type;
+
+	state.input = input;
+	state.result = result;
+	state.pos = *pos;
+	state.len = *len;
+	quote_type = state.input[state.pos++];
+	if (!process_quote_content(&state, quote_type))
+	{
+		handle_quote_error(state.result);
+		return (0);
+	}
+	*pos = state.pos;
+	*len = state.len;
 	return (1);
 }
 

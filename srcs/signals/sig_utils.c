@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:32 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/19 17:42:40 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/20 15:36:35 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	handle_wait_status(int status)
 	{
 		g_exit_status = 128 + WTERMSIG(status);
 		if (WTERMSIG(status) == SIGQUIT)
-			write(STDERR_FILENO, "Quit (core dumped)\n", 18);
+			write(STDERR_FILENO, "Quit (core dumped)\n", 19);
 		else if (WTERMSIG(status) == SIGINT)
 			write(STDERR_FILENO, "\n", 1);
 	}
