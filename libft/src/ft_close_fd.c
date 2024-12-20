@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_close_fd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 12:59:56 by dodordev          #+#    #+#             */
-/*   Updated: 2024/10/24 13:00:28 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/20 10:56:13 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,5 +18,9 @@ void	ft_close_fd(int fd)
 	{
 		close(fd);
 		fd = -1;
+	}
+	else 
+	{
+		ft_putstr_fd("Error: Invalid file descriptor\n", STDERR_FILENO);
 	}
 }

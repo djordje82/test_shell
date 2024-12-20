@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 14:43:39 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/19 17:05:02 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/20 11:49:22 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ int	setup_pipe_io(int in_fd, int out_fd)
 		if (dup2(in_fd, STDIN_FILENO) == -1)
 		{
 			perror("dup2 failed in_fd");
+			close(in_fd);
 			return (0);
 		}
 		close(in_fd);
@@ -59,6 +60,7 @@ int	setup_pipe_io(int in_fd, int out_fd)
 		if (dup2(out_fd, STDOUT_FILENO) == -1)
 		{
 			perror("dup2 failed out_fd");
+			close(out_fd);
 			return (0);
 		}
 		close(out_fd);
@@ -68,11 +70,18 @@ int	setup_pipe_io(int in_fd, int out_fd)
 
 void	handle_parent_process(int *prev_pipe, int *pipe_fd)
 {
-	close_pipe_ends(prev_pipe);
-	if (pipe_fd && pipe_fd[1] != -1 && pipe_fd[0] != -1)
+	if (prev_pipe)
+		close_pipe_ends(prev_pipe);
+	if (pipe_fd)
 	{
-		prev_pipe[0] = pipe_fd[0];
-		prev_pipe[1] = pipe_fd[1];
+		if (pipe_fd[0] != -1 && pipe_fd[1] != -1)
+		{
+			if (prev_pipe)
+			{
+				prev_pipe[0] = pipe_fd[0];
+				prev_pipe[1] = pipe_fd[1];
+			}
+		}
 	}
 	else
 		close_pipe_ends(pipe_fd);
@@ -88,12 +97,13 @@ void	handle_pipeline_child(t_command *cmd, int *prev_pipe, int *pipe_fd,
 	input_fd = get_input_fd(prev_pipe);
 	output_fd = get_output_fd(pipe_fd);
 	if (!setup_pipe_io(input_fd, output_fd))
-	{
 		handle_pipe_io_error(prev_pipe, pipe_fd);
-	}
 	close_pipe_ends(prev_pipe);
-	if (pipe_fd)
+	if (pipe_fd && pipe_fd[0] != -1)
+	{
 		close(pipe_fd[0]);
+		pipe_fd[0] = -1;
+	}
 	if (!setup_redirections(cmd))
 	{
 		close_pipe_ends(pipe_fd);

@@ -6,7 +6,7 @@
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/20 10:17:18 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/20 11:09:03 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -359,7 +359,7 @@ int								validate_env_var(char *name);
 
 /*EXECUTOR /REDIRECTIONS*/
 int								setup_redirections(t_command *cmd);
-int							restore_std_fds(int stdin_fd, int stdout_fd);
+int								restore_std_fds(int stdin_fd, int stdout_fd);
 int								redirect_output(int fd, char *outfile);
 int								backup_std_fds(int *stdin_backup,
 									int *stdout_backup);
