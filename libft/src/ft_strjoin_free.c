@@ -1,28 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   ft_strjoin_free.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/25 14:14:04 by dodordev          #+#    #+#             */
-/*   Updated: 2023/11/25 14:19:28 by dodordev         ###   ########.fr       */
+/*   Created: 2024/11/17 14:06:31 by dodordev          #+#    #+#             */
+/*   Updated: 2024/11/17 14:07:59 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_putstr_fd(const char *s, int fd)
+// Joins two strings and frees the first one
+char	*ft_strjoin_free(char *s1, char *s2)
 {
-	int	i;
+	char	*result;
 
-	if (s != 0)
-	{
-		i = 0;
-		while (s[i])
-		{
-			ft_putchar_fd(s[i], fd);
-			i++;
-		}
-	}
+	result = ft_strjoin(s1, s2);
+	free(s1);
+	return (result);
 }

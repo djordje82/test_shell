@@ -1,28 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   ft_is_whitespace.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/25 14:14:04 by dodordev          #+#    #+#             */
-/*   Updated: 2023/11/25 14:19:28 by dodordev         ###   ########.fr       */
+/*   Created: 2024/11/28 12:59:40 by jadyar            #+#    #+#             */
+/*   Updated: 2024/12/03 12:12:58 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_putstr_fd(const char *s, int fd)
+int	ft_is_whitespace(char c)
 {
-	int	i;
-
-	if (s != 0)
-	{
-		i = 0;
-		while (s[i])
-		{
-			ft_putchar_fd(s[i], fd);
-			i++;
-		}
-	}
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\v' 
+		|| c == '\f' || c == '\r' || c == '\0' || c == '\r');
 }

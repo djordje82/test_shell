@@ -1,28 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   ft_isnumber.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/25 14:14:04 by dodordev          #+#    #+#             */
-/*   Updated: 2023/11/25 14:19:28 by dodordev         ###   ########.fr       */
+/*   Created: 2024/11/17 19:08:48 by dodordev          #+#    #+#             */
+/*   Updated: 2024/11/17 19:08:51 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_putstr_fd(const char *s, int fd)
+int	ft_isnumber(char *str)
 {
 	int	i;
 
-	if (s != 0)
+	if (!str)
+		return (0);
+	i = 0;
+	if (str[i] == '+' || str[i] == '-')
+		i++;
+	while (str[i])
 	{
-		i = 0;
-		while (s[i])
-		{
-			ft_putchar_fd(s[i], fd);
-			i++;
-		}
+		if (!ft_isdigit(str[i]))
+			return (0);
+		i++;
 	}
+	return (1);
 }

@@ -1,28 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   ft_atoll.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/25 14:14:04 by dodordev          #+#    #+#             */
-/*   Updated: 2023/11/25 14:19:28 by dodordev         ###   ########.fr       */
+/*   Created: 2024/11/17 17:42:26 by dodordev          #+#    #+#             */
+/*   Updated: 2024/12/05 13:04:47 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_putstr_fd(const char *s, int fd)
+long long	ft_atoll(const char *str)
 {
-	int	i;
+	long long	result;
+	int			sign;
+	int			i;
 
-	if (s != 0)
+	result = 0;
+	sign = 1;
+	i = 0;
+	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
 	{
-		i = 0;
-		while (s[i])
-		{
-			ft_putchar_fd(s[i], fd);
-			i++;
-		}
+		if (str[i] == '-')
+			sign = -1;
+		i++;
 	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		result = result * 10 + (str[i] - '0');
+		i++;
+	}
+	return (result * sign);
 }

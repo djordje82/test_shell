@@ -1,46 +1,94 @@
-static void	init_shell(t_shell *shell, char **envp)
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/15 18:01:11 by dodordev          #+#    #+#             */
+/*   Updated: 2024/12/20 10:08:39 by jadyar           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+void	reset_shell_state(t_shell *shell)
 {
-	shell->env = env;
-	shell->commands = NULL;
+	if (shell->cmnd_lst)
+	{
+		cleanup_cmd_list(shell->cmnd_lst);
+		shell->cmnd_lst = NULL;
+	}
+	if (shell->tokens)
+	{
+		cleanup_token_list(shell->tokens);
+		shell->tokens = NULL;
+	}
+}
+
+void	process_shell_input(char *input, t_shell *shell)
+{
+	if (*input)
+	{
+		add_history(input);
+		shell->tokens = tokenize_input(input, shell);
+		if (shell->tokens && parse_tokens(shell))
+		{
+			shell->exit_status = execute_commands(shell);
+			g_exit_status = shell->exit_status;
+		}
+		reset_shell_state(shell);
+	}
+}
+
+void	run_shell_loop(t_shell *shell)
+{
+	char	*input;
+
+	while (shell->running)
+	{
+		input = readline("minishell$ ");
+		if (!input)
+		{
+			if (isatty(STDIN_FILENO))
+				write(2, "exit\n", 5);
+			cleanup_shell_data(shell);
+			rl_clear_history();
+			exit(shell->exit_status);
+		}
+		process_shell_input(input, shell);
+		free(input);
+	}
+}
+
+void	initialize_shell(t_shell *shell, char **envp)
+{
+	shell->cmnd_lst = NULL;
 	shell->tokens = NULL;
-	shell->envp = envp;
+	shell->pipe = NULL;
+	shell->pid = NULL;
+	shell->envp = NULL;
+	shell->n_cmnds = 0;
 	shell->exit_status = 0;
 	shell->running = true;
+	shell->envp = copy_env(envp);
+	if (!shell->envp)
+		exit(EXIT_FAILURE);
+	update_shell_level(shell);
 }
 
 int	main(int argc, char **argv, char **env)
 {
 	t_shell	shell;
-	char	*input;
+	int		exit_status;
 
 	if (argc != 1)
-		return (exit_error("minishell: too many arguments\n", NULL, 1, NULL));
+		return (cleanup_and_exit(ERR_BATCH, NULL, 1, NULL));
 	(void)argv;
-	init_shell(&shell, env);
+	initialize_shell(&shell, env);
 	setup_signals();
-	while (shell.running)
-	{
-		input = readline(PROMPT);
-		if (!input)
-		{
-			write(STDOUT_FILENO, "exit\n", 5);
-			break ;
-		}
-		if (*input)
-		{
-			add_history(input);
-			shell.tokens = tokenize_input(input, &shell);
-			if (shell.tokens && parse_tokens(&shell))
-			{
-				execute_commans(&shell);
-				free_cmd_list(shell.cmnd_list);
-				shell.cmnd_list = NULL;
-			}
-			free_tokens(shell.tokens);
-			shell.tokens = NULL;
-		}
-		free(input);
-	}
-	cleanup_shell(&shell);
-	return (shell.exit_status);
+	run_shell_loop(&shell);
+	exit_status = shell.exit_status;
+	cleanup_shell_data(&shell);
+	return (exit_status);
 }

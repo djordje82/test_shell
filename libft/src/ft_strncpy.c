@@ -1,63 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free_array.c                                    :+:      :+:    :+:   */
+/*   ft_strncpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/24 13:20:55 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/20 10:15:19 by jadyar           ###   ########.fr       */
+/*   Created: 2024/12/12 11:07:51 by jadyar            #+#    #+#             */
+/*   Updated: 2024/12/12 11:08:16 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_free_array(void **arr, int size)
+char	*ft_strncpy(char *dest, const char *src, size_t n)
 {
-	int	i;
-
-	if (!arr)
-		return ;
-	i = 0;
-	if (size == -1)
-	{
-		while (arr[i])
-		{
-			free(arr[i]);
-			i++;
-		}
-	}
-	else
-	{
-		while (i < size)
-		{
-			free(arr[i]);
-			i++;
-		}
-	}
-	free(arr);
-}
-
-void	free_env(char **env, int size)
-{
-	int	i;
+	size_t	i;
 
 	i = 0;
-	if (size == -1)
+	while (src[i] && i < n)
 	{
-		while (env[i])
-		{
-			free(env[i]);
-			i++;
-		}
+		dest[i] = src[i];
+		i++;
 	}
-	else
-	{
-		while (i < size)
-		{
-			free(env[i]);
-			i++;
-		}
-	}
-	free(env);
+	while (i < n)
+		dest[i++] = '\0';
+	return (dest);
 }

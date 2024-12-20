@@ -1,28 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   ft_count_args.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/25 14:14:04 by dodordev          #+#    #+#             */
-/*   Updated: 2023/11/25 14:19:28 by dodordev         ###   ########.fr       */
+/*   Created: 2024/11/15 18:18:35 by dodordev          #+#    #+#             */
+/*   Updated: 2024/12/05 13:04:38 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_putstr_fd(const char *s, int fd)
+int	ft_count_args(char **args)
 {
 	int	i;
 
-	if (s != 0)
-	{
-		i = 0;
-		while (s[i])
-		{
-			ft_putchar_fd(s[i], fd);
-			i++;
-		}
-	}
+	i = 0;
+	while (args && args[i])
+		i++;
+	return (i);
 }

@@ -3,65 +3,134 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+         #
+#    By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 14:34:50 by j                 #+#    #+#              #
-#    Updated: 2024/10/24 12:20:20 by dodordev         ###   ########.fr        #
+#    Updated: 2024/12/19 20:09:50 by jadyar           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-
+# Program name
 NAME = minishell
 
-SRCS =	srcs/main.c \
-		srcs/execution/builtins/ft_cd.c \
-		srcs/execution/builtins/ft_echo.c \
-		srcs/execution/builtins/ft_env.c \
-		srcs/execution/builtins/ft_exit.c \
-		srcs/execution/builtins/ft_export.c \
-		srcs/execution/builtins/ft_pwd.c \
-		srcs/execution/builtins/ft_unset.c \
-		srcs/execution/executor/executor.c \
-		srcs/utils/cleaning/clean.c \
-		srcs/utils/cleaning/clean_utils.c \
-		srcs/utils/errors/errors.c \
-		srcs/utils/signals/signals.c \
-		srcs/utils/signals/sig_utils.c \
-		srcs/utils/utils.c \
-		srcs/parsing/parser/parser.c \
-		srcs/parsing/parser/parser_utils.c \
-		srcs/parsing/parser/command_utils.c \
-		srcs/parsing/tokenizer/tokenizer.c \
-		srcs/parsing/tokenizer/tokenizer_utils.c \
-		srcs/parsing/tokenizer/tokenizer_operators.c \
-OBJS = $(SRCS:.c=.o)
+# Compiler and flags
+CC = cc
+CFLAGS = -Wall -Wextra -Werror -g
+INCLUDES = -I./includes -I./libft
+LIBS = -lreadline -L$(LIBFT_DIR) -lft
 
-CFLAGS = -Wall -Wextra -Werror -g -I./include
-LIBS = -lreadline
-
+# Directories
 LIBFT_DIR = ./libft
+SRCS_DIR = srcs
+OBJS_DIR = objs
+
+# Source files
+SRCS =	main.c \
+		builtins/ft_cd.c \
+		builtins/ft_echo.c \
+		builtins/ft_env.c \
+		builtins/ft_exit.c \
+		builtins/ft_export.c \
+		builtins/ft_pwd.c \
+		builtins/ft_unset.c \
+		executor/exec.c \
+		executor/setup_redirections.c \
+		executor/setup_redirection_utils.c \
+		executor/exec_utils.c \
+		executor/exec_external.c \
+		executor/exec_external_utils.c \
+		executor/exec_single_cmd.c \
+		executor/exec_builtins.c \
+		executor/exec_pipeline.c \
+		executor/exec_pipeline_utils.c \
+		utils/cleanup/cleanup_shell.c \
+		utils/cleanup/cleanup_shell_utils.c \
+		utils/cleanup/cleanup_cmd_node.c \
+		env/env_modify.c \
+		env/env_core.c \
+		env/env_print.c \
+		env/env_parse.c \
+		utils/errors/print_errors.c \
+		utils/utils.c \
+		utils/checkers.c \
+		parser/heredoc.c \
+		parser/parser.c \
+		parser/parser_utils.c \
+		parser/parse_command.c \
+		parser/parse_cmd_arguments.c \
+		parser/parse_redirections.c \
+		parser/command_utils.c \
+		parser/env_expansion.c \
+		signals/signals.c \
+		signals/sig_utils.c \
+		tokenizer/tokenizer.c \
+		tokenizer/tokenize_quoted.c \
+		tokenizer/tokenizer_utils.c \
+		tokenizer/tokenize_operators.c \
+		tokenizer/tokenize_word.c \
+		pipes/pipe_manager.c \
+		pipes/pipe_manager_utils.c
+# Object files
+OBJS = $(SRCS:%.c=$(OBJS_DIR)/%.o)
+
+# Libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-.PHONY: all clean fclean re
+# Colors for output
+GREEN = \033[0;32m
+RED = \033[0;31m
+RESET = \033[0m
 
-all: $(LIBFT) $(NAME)
+# Default target
+all: $(NAME)
 
+# Create object directories
+$(OBJS_DIR):
+	@mkdir -p $(OBJS_DIR)
+	@mkdir -p $(OBJS_DIR)/execution/builtins
+	@mkdir -p $(OBJS_DIR)/execution/executor
+	@mkdir -p $(OBJS_DIR)/utils/cleaning
+	@mkdir -p $(OBJS_DIR)/utils/errors
+	@mkdir -p $(OBJS_DIR)/utils/signals
+	@mkdir -p $(OBJS_DIR)/parsing/parser
+	@mkdir -p $(OBJS_DIR)/parsing/tokenizer
+
+# Compile libft
 $(LIBFT):
-	make -C $(LIBFT_DIR)
+	@echo "$(GREEN)Compiling libft...$(RESET)"
+	@make -C $(LIBFT_DIR)
 
-$(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBS) $(LIBFT)
+# Compile object files
+$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
+	@mkdir -p $(dir $@)
+	@echo "Compiling $<..."
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+# Link the program
+$(NAME): $(OBJS_DIR) $(LIBFT) $(OBJS)
+	@echo "$(GREEN)Linking minishell...$(RESET)"
+	@$(CC) $(OBJS) $(LIBS) -o $(NAME)
+	@echo "$(GREEN)minishell is ready!$(RESET)"
 
+# Clean object files
 clean:
-	rm -f $(OBJS)
-	make -C $(LIBFT_DIR) clean
+	@echo "$(RED)Cleaning object files...$(RESET)"
+	@rm -rf $(OBJS_DIR)
+	@make -C $(LIBFT_DIR) clean
 
+# Clean everything
 fclean: clean
-	rm -f $(NAME)
-	make -C $(LIBFT_DIR) fclean
+	@echo "$(RED)Cleaning everything...$(RESET)"
+	@rm -f $(NAME)
+	@make -C $(LIBFT_DIR) fclean
 
+# Rebuild everything
 re: fclean all
+
+# Debug target
+debug: CFLAGS += -g
+debug: re
+
+# Phony targets
+.PHONY: all clean fclean re debug
 
