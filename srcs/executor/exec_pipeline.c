@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipeline.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/19 15:25:41 by jadyar           ###   ########.fr       */
+/*   Updated: 2024/12/31 14:28:32 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,10 +97,10 @@ void	execute_pipeline_cmd(t_command *cmd, char *cmd_path, t_shell *shell)
 	}
 	if (!execve(cmd_path, cmd->args, shell->envp))
 	{
+		handle_command_errors(cmd_path, cmd->args[0]);
 		close(STDIN_FILENO);
 		close(STDOUT_FILENO);
 		free(cmd_path);
-		handle_command_errors(cmd_path, cmd->args[0]);
 		exit(EXIT_FAILURE);
 	}
 }

@@ -48,16 +48,19 @@ static int	write_to_heredoc(int fd, char *line)
 
 static int	cleanup_heredoc(int *heredoc_pipe, bool is_last)
 {
-	close(heredoc_pipe[1]);
+	if (heredoc_pipe[1] != -1)
+		close(heredoc_pipe[1]);
 	if (is_last)
 	{
-		if (dup2(heredoc_pipe[0], STDIN_FILENO) == -1)
+		if (heredoc_pipe[0] != -1 && dup2(heredoc_pipe[0], STDIN_FILENO) == -1)
 		{
-			close(heredoc_pipe[0]);
+			if (heredoc_pipe[0] != -1)
+				close(heredoc_pipe[0]);
 			return (0);
 		}
 	}
-	close(heredoc_pipe[0]);
+	if (heredoc_pipe[0] != -1)
+		close(heredoc_pipe[0]);
 	return (1);
 }
 
@@ -77,10 +80,7 @@ int	setup_heredoc(t_command *cmd)
 		if (!line)
 			return (cleanup_heredoc(heredoc_pipe, false));
 		if (handle_heredoc_line(line, cmd->infile, len_delimiter) == 0)
-		{
-			cleanup_pipeline_resources(NULL, heredoc_pipe);
 			break ;
-		}
 		if (!write_to_heredoc(heredoc_pipe[1], line))
 		{
 			close_pipe_ends(heredoc_pipe);
