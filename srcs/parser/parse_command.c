@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:15:54 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/20 12:29:59 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/03 09:56:06 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static bool	handle_redirection(t_token **token, t_command *cmd)
 	if (!parse_redirections(token, cmd))
 	{
 		cmd->is_valid = false;
-		cleanup_cmd_list(cmd);
+		//cleanup_cmd_list(cmd); //this shit was causing segfault
 		return (false);
 	}
 	return (true);

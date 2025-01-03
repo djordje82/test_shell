@@ -6,16 +6,30 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/31 14:28:32 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/03 09:56:53 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static int	handle_invalid_command(t_command *current)
+{
+	if (!current->is_valid)
+	{
+		if (!current->prev)
+			print_command_not_found(current);
+		return (0);
+	}
+	return (1);
+}
+
 static int	init_pipeline(t_command *current, int *pipe_fd, t_shell *shell)
 {
 	pipe_fd[0] = -1;
 	pipe_fd[1] = -1;
+	
+	if (!handle_invalid_command(current))
+		return (0);
 	if (current->next && !create_pipe(pipe_fd, shell))
 	{
 		perror("pipe failed");
@@ -29,19 +43,8 @@ static int	init_pipeline(t_command *current, int *pipe_fd, t_shell *shell)
 			if (!setup_redirections(current))
 				return (0);
 			handle_builtin_cmd(current, shell);
-			return (1);
+			return (0); //return (1); suppose 0 to stop the pipeline
 		}
-	}
-	return (1);
-}
-
-static int	handle_invalid_command(t_command *current)
-{
-	if (!current->is_valid)
-	{
-		if (!current->prev)
-			print_command_not_found(current);
-		return (0);
 	}
 	return (1);
 }
