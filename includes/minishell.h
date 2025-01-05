@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/20 16:41:50 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/05 10:51:04 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@
 
 /*ERROR MESSAGES*/
 # define ERR_MEM "minishell: memory allocation error"
+# define ERR_MALLOC "minishell: malloc error"
 # define ERR_INVALID "minishell: invalid argument"
 # define ERR_SYNTAX "minishell: syntax error"
 # define ERR_PIPE "minishell: pipe error"
@@ -160,7 +161,8 @@ typedef struct s_shell
 	t_command					*cmnd_lst;
 	t_token						*tokens;
 	int							**pipe;
-	pid_t						*pid;
+	pid_t						*pids;
+	int							pid_count;
 	int							n_cmnds;
 	int							exit_status;
 	bool						running;
@@ -375,14 +377,12 @@ int								backup_std_fds(int *stdin_backup,
 int								open_output_file(char *outfile, int flags);
 
 /*EXECUTOR /PIPELINE*/
-int								setup_pipeline_steps(t_command *current,
-									int *prev_pipe, pid_t *last_pid,
-									t_shell *shell);
+int								setup_pipeline_steps(t_command *current, int *prev_pipe, t_shell *shell);
 void							cleanup_pipeline_resources(int *prev_pipe,
 									int *pipe_fd);
 
 /*EXECUTOR /PROCESSES*/
-int								create_process(pid_t *pid, t_shell *shell);
+int								create_process(pid_t *pids, t_shell *shell);
 void							handle_pipeline_child(t_command *cmd,
 									int *prev_pipe, int *pipe_fd,
 									t_shell *shell);
@@ -403,15 +403,13 @@ int								execute_single_command(t_command *cmd,
 int								execute_single_builtin(t_command *cmd,
 									t_shell *shell);
 int								is_parent_only_builtin(char *cmd);
-int								setup_pipeline_steps(t_command *current,
-									int *prev_pipe, pid_t *last_pid,
-									t_shell *shell);
 void							handle_pipeline_child(t_command *cmd,
 									int *prev_pipe, int *pipe_fd,
 									t_shell *shell);
 void							handle_parent_process(int *prev_pipe,
 									int *pipe_fd);
 void							wait_for_children(pid_t last_pid);
+void							wait_for_pipeline(t_shell *shell);
 int								setup_heredoc(t_command *cmd);
 
 /*EXECUTOR /EXTERNAL AND UTILS*/
