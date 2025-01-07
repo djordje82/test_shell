@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/03 09:56:53 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/07 12:05:20 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ static int	init_pipeline(t_command *current, int *pipe_fd, t_shell *shell)
 {
 	pipe_fd[0] = -1;
 	pipe_fd[1] = -1;
-	
 	if (!handle_invalid_command(current))
 		return (0);
 	if (current->next && !create_pipe(pipe_fd, shell))
@@ -43,7 +42,7 @@ static int	init_pipeline(t_command *current, int *pipe_fd, t_shell *shell)
 			if (!setup_redirections(current))
 				return (0);
 			handle_builtin_cmd(current, shell);
-			return (0); //return (1); suppose 0 to stop the pipeline
+			return (0);
 		}
 	}
 	return (1);
