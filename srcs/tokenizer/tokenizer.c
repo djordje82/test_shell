@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:16 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/20 16:21:06 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/07 12:19:38 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,6 @@ static int	check_consecutive_redirections(const char *input, int *pos)
 	return (0);
 }
 
-/*
-*probably should be in a separate file but fuck it...
-see how it does without the null,pos,shell,input check
-*/
 t_token	*get_token_type(const char *input, int *pos, t_shell *shell)
 {
 	t_token_type	type;

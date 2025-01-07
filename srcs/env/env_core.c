@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   env_core.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:47:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/20 10:18:48 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/07 12:21:29 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function retrieves the value of an environment variable. \ 
-It returns the value as a string if found, or NULL if not found.*/
 char	*get_env_value(char *name, t_shell *shell)
 {
 	int		i;
@@ -37,8 +35,6 @@ char	*get_env_value(char *name, t_shell *shell)
 	return (NULL);
 }
 
-/*This function finds the index of an environment variable. \ 
-It returns the index of the variable if found, or -1 if not found.*/
 int	find_env_index(char *name, char **envp)
 {
 	int	i;
@@ -92,7 +88,6 @@ int	count_env_vars(char **envp)
 	return (i);
 }
 
-/*This function updates the SHLVL of the Minishell program*/
 void	update_shell_level(t_shell *shell)
 {
 	char	*current_level;
