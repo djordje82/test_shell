@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/07 12:05:20 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/07 14:58:51 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,20 +48,45 @@ static int	init_pipeline(t_command *current, int *pipe_fd, t_shell *shell)
 	return (1);
 }
 
-static void	handle_child_process(t_command *current, int *prev_pipe,
-		int *pipe_fd, t_shell *shell)
+static void	handle_child_process(t_command *cmd, int *prev_pipe, int *pipe_fd,
+		t_shell *shell)
 {
+	int		status;
+	int		input_fd;
+	int		output_fd;
+	char	*cmd_path;
+
 	setup_child_signal();
-	if (!current->is_valid)
+	if (!cmd->is_valid)
 	{
 		cleanup_pipeline_resources(prev_pipe, pipe_fd);
-		exit(127);
+		exit (127);
 	}
-	handle_pipeline_child(current, prev_pipe, pipe_fd, shell);
+	input_fd = get_input_fd(prev_pipe);
+	output_fd = get_output_fd(pipe_fd);
+	if (!setup_pipe_io(input_fd, output_fd))
+		handle_pipe_io_error(prev_pipe, pipe_fd);
+	cleanup_pipeline_resources(prev_pipe, pipe_fd);
+	if (cmd->args && is_builtin(cmd->args[0]))
+	{
+		status = handle_builtin_cmd(cmd, shell);
+		exit(status);
+	}
+	else
+	{
+		cmd_path = find_command_path(cmd->args[0], shell);
+		if (!cmd_path)
+			exit(print_command_not_found(cmd));
+		if (!setup_redirections(cmd))
+			exit (1);
+		execve(cmd_path, cmd->args, shell->envp);
+		handle_command_errors(cmd_path, cmd->args[0]);
+		free(cmd_path);
+		exit(EXIT_FAILURE);
+	}
 }
 
-int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
-		t_shell *shell)
+int	setup_pipeline_steps(t_command *current, int *prev_pipe, t_shell *shell)
 {
 	int		pipe_fd[2];
 	pid_t	pid;
@@ -80,9 +105,14 @@ int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 	}
 	if (pid == 0)
 		handle_child_process(current, prev_pipe, pipe_fd, shell);
-	if (!current->next)
-		*last_pid = pid;
-	handle_parent_process(prev_pipe, pipe_fd);
+	/* if (!current->next)
+		*last_pid = pids;
+	handle_parent_process(prev_pipe, pipe_fd); */
+	else
+	{
+		shell->pids[shell->pid_count++] = pid;
+		handle_parent_process(prev_pipe, pipe_fd);
+	}
 	return (1);
 }
 

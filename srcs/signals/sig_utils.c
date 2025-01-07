@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sig_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:32 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/20 15:36:35 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/07 15:01:18 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,17 @@ int	setup_heredoc_signals(void)
 	return (1);
 }
 
-void	wait_for_children(pid_t pid)
+void	wait_for_children(pid_t pids)
 {
 	int	status;
 
-	if (pid == -1)
+	if (pids == -1)
 	{
 		perror("Bad PID");
 		g_exit_status = 1;
 		return ;
 	}
-	if (waitpid(pid, &status, 0) == -1)
+	if (waitpid(pids, &status, 0) == -1)
 	{
 		perror("waitpid failed");
 		g_exit_status = 1;

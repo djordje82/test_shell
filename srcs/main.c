@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:01:11 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/20 13:19:10 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/07 13:41:23 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ void	initialize_shell(t_shell *shell, char **envp)
 	shell->cmnd_lst = NULL;
 	shell->tokens = NULL;
 	shell->pipe = NULL;
-	shell->pid = NULL;
+	shell->pids = NULL;
+	shell->pid_count = 0;
 	shell->envp = NULL;
 	shell->n_cmnds = 0;
 	shell->exit_status = 0;

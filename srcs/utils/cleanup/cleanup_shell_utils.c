@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:39 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/03 09:22:53 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/07 13:40:15 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,10 @@ void	cleanup_token_list(t_token *tokens)
 
 void	cleanup_execution_data(t_shell *shell)
 {
-	if (shell->pid)
+	if (shell->pids)
 	{
-		free(shell->pid);
-		shell->pid = NULL;
+		free(shell->pids);
+		shell->pids = NULL;
 	}
 	if (shell->pipe)
 	{

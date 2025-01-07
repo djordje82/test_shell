@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_external.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:39 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/20 15:49:57 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/07 13:40:15 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,19 @@ void	execute_external_child(t_command *cmd, char *cmd_path, t_shell *shell)
 
 int	execute_external_single_cmd(t_command *cmd, char *cmd_path, t_shell *shell)
 {
-	pid_t	pid;
+	pid_t	pids;
 	int		status;
 
-	pid = fork();
-	if (pid == -1)
+	pids = fork();
+	if (pids == -1)
 	{
 		free(cmd_path);
 		return (cleanup_and_exit(ERR_FORK, NULL, 1, shell));
 	}
-	if (pid == 0)
+	if (pids == 0)
 		execute_external_child(cmd, cmd_path, shell);
 	free(cmd_path);
-	waitpid(pid, &status, 0);
+	waitpid(pids, &status, 0);
 	handle_wait_status(status);
 	return (g_exit_status);
 }

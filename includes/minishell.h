@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/20 16:41:50 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/07 14:59:57 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ typedef enum e_char_type
 	CHAR_SQUOTE,
 	CHAR_DQUOTE,
 	CHAR_NORMAL
-}				t_char_type;
+}								t_char_type;
 
 typedef enum e_token_type
 {
@@ -111,11 +111,11 @@ typedef enum e_token_type
 
 typedef struct s_quote_state
 {
-	const char	*input;
-	char		*result;
-	int			pos;
-	int			len;
-}			t_quote_state;
+	const char					*input;
+	char						*result;
+	int							pos;
+	int							len;
+}								t_quote_state;
 
 /*STRUCTS*/
 typedef struct s_node
@@ -160,7 +160,8 @@ typedef struct s_shell
 	t_command					*cmnd_lst;
 	t_token						*tokens;
 	int							**pipe;
-	pid_t						*pid;
+	pid_t						*pids;
+	int							pid_count;
 	int							n_cmnds;
 	int							exit_status;
 	bool						running;
@@ -202,12 +203,12 @@ char							*handle_word_part(char *result,
 									const char *input, int *start, int *len);
 int								initialize_tokenization(const char *input,
 									t_shell *shell);
-char							*process_quoted_content(const char *input, 
+char							*process_quoted_content(const char *input,
 									int *start, int *len);
 int								handle_escape_sequence(t_quote_state *state,
 									char quote_type);
 /*TOKENIZER /UTILS*/
-t_token							*tokenize_adjacent_quotes(const char *input, 
+t_token							*tokenize_adjacent_quotes(const char *input,
 									int *pos, t_shell *shell);
 t_token_type					get_operator_type(char c);
 t_token							*tokenize_single_operator(const char *input,
@@ -215,7 +216,7 @@ t_token							*tokenize_single_operator(const char *input,
 t_token							*tokenize_double_operator(const char *input,
 									int *pos, const char *op_str,
 									t_token_type type);
-void							add_token_to_list(t_token **head, 
+void							add_token_to_list(t_token **head,
 									t_token **current, t_token *new_token);
 char							**insert_arg_array(char **orig_args, int pos,
 									char **expanded);
@@ -256,7 +257,7 @@ char							**copy_existing_args(char **new_args,
 
 /*PARSING /ENV_EXPANSION*/
 char							*extract_env_var_name(const char *str);
-char							*expand_env_vars(const char *str, 
+char							*expand_env_vars(const char *str,
 									t_shell *shell);
 
 /*EXECUTOR*/
@@ -307,8 +308,8 @@ void							setup_signals(void);
 void							setup_child_signal(void);
 void							handle_eof(t_shell *shell);
 void							interactive_signal_handler(int signum);
-void							setup_execution_signals(struct sigaction 
-									*sa_old_int, struct sigaction *sa_old_quit);
+void							setup_execution_signals(struct sigaction *sa_old_int,
+									struct sigaction *sa_old_quit);
 int								setup_heredoc_signals(void);
 /*UTILS /SHELL*/
 void							run_shell_loop(t_shell *shell);
@@ -376,13 +377,12 @@ int								open_output_file(char *outfile, int flags);
 
 /*EXECUTOR /PIPELINE*/
 int								setup_pipeline_steps(t_command *current,
-									int *prev_pipe, pid_t *last_pid,
-									t_shell *shell);
+									int *prev_pipe, t_shell *shell);
 void							cleanup_pipeline_resources(int *prev_pipe,
 									int *pipe_fd);
 
 /*EXECUTOR /PROCESSES*/
-int								create_process(pid_t *pid, t_shell *shell);
+int								create_process(pid_t *pids, t_shell *shell);
 void							handle_pipeline_child(t_command *cmd,
 									int *prev_pipe, int *pipe_fd,
 									t_shell *shell);
@@ -403,9 +403,6 @@ int								execute_single_command(t_command *cmd,
 int								execute_single_builtin(t_command *cmd,
 									t_shell *shell);
 int								is_parent_only_builtin(char *cmd);
-int								setup_pipeline_steps(t_command *current,
-									int *prev_pipe, pid_t *last_pid,
-									t_shell *shell);
 void							handle_pipeline_child(t_command *cmd,
 									int *prev_pipe, int *pipe_fd,
 									t_shell *shell);

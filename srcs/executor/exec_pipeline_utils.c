@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipeline_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 14:20:10 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/19 19:40:36 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/07 13:40:15 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ int	restore_std_fds(int stdin_fd, int stdout_fd)
 	return (result);
 }
 
-int	create_process(pid_t *pid, t_shell *shell)
+int	create_process(pid_t *pids, t_shell *shell)
 {
-	*pid = fork();
-	if (*pid == -1)
+	*pids = fork();
+	if (*pids == -1)
 		return (cleanup_and_exit("fork failed", NULL, 1, shell));
 	return (1);
 }

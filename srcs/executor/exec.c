@@ -3,27 +3,93 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 15:32:53 by jadyar            #+#    #+#             */
-/*   Updated: 2024/12/19 15:33:39 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/07 15:14:56 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static void	wait_for_pipeline(t_shell *shell)
+{
+	int		status;
+	int		first_error;
+	int		last_status;
+	pid_t	waited_pid;
+	int		i;
+
+	i = 0;
+	first_error = 0;
+	last_status = 0;
+	while (i < shell->pid_count)
+	{
+		waited_pid = waitpid(shell->pids[i], &status, 0);
+		if (waited_pid == -1)
+		{
+			perror("waitpid failed");
+			if (!first_error)
+				first_error = 1;
+			continue;
+		}
+		if (WIFEXITED(status))
+		{
+			last_status = WEXITSTATUS(status);
+			if (last_status != 0 && !first_error)
+				first_error = last_status;
+		}
+		else if (WIFSIGNALED(status))
+		{
+			last_status = 128 + WTERMSIG(status);
+			if (!first_error)
+				first_error = last_status;
+			if (WTERMSIG(status) == SIGINT)
+				write(STDERR_FILENO, "\n", 1);
+			else if (WTERMSIG(status) == SIGQUIT)
+				write(STDERR_FILENO, "Quit core dumped\n", 17);
+		}
+		i++;
+	}
+	if (shell->pid_count > 1)
+	{
+		if (last_status == 0 && first_error)
+			g_exit_status = first_error;
+		else
+			g_exit_status = last_status;
+	}
+	else
+	{
+		if (first_error)
+			g_exit_status = first_error;
+		else
+			g_exit_status = last_status;
+	}
+}
+
 static int	execute_pipeline(t_command *current, t_shell *shell,
 		struct sigaction *sa_old_int, struct sigaction *sa_old_quit)
 {
-	int		prev_pipe[2];
-	pid_t	last_pid;
+	int			prev_pipe[2];
+	int			cmd_count;
+	t_command	*temp;
 
+	cmd_count = 0;
+	temp = current;
+	while (temp)
+	{
+		cmd_count++;
+		temp = temp->next;
+	}
+	shell->pids = malloc(sizeof(pid_t) * cmd_count);
+	if (!shell->pids)
+		return (cleanup_and_exit(ERR_MEM, NULL, 1, shell));
+	shell->pid_count = 0;
 	prev_pipe[0] = -1;
 	prev_pipe[1] = -1;
-	last_pid = 0;
 	while (current)
 	{
-		if (!setup_pipeline_steps(current, prev_pipe, &last_pid, shell))
+		if (!setup_pipeline_steps(current, prev_pipe, shell))
 		{
 			g_exit_status = 1;
 			cleanup_pipeline_resources(prev_pipe, NULL);
@@ -31,7 +97,7 @@ static int	execute_pipeline(t_command *current, t_shell *shell,
 		}
 		current = current->next;
 	}
-	wait_for_children(last_pid);
+	wait_for_pipeline(shell);
 	sigaction(SIGINT, sa_old_int, NULL);
 	sigaction(SIGQUIT, sa_old_quit, NULL);
 	return (g_exit_status);
