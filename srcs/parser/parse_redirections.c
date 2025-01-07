@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_redirections.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:20:05 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/19 16:56:53 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/07 17:44:11 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	set_redirection(t_command *cmd, char *filename, t_token_type type)
 		free(filename);
 }
 
-static int	check_output_file(char *filename, t_token_type type)
+static int	check_out_file(char *filename, t_token_type type)
 {
 	int	flags;
 	int	fd;
@@ -52,6 +52,30 @@ static int	check_output_file(char *filename, t_token_type type)
 		flags |= O_TRUNC;
 	else
 		flags |= O_APPEND;
+	fd = open(filename, flags, FILE_PERMS);
+	if (fd == -1)
+	{
+		if (errno == ENOENT)
+		{
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			ft_putstr_fd(filename, STDERR_FILENO);
+			ft_putendl_fd(": No such file or directory", STDERR_FILENO);
+			return (0);
+		}
+	}
+	if (fd != -1)
+		close(fd);
+	return (1);
+}
+
+static int	check_in_file(char *filename, t_token_type type)
+{
+	int	flags;
+	int	fd;
+
+	if (type != TOKEN_REDIR_IN)
+		return (1);
+	flags = O_WRONLY;
 	fd = open(filename, flags, FILE_PERMS);
 	if (fd == -1)
 	{
@@ -86,7 +110,7 @@ int	parse_redirections(t_token **token, t_command *cmd)
 		print_syntx_err("malloc failed", NULL);
 		return (0);
 	}
-	if (!check_output_file(temp_file, type))
+	if (!check_out_file(temp_file, type) || !check_in_file(temp_file, type))
 	{
 		free(temp_file);
 		return (0);
