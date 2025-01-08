@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 15:20:41 by jadyar            #+#    #+#             */
-/*   Updated: 2025/01/08 14:54:58 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/08 17:44:17 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,138 +30,189 @@ int	backup_std_fds(int *stdin_backup, int *stdout_backup)
 	return (1);
 }
 
-static int	handle_regular_input(t_command *cmd)
+/* static int handle_regular_input(t_command *cmd)
 {
-	int	fd;
+    t_redirection *redir;
+    int fd;
+    int success;
 
-	fd = open(cmd->infile, O_RDONLY);
-	if (fd == -1)
-	{
-		g_exit_status = 1;
-		handle_file_open_error(cmd->infile);
-		return (0);
-	}
-	if (dup2(fd, STDIN_FILENO) == -1)
-	{
-		print_file_error(cmd->infile, "Error duplicating file descriptor");
-		g_exit_status = 1;
-		close(fd);
-		return (0);
-	}
-	close(fd);
-	return (1);
-}
+    // Initialize success flag
+    success = 1;
+    redir = cmd->redirections;
 
-static int	handle_input_redirection(t_command *cmd)
-{
-	static bool	heredoc_processed = false;
+    // Process each input redirection in sequence
+    while (redir && success)
+    {
+        // We only want to process regular input redirections here, not heredocs
+        if (redir->type == TOKEN_REDIR_IN)
+        {
+            // If we had a previous file descriptor open, close it
+            if (fd != -1)
+                close(fd);
 
-	if (cmd->in_type == REDIR_INPUT)
-		return (handle_regular_input(cmd));
-	else if (cmd->in_type == REDIR_HEREDOC)
-	{
-		if (heredoc_processed)
-			return (1);
-		if (!setup_heredoc(cmd))
-		{
-			g_exit_status = 1;
-			return (0);
-		}
-		heredoc_processed = true;
-		return (1);
-	}
-	return (1);
-}
+            // Try to open the input file
+            fd = open(redir->filename, O_RDONLY);
+            if (fd == -1)
+            {
+                g_exit_status = 1;
+                handle_file_open_error(redir->filename);
+                success = 0;
+                break;
+            }
 
-static int	handle_output_redirection(t_command *cmd)
-{
-	int	fd;
-	int	flags;
+            // Only redirect to STDIN if this is the final input redirection
+            // This matches bash behavior where only the last redirection takes effect
+            if (redir->next == NULL || 
+                (redir->next && redir->next->type != TOKEN_REDIR_IN))
+            {
+                if (dup2(fd, STDIN_FILENO) == -1)
+                {
+                    print_file_error(redir->filename, 
+                        "Error duplicating file descriptor");
+                    g_exit_status = 1;
+                    close(fd);
+                    success = 0;
+                    break;
+                }
+            }
+        }
+        redir = redir->next;
+    }
 
-	if (!cmd->outfile || !cmd->out_type)
-		return (1);
-	flags = O_WRONLY | O_CREAT;
-	if (cmd->out_type == REDIR_TRUNC)
-		flags |= O_TRUNC;
-	else if (cmd->out_type == REDIR_APPEND)
-		flags |= O_APPEND;
-	fd = open_output_file(cmd->outfile, flags);
-	if (fd == -1)
-		return (0);
-	if (!redirect_output(fd, cmd->outfile))
-		return (0);
-	close(fd);
-	return (1);
-}
+    // Clean up our file descriptor
+    if (fd != -1)
+        close(fd);
 
-/* int	setup_redirections(t_command *cmd)
-{
-	int	stdin_backup;
-	int	stdout_backup;
-
-	stdin_backup = -1;
-	stdout_backup = -1;
-	if (!backup_std_fds(&stdin_backup, &stdout_backup) || !cmd)
-		return (0);
-	if (cmd->infile && (!handle_input_redirection(cmd)))
-	{
-		g_exit_status = 1;
-		restore_std_fds(STDIN_FILENO, STDOUT_FILENO);
-		close(stdin_backup);
-		close(stdout_backup);
-		return (0);
-	}
-	if (cmd->outfile && (!handle_output_redirection(cmd)))
-	{
-		g_exit_status = 1;
-		restore_std_fds(STDIN_FILENO, STDOUT_FILENO);
-		close(stdin_backup);
-		close(stdout_backup);
-		return (0);
-	}
-	return (1);
+    return success;
 } */
 
-int	setup_redirections(t_command *cmd)
+static int handle_input_redirection(t_redirection *redir)
 {
-	int stdin_backup;
-	int stdout_backup;
+    int fd;
+    struct stat st;
 
-	stdin_backup = -1;
-	stdout_backup = -1;
+    if (stat(redir->filename, &st) == -1) {
+        if (errno == ENOENT)
+            print_file_error(redir->filename, "No such file or directory");
+        else
+            print_file_error(redir->filename, strerror(errno));
+        return (0);
+    }
 
-	if (!backup_std_fds(&stdin_backup, &stdout_backup) || !cmd)
-		return (0);
+    if (!S_ISREG(st.st_mode)) {
+        print_file_error(redir->filename, "Not a regular file");
+        return (0);
+    }
 
-	if (cmd->infile)
-	{
-		if (!handle_input_redirection(cmd))
-		{
-			g_exit_status = 1;
-			if (!cmd->next && !cmd->prev)
-			{
-				restore_std_fds(STDIN_FILENO, STDOUT_FILENO);
-				close(stdin_backup);
-				close(stdout_backup);
-			}
-			return (0);
-		}
-	}
+    if (access(redir->filename, R_OK) == -1) {
+        print_file_error(redir->filename, "Permission denied");
+        return (0);
+    }
 
-	if (cmd->outfile)
-	{
-		if (!handle_output_redirection(cmd))
-		{
-			g_exit_status = 1;
-			if (!cmd->next && !cmd->prev)
-			{
-				restore_std_fds(STDIN_FILENO, STDOUT_FILENO);
-				close(stdin_backup);
-				close(stdout_backup);
-			}
-			return (0);
-		}
-	}
+    fd = open(redir->filename, O_RDONLY);
+    if (fd == -1) {
+        print_file_error(redir->filename, strerror(errno));
+        return (0);
+    }
 
-	return (1);
+    if (dup2(fd, STDIN_FILENO) == -1) {
+        close(fd);
+        return (0);
+    }
+    close(fd);
+    return (1);
+}
+
+static int handle_output_redirection(t_command *cmd)
+{
+    t_redirection *redir;
+    int fd;
+    int flags;
+    int success;
+
+    // Initialize our success flag
+    success = 1;
+    redir = cmd->redirections;
+
+    // Iterate through all redirections
+    while (redir && success)
+    {
+        // Only process output redirections
+        if (redir->type == TOKEN_REDIR_OUT || redir->type == TOKEN_APPEND)
+        {
+            // Close previous file descriptor if we had one
+            if (fd != -1)
+                close(fd);
+
+            // Set up the appropriate flags based on redirection type
+            flags = O_WRONLY | O_CREAT;
+            if (redir->type == TOKEN_REDIR_OUT)  // equivalent to old REDIR_TRUNC
+                flags |= O_TRUNC;
+            else if (redir->type == TOKEN_APPEND) // equivalent to old REDIR_APPEND
+                flags |= O_APPEND;
+
+            // Try to open the output file
+            fd = open_output_file(redir->filename, flags);
+            if (fd == -1)
+            {
+                success = 0;
+                break;
+            }
+
+            // Only redirect to STDOUT if this is the final output redirection
+            // This matches bash behavior where only the last redirection takes effect
+            if (redir->next == NULL || 
+                (redir->next && redir->next->type != TOKEN_REDIR_OUT && 
+                 redir->next->type != TOKEN_APPEND))
+            {
+                if (!redirect_output(fd, redir->filename))
+                {
+                    close(fd);
+                    success = 0;
+                    break;
+                }
+            }
+        }
+        redir = redir->next;
+    }
+
+    // Clean up our file descriptor
+    if (fd != -1)
+        close(fd);
+
+    return success;
+}
+
+int setup_redirections(t_command *cmd)
+{
+    t_redirection *redir;
+    int stdin_backup;
+    int stdout_backup;
+
+    if (!backup_std_fds(&stdin_backup, &stdout_backup))
+        return (0);
+
+    redir = cmd->redirections;
+    while (redir)
+    {
+        if (redir->type == TOKEN_REDIR_IN || redir->type == TOKEN_HEREDOC)
+        {
+            if (!handle_input_redirection(redir))
+            {
+                restore_std_fds(stdin_backup, stdout_backup);
+                return (0);
+            }
+        }
+        else if (redir->type == TOKEN_REDIR_OUT || redir->type == TOKEN_APPEND)
+        {
+            if (!handle_output_redirection(cmd))
+            {
+                restore_std_fds(stdin_backup, stdout_backup);
+                return (0);
+            }
+        }
+        redir = redir->next;
+    }
+
+    return (1);
 }

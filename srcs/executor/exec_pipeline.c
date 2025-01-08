@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/08 14:55:13 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/08 16:29:03 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,9 @@ static void	handle_child_process(t_command *current, int *prev_pipe,
 		exit(127);
 	}
 	handle_pipeline_child(current, prev_pipe, pipe_fd, shell);
-} */
+}
 
-/* int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
+int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 		t_shell *shell)
 {
 	int		pipe_fd[2];

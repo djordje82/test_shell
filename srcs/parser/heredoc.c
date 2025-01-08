@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 14:31:34 by jadyar            #+#    #+#             */
-/*   Updated: 2024/12/20 10:00:14 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/08 17:33:42 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,28 +64,58 @@ static int	cleanup_heredoc(int *heredoc_pipe, bool is_last)
 	return (1);
 }
 
-int	setup_heredoc(t_command *cmd)
+int setup_heredoc(t_command *cmd)
 {
-	int		heredoc_pipe[2];
-	char	*line;
-	size_t	len_delimiter;
+    t_redirection *redir;
+    int heredoc_pipe[2];
+    char *line;
+    size_t len_delimiter;
+    bool success;
 
-	if (!create_pipe(heredoc_pipe, NULL))
-		return (0);
-	len_delimiter = ft_strlen(cmd->infile);
-	setup_heredoc_signals();
-	while (1)
-	{
-		line = readline("> ");
-		if (!line)
-			return (cleanup_heredoc(heredoc_pipe, false));
-		if (handle_heredoc_line(line, cmd->infile, len_delimiter) == 0)
-			break ;
-		if (!write_to_heredoc(heredoc_pipe[1], line))
-		{
-			close_pipe_ends(heredoc_pipe);
-			return (0);
-		}
-	}
-	return (cleanup_heredoc(heredoc_pipe, true));
+    // First, find the last heredoc redirection in the list
+    // This maintains compatibility with how bash processes multiple heredocs
+    redir = cmd->redirections;
+    success = true;
+
+    while (redir)
+    {
+        if (redir->type == TOKEN_HEREDOC)
+        {
+            // Set up pipe for this heredoc
+            if (!create_pipe(heredoc_pipe, NULL))
+                return (0);
+
+            len_delimiter = ft_strlen(redir->filename);
+            setup_heredoc_signals();
+
+            // Process the heredoc content
+            while (1)
+            {
+                line = readline("> ");
+                if (!line)
+                    return (cleanup_heredoc(heredoc_pipe, false));
+
+                // Check if we've reached the delimiter
+                if (handle_heredoc_line(line, redir->filename, len_delimiter) == 0)
+                    break;
+
+                // Write the line to heredoc pipe
+                if (!write_to_heredoc(heredoc_pipe[1], line))
+                {
+                    close_pipe_ends(heredoc_pipe);
+                    return (0);
+                }
+            }
+
+            // Only keep the last heredoc's file descriptor
+            if (!cleanup_heredoc(heredoc_pipe, redir->next == NULL))
+            {
+                success = false;
+                break;
+            }
+        }
+        redir = redir->next;
+    }
+
+    return (success);
 }

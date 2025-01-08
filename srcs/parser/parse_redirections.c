@@ -6,13 +6,13 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:20:05 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/08 15:19:15 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/08 17:15:23 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	set_redirection(t_command *cmd, char *filename, t_token_type type)
+/* static void	set_redirection(t_command *cmd, char *filename, t_token_type type)
 {
 	if (!filename)
 		return ;
@@ -38,9 +38,9 @@ static void	set_redirection(t_command *cmd, char *filename, t_token_type type)
 	}
 	else 
 		free(filename);
-}
+} */
 
-static int	check_out_file(char *filename, t_token_type type)
+/* static int	check_out_file(char *filename, t_token_type type)
 {
 	int	flags;
 	int	fd;
@@ -90,32 +90,39 @@ static int	check_in_file(char *filename, t_token_type type)
 	if (fd != -1)
 		close(fd);
 	return (1);
-}
+} */
 
 int	parse_redirections(t_token **token, t_command *cmd)
 {
-	t_token_type	type;
-	char			*temp_file;
+	t_token_type type;
+    t_redirection *new_redir;
+    t_redirection *last_redir;
 
-	if (!*token || !(*token) || !cmd)
-		return (0);
-	type = (*token)->type;
-	if (!(*token)->next || (*token)->next->type != TOKEN_WORD)
-		return (print_syntx_err("syntax error near unexpected token \
-		`newline'", NULL), 0);
-	*token = (*token)->next;
-	temp_file = ft_strdup((*token)->value);
-	if (!temp_file)
-	{
-		print_syntx_err("malloc failed", NULL);
-		return (0);
-	}
-	if (!check_out_file(temp_file, type) || !check_in_file(temp_file, type))
-	{
-		free(temp_file);
-		return (0);
-	}
-	set_redirection(cmd, temp_file, type);
-	*token = (*token)->next;
-	return (1);
+    if (!*token || !cmd)
+        return (0);
+    
+    type = (*token)->type;
+    if (!(*token)->next || (*token)->next->type != TOKEN_WORD)
+        return (print_syntx_err("syntax error near unexpected token `newline'", NULL));
+    
+    *token = (*token)->next;
+    new_redir = malloc(sizeof(t_redirection));
+    if (!new_redir)
+        return (0);
+        
+    new_redir->filename = ft_strdup((*token)->value);
+    new_redir->type = type;
+    new_redir->next = NULL;
+    
+    if (!cmd->redirections)
+        cmd->redirections = new_redir;
+    else {
+        last_redir = cmd->redirections;
+        while (last_redir->next)
+            last_redir = last_redir->next;
+        last_redir->next = new_redir;
+    }
+    
+    *token = (*token)->next;
+    return (1);
 }

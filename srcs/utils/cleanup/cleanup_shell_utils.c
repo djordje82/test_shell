@@ -6,30 +6,39 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:39 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/03 09:22:53 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/08 17:22:17 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	cleanup_cmd_list(t_command *cmd)
+void cleanup_cmd_list(t_command *cmd)
 {
-	t_command	*temp;
+    t_command *temp;
+    t_redirection *redir;
+    t_redirection *next_redir;
 
-	if (!cmd)
-		return ;
-	while (cmd)
-	{
-		temp = cmd->next;
-		if (cmd->args)
-			ft_free_array((void **)cmd->args, -1);
-		if (cmd->infile)
-			free(cmd->infile);
-		if (cmd->outfile)
-			free(cmd->outfile);
-		free(cmd);
-		cmd = temp;
-	}
+    if (!cmd)
+        return;
+    while (cmd)
+    {
+        temp = cmd->next;
+        if (cmd->args)
+            ft_free_array((void **)cmd->args, -1);
+        
+        // Clean up redirections
+        redir = cmd->redirections;
+        while (redir)
+        {
+            next_redir = redir->next;
+            free(redir->filename);
+            free(redir);
+            redir = next_redir;
+        }
+        
+        free(cmd);
+        cmd = temp;
+    }
 }
 
 void	cleanup_token_list(t_token *tokens)

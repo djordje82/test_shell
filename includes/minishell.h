@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/20 16:41:50 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/08 17:13:40 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,13 +140,21 @@ typedef struct s_token
 	struct s_token				*next;
 }								t_token;
 
+typedef struct s_redirection
+{
+	char						*filename;
+	int							type;
+	struct s_redirection		*next;
+}								t_redirection;
+
 typedef struct s_command
 {
 	char						**args;
-	char						*infile;
-	char						*outfile;
-	int							in_type;
-	int							out_type;
+	t_redirection				*redirections;
+	// char						*infile;
+	// char						*outfile;
+	// int						in_type;
+	// int						out_type;
 	bool						is_valid;
 	bool						heredoc_processed;
 	struct s_shell				*shell;
