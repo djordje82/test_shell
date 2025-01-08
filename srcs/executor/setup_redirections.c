@@ -6,48 +6,57 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:00 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/08 17:40:37 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/08 22:54:23 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_file_open_error(const char *file)
+static int	start_redirections(t_command *cmd, int *stdin_backup,
+	int *stdout_backup, t_redirection **redir)
 {
-	if (errno == ENOENT)
-		print_file_error(file, "No such file or directory");
-	else if (errno == EACCES)
-		print_file_error(file, "Permission denied");
-	else
-		print_file_error(file, strerror(errno));
+	if (!backup_std_fds(stdin_backup, stdout_backup))
+		return (0);
+	*redir = cmd->redirections;
+	return (1);
 }
 
-int	redirect_output(int fd, char *outfile)
+static int	handle_redirection_type(t_command *cmd, t_redirection *redir,
+	int stdin_backup, int stdout_backup)
 {
-	if (dup2(fd, STDOUT_FILENO) == -1)
+	if (redir->type == TOKEN_REDIR_IN || redir->type == TOKEN_HEREDOC)
 	{
-		print_command_error(outfile, "Error duplicating file descriptor");
-		close(fd);
-		g_exit_status = 1;
-		return (0);
+		if (!handle_input_redirection(redir))
+		{
+			restore_std_fds(stdin_backup, stdout_backup);
+			g_exit_status = 1;
+			return (0);
+		}
+	}
+	else if (redir->type == TOKEN_REDIR_OUT || redir->type == TOKEN_APPEND)
+	{
+		if (!handle_output_redirection(cmd))
+		{
+			restore_std_fds(stdin_backup, stdout_backup);
+			return (0);
+		}
 	}
 	return (1);
 }
 
-int	open_output_file(char *outfile, int flags)
+int	setup_redirections(t_command *cmd)
 {
-	int	fd;
+	t_redirection	*redir;
+	int				stdin_backup;
+	int				stdout_backup;
 
-	fd = open(outfile, flags, FILE_PERMS);
-	if (fd == -1)
+	if (!start_redirections(cmd, &stdin_backup, &stdout_backup, &redir))
+		return (0);
+	while (redir)
 	{
-		if (errno == EACCES)
-			print_file_error(outfile, "Permission denied");
-		else if (errno == ENOENT)
-			print_file_error(outfile, "No such file");
-		else
-			print_file_error(outfile, strerror(errno));
-		g_exit_status = 1;
+		if (!handle_redirection_type(cmd, redir, stdin_backup, stdout_backup))
+			return (0);
+		redir = redir->next;
 	}
-	return (fd);
+	return (1);
 }

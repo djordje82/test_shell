@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/08 17:13:40 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/08 22:55:13 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,10 +151,6 @@ typedef struct s_command
 {
 	char						**args;
 	t_redirection				*redirections;
-	// char						*infile;
-	// char						*outfile;
-	// int						in_type;
-	// int						out_type;
 	bool						is_valid;
 	bool						heredoc_processed;
 	struct s_shell				*shell;
@@ -261,6 +257,9 @@ char							**add_new_argument(char **new_args,
 char							**create_new_array(char **args, int count);
 char							**copy_existing_args(char **new_args,
 									char **args, int *i);
+bool							setup_single_heredoc(t_redirection *redir, 
+									int *heredoc_pipe);
+int								setup_heredoc(t_command *cmd);
 
 /*PARSING /ENV_EXPANSION*/
 char							*extract_env_var_name(const char *str);
@@ -335,7 +334,6 @@ int								remove_env_var(char *name, t_shell *shell);
 /*ENVIRONMENT /UTILS*/
 char							*get_home_dir(t_shell *shell);
 int								update_pwd_vars(t_shell *shell);
-// int				has_equals_sign(char *str);
 char							*get_env_value(char *name, t_shell *shell);
 int								find_env_index(char *name, char **envp);
 char							*create_env_string(char *name, char *value);
@@ -381,6 +379,8 @@ int								redirect_output(int fd, char *outfile);
 int								backup_std_fds(int *stdin_backup,
 									int *stdout_backup);
 int								open_output_file(char *outfile, int flags);
+int								handle_input_redirection(t_redirection *redir);
+int								handle_output_redirection(t_command *cmd);
 
 /*EXECUTOR /PIPELINE*/
 int								setup_pipeline_steps(t_command *current,
@@ -420,7 +420,6 @@ void							handle_pipeline_child(t_command *cmd,
 void							handle_parent_process(int *prev_pipe,
 									int *pipe_fd);
 void							wait_for_children(pid_t last_pid);
-int								setup_heredoc(t_command *cmd);
 
 /*EXECUTOR /EXTERNAL AND UTILS*/
 int								handle_external_cmd(t_command *cmd,

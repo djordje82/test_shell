@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_manager_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 18:19:41 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/19 17:00:31 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/08 21:53:46 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,35 @@ void	handle_pipe_io_error(int *prev_pipe, int *pipe_fd)
 	if (pipe_fd)
 		close_pipe_ends(pipe_fd);
 	exit(1);
+}
+
+int	create_pipe(int pipe_fd[2], t_shell *shell)
+{
+	if (!pipe_fd)
+		return (0);
+	if (pipe(pipe_fd) == -1)
+	{
+		pipe_fd[0] = -1;
+		pipe_fd[1] = -1;
+		if (shell)
+			perror("pipe failed");
+		return (0);
+	}
+	return (1);
+}
+
+void	close_pipe_ends(int pipe_fd[2])
+{
+	if (!pipe_fd)
+		return ;
+	if (pipe_fd[0] != -1)
+	{
+		close(pipe_fd[0]);
+		pipe_fd[0] = -1;
+	}
+	if (pipe_fd[1] != -1)
+	{
+		close(pipe_fd[1]);
+		pipe_fd[1] = -1;
+	}
 }

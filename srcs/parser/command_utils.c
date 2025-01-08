@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:57:58 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/08 17:21:16 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/08 21:15:46 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,6 @@ t_command	*create_cmd_node(void)
 		return (NULL);
 	}
 	cmd->args = NULL;
-	// cmd->infile = NULL;
-	// cmd->outfile = NULL;
-	// cmd->in_type = 0;
-	// cmd->out_type = 0;
 	cmd->redirections = NULL;
 	cmd->is_valid = false;
 	cmd->next = NULL;

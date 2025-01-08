@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+         #
+#    By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 14:34:50 by j                 #+#    #+#              #
-#    Updated: 2024/12/19 20:09:50 by jadyar           ###   ########.fr        #
+#    Updated: 2025/01/08 22:57:44 by dodordev         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ SRCS =	main.c \
 		executor/exec.c \
 		executor/setup_redirections.c \
 		executor/setup_redirection_utils.c \
+		executor/setup_inout_redirection.c \
 		executor/exec_utils.c \
 		executor/exec_external.c \
 		executor/exec_external_utils.c \
@@ -50,17 +51,17 @@ SRCS =	main.c \
 		env/env_core.c \
 		env/env_print.c \
 		env/env_parse.c \
+		env/env_expansion.c \
 		utils/errors/print_errors.c \
 		utils/utils.c \
-		utils/checkers.c \
 		parser/heredoc.c \
+		parser/heredoc_utils.c \
 		parser/parser.c \
 		parser/parser_utils.c \
 		parser/parse_command.c \
 		parser/parse_cmd_arguments.c \
 		parser/parse_redirections.c \
 		parser/command_utils.c \
-		parser/env_expansion.c \
 		signals/signals.c \
 		signals/sig_utils.c \
 		tokenizer/tokenizer.c \
