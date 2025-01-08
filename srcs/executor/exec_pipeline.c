@@ -6,13 +6,13 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/07 12:05:20 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/08 14:55:13 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	handle_invalid_command(t_command *current)
+/* static int	handle_invalid_command(t_command *current)
 {
 	if (!current->is_valid)
 	{
@@ -58,9 +58,9 @@ static void	handle_child_process(t_command *current, int *prev_pipe,
 		exit(127);
 	}
 	handle_pipeline_child(current, prev_pipe, pipe_fd, shell);
-}
+} */
 
-int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
+/* int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 		t_shell *shell)
 {
 	int		pipe_fd[2];
@@ -72,7 +72,9 @@ int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 		return (0);
 	signal(SIGINT, SIG_IGN);
 	if (!init_pipeline(current, pipe_fd, shell))
-		return (0);
+	{
+		cleanup_pipeline_resources(prev_pipe, pipe_fd);
+	}
 	if (!create_process(&pid, shell))
 	{
 		cleanup_pipeline_resources(prev_pipe, pipe_fd);
@@ -84,6 +86,44 @@ int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 		*last_pid = pid;
 	handle_parent_process(prev_pipe, pipe_fd);
 	return (1);
+} */
+
+int setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
+        t_shell *shell)
+{
+    int     pipe_fd[2];
+    pid_t   pid;
+
+    pipe_fd[0] = -1;
+    pipe_fd[1] = -1;
+    
+    // Create pipe for all commands except the last one
+    if (current->next && !create_pipe(pipe_fd, shell))
+    {
+        perror("pipe failed");
+        return (0);  // Only pipe creation failure should stop the pipeline
+    }
+
+    // Fork for every command, regardless of its validity
+    if (!create_process(&pid, shell))
+    {
+        cleanup_pipeline_resources(prev_pipe, pipe_fd);
+        return (0);  // Only fork failure should stop the pipeline
+    }
+
+    if (pid == 0)
+    {
+        // Child process - handle command execution
+        handle_pipeline_child(current, prev_pipe, pipe_fd, shell);
+        // Note: handle_pipeline_child will exit
+    }
+
+    // Parent process continues
+    if (!current->next)
+        *last_pid = pid;
+    
+    handle_parent_process(prev_pipe, pipe_fd);
+    return (1);  // Pipeline setup succeeded
 }
 
 void	execute_pipeline_cmd(t_command *cmd, char *cmd_path, t_shell *shell)

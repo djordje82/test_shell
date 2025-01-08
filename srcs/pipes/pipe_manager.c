@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_manager.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 14:43:39 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/20 11:49:22 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/08 14:53:56 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	setup_pipe_io(int in_fd, int out_fd)
 		if (dup2(in_fd, STDIN_FILENO) == -1)
 		{
 			perror("dup2 failed in_fd");
-			close(in_fd);
+			// close(in_fd);
 			return (0);
 		}
 		close(in_fd);
@@ -60,7 +60,7 @@ int	setup_pipe_io(int in_fd, int out_fd)
 		if (dup2(out_fd, STDOUT_FILENO) == -1)
 		{
 			perror("dup2 failed out_fd");
-			close(out_fd);
+			// close(out_fd);
 			return (0);
 		}
 		close(out_fd);
@@ -96,20 +96,24 @@ void	handle_pipeline_child(t_command *cmd, int *prev_pipe, int *pipe_fd,
 
 	input_fd = get_input_fd(prev_pipe);
 	output_fd = get_output_fd(pipe_fd);
+
 	if (!setup_pipe_io(input_fd, output_fd))
+	{
 		handle_pipe_io_error(prev_pipe, pipe_fd);
+		exit (1);
+	}
 	close_pipe_ends(prev_pipe);
 	if (pipe_fd && pipe_fd[0] != -1)
 	{
 		close(pipe_fd[0]);
 		pipe_fd[0] = -1;
 	}
+	setup_child_signal();
 	if (!setup_redirections(cmd))
 	{
 		close_pipe_ends(pipe_fd);
 		exit(1);
 	}
-	setup_child_signal();
 	status = execute_single_command(cmd, shell);
 	close_pipe_ends(pipe_fd);
 	exit(status);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_redirection_utils.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 15:20:41 by jadyar            #+#    #+#             */
-/*   Updated: 2024/12/20 11:35:45 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/08 14:54:58 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ static int	handle_output_redirection(t_command *cmd)
 	return (1);
 }
 
-int	setup_redirections(t_command *cmd)
+/* int	setup_redirections(t_command *cmd)
 {
 	int	stdin_backup;
 	int	stdout_backup;
@@ -119,5 +119,49 @@ int	setup_redirections(t_command *cmd)
 		close(stdout_backup);
 		return (0);
 	}
+	return (1);
+} */
+
+int	setup_redirections(t_command *cmd)
+{
+	int stdin_backup;
+	int stdout_backup;
+
+	stdin_backup = -1;
+	stdout_backup = -1;
+
+	if (!backup_std_fds(&stdin_backup, &stdout_backup) || !cmd)
+		return (0);
+
+	if (cmd->infile)
+	{
+		if (!handle_input_redirection(cmd))
+		{
+			g_exit_status = 1;
+			if (!cmd->next && !cmd->prev)
+			{
+				restore_std_fds(STDIN_FILENO, STDOUT_FILENO);
+				close(stdin_backup);
+				close(stdout_backup);
+			}
+			return (0);
+		}
+	}
+
+	if (cmd->outfile)
+	{
+		if (!handle_output_redirection(cmd))
+		{
+			g_exit_status = 1;
+			if (!cmd->next && !cmd->prev)
+			{
+				restore_std_fds(STDIN_FILENO, STDOUT_FILENO);
+				close(stdin_backup);
+				close(stdout_backup);
+			}
+			return (0);
+		}
+	}
+
 	return (1);
 }
