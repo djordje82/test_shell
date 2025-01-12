@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   env_expansion.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:12 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/19 16:10:42 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/12 18:36:40 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Helper function to retrieve the expanded value of an environment variable
 char	*get_env_value_expanded(char *name, t_shell *shell)
 {
 	char	*value;
@@ -27,7 +26,6 @@ char	*get_env_value_expanded(char *name, t_shell *shell)
 	return (ft_strdup(""));
 }
 
-// Helper function to extract and process a variable name
 static char	*get_var_content(const char *str, int *i, t_shell *shell)
 {
 	char	*var_name;
@@ -47,8 +45,7 @@ static char	*get_var_content(const char *str, int *i, t_shell *shell)
 	return (value);
 }
 
-// Handle dollar-sign-related cases, e.g., $VAR or $?
-static char	*handle_dollar(const char *str, int *i, t_shell *shell)
+char	*handle_dollar(const char *str, int *i, t_shell *shell)
 {
 	char	*temp;
 
@@ -71,7 +68,6 @@ static char	*handle_dollar(const char *str, int *i, t_shell *shell)
 	return (temp);
 }
 
-// Process a single character or sequence
 char	*process_char(const char *str, int *i, char *result, t_shell *shell)
 {
 	char	*temp;
@@ -94,16 +90,6 @@ char	*process_char(const char *str, int *i, char *result, t_shell *shell)
 	return (result);
 }
 
-/* Expand environment variables and handle special cases
-
-	- $VAR: Expands the value of the variable VAR
-	- $$: Expand to a single dollar sign
-	- $? Expand to the exit status of the last command
-	- \$: Expand to a single backslash
-	- \$: Expand to a single dollar sign
-	- \VAR: Expand to a single backslash followed by the value of VAR
-	- \\: Expand to a single backslash
-*/
 char	*expand_env_vars(const char *str, t_shell *shell)
 {
 	char	*result;

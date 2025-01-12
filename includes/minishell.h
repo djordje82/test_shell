@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/12 13:30:07 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/12 18:34:56 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -344,6 +344,8 @@ char							**copy_env(char **envp);
 int								add_env_var(char *arg, t_shell *shell);
 void							update_shell_level(t_shell *shell);
 void							print_sorted_env(char **envp);
+char							*handle_dollar(const char *str, int *i, 
+									t_shell *shell);
 
 /*BUILTINS /ENV*/
 int								ft_env(char **args, t_shell *shell);

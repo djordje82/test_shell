@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:45 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/12 13:22:07 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/12 18:59:23 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,11 @@ static int	handle_quoted(const char *input, int *pos, char *result, int *len)
 	return (1);
 }
 
-static int	process_word_content(const char *input, int *pos, char *result)
+static int	process_word_content(const char *input, int *pos, char *result,
+		t_shell *shell)
 {
-	int	len;
+	int		len;
+	char	*expanded;
 
 	len = 0;
 	while (input[*pos])
@@ -80,7 +82,21 @@ static int	process_word_content(const char *input, int *pos, char *result)
 		else if (is_word_delimiter(input[*pos]))
 			break ;
 		else
-			result[len++] = input[(*pos)++];
+		{
+			expanded = ft_substr(input, *pos, 1);
+			if (expanded[0] == '$')
+			{
+				free(expanded);
+				expanded = handle_dollar(input, pos, shell);
+				ft_strlcpy(result + len, expanded, ft_strlen(expanded) + 1);
+				len += ft_strlen(expanded);
+			}
+			else
+			{
+				result[len++] = input[(*pos)++];
+				free(expanded);
+			}
+		}
 	}
 	result[len] = '\0';
 	return (1);
@@ -89,16 +105,10 @@ static int	process_word_content(const char *input, int *pos, char *result)
 t_token	*tokenize_word(const char *input, int *pos, t_shell *shell)
 {
 	char	buffer[1024];
-	char	*expanded;
 	t_token	*token;
 
-	if (!process_word_content(input, pos, buffer))
+	if (!process_word_content(input, pos, buffer, shell))
 		return (NULL);
-	if (buffer[0] == '\0')
-		expanded = ft_strdup("");
-	else
-		expanded = expand_env_vars(buffer, shell);
-	token = create_token(expanded, TOKEN_WORD);
-	free(expanded);
+	token = create_token(buffer, TOKEN_WORD);
 	return (token);
 }
