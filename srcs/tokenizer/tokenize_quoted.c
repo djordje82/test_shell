@@ -6,57 +6,24 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:36 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/12 12:32:42 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/12 13:19:43 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*process_quoted_content(const char *input, int *start, int *len)
+static int	handle_empty_quotes(const char *input, int *pos)
 {
-	char	quote_type;
-	char	*content;
-	int		i;
-
-	quote_type = input[*start];
-	content = malloc(ft_strlen(input) + 1);
-	i = 0;
-	if (!content)
-		return (NULL);
-	(*start)++;
-	while (input[*start])
+	if (input[*pos + 1] == input[*pos])
 	{
-		if (input[*start] == quote_type)
-		{
-			(*start)++;
-			break ;
-		}
-		if (quote_type == '"' && input[*start] == '\\' && (input[*start
-					+ 1] == '"' || input[*start + 1] == '$'))
-			(*start)++;
-		content[i++] = input[(*start)++];
+		*pos += 2;
+		return (1);
 	}
-	content[i] = '\0';
-	*len = i;
-	return (content);
+	return (0);
 }
 
-char	*extract_quoted(const char *input, int *pos, char quote_type)
-{
-	char	*content;
-	int		len;
-
-	len = 0;
-	if (!input || !pos || input[*pos] != quote_type)
-		return (NULL);
-	content = process_quoted_content(input, pos, &len);
-	if (!content)
-		return (NULL);
-	return (content);
-}
-
-static char	*process_quote(const char *input, int *pos, 
-							t_shell *shell, char quote_type)
+static char	*process_quote(const char *input, int *pos, t_shell *shell,
+		char quote_type)
 {
 	char	*temp;
 	char	*processed;
@@ -73,16 +40,6 @@ static char	*process_quote(const char *input, int *pos,
 	return (temp);
 }
 
-static int	handle_empty_quotes(const char *input, int *pos)
-{
-	if (input[*pos + 1] == input[*pos])
-	{
-		*pos += 2;
-		return (1);
-	}
-	return (0);
-}
-
 static int	append_to_buffer(char *buffer, const char *processed, int len)
 {
 	if (len + ft_strlen(processed) >= 1024)
@@ -91,7 +48,7 @@ static int	append_to_buffer(char *buffer, const char *processed, int len)
 	return (len + ft_strlen(processed));
 }
 
-t_token	*tokenize_adjacent_quotes(const char *input, int *pos, t_shell *shell)
+t_token	*tokenize_quotes(const char *input, int *pos, t_shell *shell)
 {
 	char	buffer[1024];
 	int		len;

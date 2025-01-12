@@ -6,36 +6,11 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:16 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/09 15:54:10 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/12 13:16:08 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	check_quotes(const char *input)
-{
-	int		i;
-	char	quote;
-
-	i = 0;
-	quote = 0;
-	while (input[i])
-	{
-		if ((input[i] == '\'' || input[i] == '"') && !quote)
-			quote = input[i];
-		else if (input[i] == quote)
-			quote = 0;
-		i++;
-	}
-	if (quote)
-	{
-		ft_putendl_fd("minishell: syntax error: unclosed quotes",
-			STDERR_FILENO);
-		g_exit_status = 2;
-		return (0);
-	}
-	return (1);
-}
 
 static int	check_invalid_redirection(const char *input, int pos)
 {
@@ -86,7 +61,7 @@ t_token	*get_token_type(const char *input, int *pos, t_shell *shell)
 	type = get_operator_type(input[*pos]);
 	if (type == TOKEN_PIPE || type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT)
 	{
-		if (check_invalid_redirection(input, *pos) 
+		if (check_invalid_redirection(input, *pos)
 			|| check_consecutive_redirections(input, pos))
 			return (NULL);
 		if (input[*pos] == '>' && input[*pos + 1] == '>')
@@ -97,9 +72,21 @@ t_token	*get_token_type(const char *input, int *pos, t_shell *shell)
 	}
 	if (type == TOKEN_SQUOTE || type == TOKEN_DQUOTE)
 	{
-		return (tokenize_adjacent_quotes(input, pos, shell));
+		return (tokenize_quotes(input, pos, shell));
 	}
 	return (tokenize_word(input, pos, shell));
+}
+
+int	initialize_tokenization(const char *input, t_shell *shell)
+{
+	if (!input || !shell || !*input)
+		return (0);
+	if (!count_quote_pairs(input))
+	{
+		g_exit_status = 2;
+		return (0);
+	}
+	return (1);
 }
 
 t_token	*tokenize_input(const char *input, t_shell *shell)

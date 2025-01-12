@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/10 13:21:20 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/12 13:30:07 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ typedef enum e_char_type
 	CHAR_SQUOTE,
 	CHAR_DQUOTE,
 	CHAR_NORMAL
-}				t_char_type;
+}								t_char_type;
 
 typedef enum e_token_type
 {
@@ -111,11 +111,11 @@ typedef enum e_token_type
 
 typedef struct s_quote_state
 {
-	const char	*input;
-	char		*result;
-	int			pos;
-	int			len;
-}			t_quote_state;
+	const char					*input;
+	char						*result;
+	int							pos;
+	int							len;
+}								t_quote_state;
 
 /*STRUCTS*/
 typedef struct s_node
@@ -207,27 +207,27 @@ char							*handle_word_part(char *result,
 									const char *input, int *start, int *len);
 int								initialize_tokenization(const char *input,
 									t_shell *shell);
-char							*process_quoted_content(const char *input, 
+char							*process_quoted_content(const char *input,
 									int *start, int *len);
 int								handle_escape_sequence(t_quote_state *state,
 									char quote_type);
 /*TOKENIZER /UTILS*/
-t_token							*tokenize_adjacent_quotes(const char *input, 
-									int *pos, t_shell *shell);
+t_token							*tokenize_quotes(const char *input, int *pos,
+									t_shell *shell);
 t_token_type					get_operator_type(char c);
 t_token							*tokenize_single_operator(const char *input,
 									int *i);
 t_token							*tokenize_double_operator(const char *input,
 									int *pos, const char *op_str,
 									t_token_type type);
-void							add_token_to_list(t_token **head, 
+void							add_token_to_list(t_token **head,
 									t_token **current, t_token *new_token);
 char							**insert_arg_array(char **orig_args, int pos,
 									char **expanded);
-char							*handle_quote_error(const char *result);
+char							*print_quote_error(const char *result);
 char							*append_unquoted_part(char *result,
 									const char *input, int *start, int *len);
-int								check_quotes(const char *input);
+int								count_quote_pairs(const char *input);
 /*PIPES*/
 int								create_pipe(int pipe_fd[2], t_shell *shell);
 void							close_pipe_ends(int pipe_fd[2]);
@@ -258,13 +258,13 @@ char							**add_new_argument(char **new_args,
 char							**create_new_array(char **args, int count);
 char							**copy_existing_args(char **new_args,
 									char **args, int *i);
-bool							setup_single_heredoc(t_redirection *redir, 
+bool							setup_single_heredoc(t_redirection *redir,
 									int *heredoc_pipe);
 int								setup_heredoc(t_redirection *redir);
 
 /*PARSING /ENV_EXPANSION*/
 char							*extract_env_var_name(const char *str);
-char							*expand_env_vars(const char *str, 
+char							*expand_env_vars(const char *str,
 									t_shell *shell);
 
 /*EXECUTOR*/
@@ -315,8 +315,8 @@ void							setup_signals(void);
 void							setup_child_signal(void);
 void							handle_eof(t_shell *shell);
 void							interactive_signal_handler(int signum);
-void							setup_execution_signals(struct sigaction 
-									*sa_old_int, struct sigaction *sa_old_quit);
+void							setup_exec_signals(struct sigaction *sa_old_int,
+									struct sigaction *sa_old_quit);
 int								setup_heredoc_signals(void);
 /*UTILS /SHELL*/
 void							run_shell_loop(t_shell *shell);

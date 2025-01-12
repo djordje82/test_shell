@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 14:31:34 by jadyar            #+#    #+#             */
-/*   Updated: 2025/01/12 12:27:48 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/12 13:36:40 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,18 +59,11 @@ static int	cleanup_heredoc(int *heredoc_pipe, bool is_last)
 	return (1);
 }
 
-int	setup_heredoc(t_redirection *redir)
+static int	process_heredoc_lines(int heredoc_pipe[2], t_redirection *redir, 
+								size_t len_delimiter)
 {
-	int		heredoc_pipe[2];
 	char	*line;
-	size_t	len_delimiter;
 
-	if (redir->heredoc_processed)
-		return (1);
-	if (!create_pipe(heredoc_pipe, NULL))
-		return (0);
-	len_delimiter = ft_strlen(redir->filename);
-	setup_heredoc_signals();
 	while (1)
 	{
 		line = readline("> ");
@@ -92,6 +85,21 @@ int	setup_heredoc(t_redirection *redir)
 		}
 		free(line);
 	}
+	return (1);
+}
+
+int	setup_heredoc(t_redirection *redir)
+{
+	int		heredoc_pipe[2];
+	size_t	len_delimiter;
+
+	if (redir->heredoc_processed)
+		return (1);
+	if (!create_pipe(heredoc_pipe, NULL))
+		return (0);
+	len_delimiter = ft_strlen(redir->filename);
+	setup_heredoc_signals();
+	process_heredoc_lines(heredoc_pipe, redir, len_delimiter);
 	redir->heredoc_processed = true;
 	return (cleanup_heredoc(heredoc_pipe, true));
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:42 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/19 17:52:02 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/12 13:30:07 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	setup_child_signal(void)
 	sigaction(SIGQUIT, &sa, NULL);
 }
 
-void	setup_execution_signals(struct sigaction *sa_old_int,
+void	setup_exec_signals(struct sigaction *sa_old_int,
 		struct sigaction *sa_old_quit)
 {
 	struct sigaction	sa;

@@ -6,17 +6,42 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:58:51 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/09 16:07:44 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/12 13:08:04 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int	count_quote_pairs(const char *input)
+{
+	int		i;
+	char	quote;
+
+	i = 0;
+	quote = 0;
+	while (input[i])
+	{
+		if ((input[i] == '\'' || input[i] == '"') && !quote)
+			quote = input[i];
+		else if (input[i] == quote)
+			quote = 0;
+		i++;
+	}
+	if (quote)
+	{
+		ft_putendl_fd("minishell: syntax error: unclosed quotes",
+			STDERR_FILENO);
+		g_exit_status = 2;
+		return (0);
+	}
+	return (1);
+}
+
 int	handle_escape_sequence(t_quote_state *state, char quote_type)
 {
 	(void)quote_type;
 	state->pos++;
-	if (state->input[state->pos] == '"' || state->input[state->pos] == '$' 
+	if (state->input[state->pos] == '"' || state->input[state->pos] == '$'
 		|| state->input[state->pos] == '\\')
 		state->result[state->len++] = state->input[state->pos++];
 	else
@@ -46,21 +71,9 @@ t_token	*create_token(const char *value, t_token_type type)
 
 void	skip_whitespace(const char *input, int *pos)
 {
-	while (input[*pos] && (input[*pos] == ' ' || \
-		input[*pos] == '\t' || input[*pos] == '\r' || input[*pos] == '\n'))
+	while (input[*pos] && (input[*pos] == ' ' || input[*pos] == '\t'
+			|| input[*pos] == '\r' || input[*pos] == '\n'))
 		(*pos)++;
-}
-
-int	initialize_tokenization(const char *input, t_shell *shell)
-{
-	if (!input || !shell || !*input)
-		return (0);
-	if (!check_quotes(input))
-	{
-		g_exit_status = 2;
-		return (0);
-	}
-	return (1);
 }
 
 void	add_token_to_list(t_token **head, t_token **current, t_token *new_token)

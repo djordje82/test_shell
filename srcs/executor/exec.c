@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 15:32:53 by jadyar            #+#    #+#             */
-/*   Updated: 2025/01/12 12:22:49 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/12 13:30:07 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	execute_commands(t_shell *shell)
 		g_exit_status = 127;
 		return (g_exit_status);
 	}
-	setup_execution_signals(&sa_old_int, &sa_old_quit);
+	setup_exec_signals(&sa_old_int, &sa_old_quit);
 	if (current && !current->next && current->args
 		&& is_builtin(current->args[0]))
 	{

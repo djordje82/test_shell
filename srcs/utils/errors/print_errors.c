@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   print_errors.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:00:33 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/12 18:12:53 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/12 13:09:35 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*handle_quote_error(const char *result)
+char	*print_quote_error(const char *result)
 {
 	ft_putendl_fd("minishell: syntax error: unclosed quotes", STDERR_FILENO);
 	free((char *)result);

@@ -6,7 +6,7 @@
 #    By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 14:34:50 by j                 #+#    #+#              #
-#    Updated: 2025/01/09 20:04:11 by dodordev         ###   ########.fr        #
+#    Updated: 2025/01/12 13:20:24 by dodordev         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,6 +65,7 @@ SRCS =	main.c \
 		signals/sig_utils.c \
 		tokenizer/tokenizer.c \
 		tokenizer/tokenize_quoted.c \
+		tokenizer/tokenize_quoted_utils.c \
 		tokenizer/tokenizer_utils.c \
 		tokenizer/tokenize_operators.c \
 		tokenizer/tokenize_word.c \

@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:45 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/08 21:48:31 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/12 13:22:07 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	process_char_within_quotes(t_quote_state *state, char quote_type)
 	return (1);
 }
 
-static int	process_quote_content(t_quote_state *state, char quote_type)
+static int	process_quoted_section(t_quote_state *state, char quote_type)
 {
 	while (state->input[state->pos])
 	{
@@ -42,7 +42,7 @@ static int	process_quote_content(t_quote_state *state, char quote_type)
 	return (0);
 }
 
-static int	process_quotes(const char *input, int *pos, char *result, int *len)
+static int	handle_quoted(const char *input, int *pos, char *result, int *len)
 {
 	t_quote_state	state;
 	char			quote_type;
@@ -52,9 +52,9 @@ static int	process_quotes(const char *input, int *pos, char *result, int *len)
 	state.pos = *pos;
 	state.len = *len;
 	quote_type = state.input[state.pos++];
-	if (!process_quote_content(&state, quote_type))
+	if (!process_quoted_section(&state, quote_type))
 	{
-		handle_quote_error(state.result);
+		print_quote_error(state.result);
 		return (0);
 	}
 	*pos = state.pos;
@@ -71,7 +71,7 @@ static int	process_word_content(const char *input, int *pos, char *result)
 	{
 		if (input[*pos] == '\'' || input[*pos] == '"')
 		{
-			if (!process_quotes(input, pos, result, &len))
+			if (!handle_quoted(input, pos, result, &len))
 			{
 				ft_putendl_fd("minishell: syntax error: unexpected EOF", 2);
 				return (0);
