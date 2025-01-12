@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:10:01 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/20 16:26:14 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/10 16:36:03 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,11 @@ int	execute_single_builtin(t_command *cmd, t_shell *shell)
 		return (g_exit_status);
 	}
 	status = handle_builtin_cmd(cmd, shell);
-	restore_std_fds(stdin_fd, stdout_fd);
 	if (ft_strncmp(cmd->args[0], "exit", 5) == 0 && status != 1)
 	{
 		shell->running = false;
 		shell->exit_status = status;
 	}
+	restore_std_fds(stdin_fd, stdout_fd);
 	return (status);
 }

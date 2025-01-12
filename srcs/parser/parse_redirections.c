@@ -6,116 +6,51 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:20:05 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/07 17:44:11 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/10 13:25:55 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	set_redirection(t_command *cmd, char *filename, t_token_type type)
+static t_redirection	*create_redirec(t_token_type type, const char *filename)
 {
-	if (!filename)
-		return ;
-	if (type == TOKEN_REDIR_IN || type == TOKEN_HEREDOC)
-	{
-		if (cmd->infile)
-			free(cmd->infile);
-		cmd->infile = filename;
-		if (type == TOKEN_REDIR_IN)
-			cmd->in_type = REDIR_INPUT;
-		else
-			cmd->in_type = REDIR_HEREDOC;
-	}
-	else if (type == TOKEN_REDIR_OUT || type == TOKEN_APPEND)
-	{
-		if (cmd->outfile)
-			free(cmd->outfile);
-		cmd->outfile = filename;
-		if (type == TOKEN_REDIR_OUT)
-			cmd->out_type = REDIR_TRUNC;
-		else
-			cmd->out_type = REDIR_APPEND;
-	}
-	else 
-		free(filename);
-}
+	t_redirection	*new_redir;
 
-static int	check_out_file(char *filename, t_token_type type)
-{
-	int	flags;
-	int	fd;
-
-	if (type != TOKEN_REDIR_OUT && type != TOKEN_APPEND)
-		return (1);
-	flags = O_WRONLY | O_CREAT;
-	if (type == TOKEN_REDIR_OUT)
-		flags |= O_TRUNC;
-	else
-		flags |= O_APPEND;
-	fd = open(filename, flags, FILE_PERMS);
-	if (fd == -1)
-	{
-		if (errno == ENOENT)
-		{
-			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			ft_putstr_fd(filename, STDERR_FILENO);
-			ft_putendl_fd(": No such file or directory", STDERR_FILENO);
-			return (0);
-		}
-	}
-	if (fd != -1)
-		close(fd);
-	return (1);
-}
-
-static int	check_in_file(char *filename, t_token_type type)
-{
-	int	flags;
-	int	fd;
-
-	if (type != TOKEN_REDIR_IN)
-		return (1);
-	flags = O_WRONLY;
-	fd = open(filename, flags, FILE_PERMS);
-	if (fd == -1)
-	{
-		if (errno == ENOENT)
-		{
-			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			ft_putstr_fd(filename, STDERR_FILENO);
-			ft_putendl_fd(": No such file or directory", STDERR_FILENO);
-			return (0);
-		}
-	}
-	if (fd != -1)
-		close(fd);
-	return (1);
+	new_redir = malloc(sizeof(t_redirection));
+	if (!new_redir)
+		return (NULL);
+	new_redir->filename = ft_strdup(filename);
+	new_redir->type = type;
+	new_redir->heredoc_processed = false;
+	new_redir->next = NULL;
+	return (new_redir);
 }
 
 int	parse_redirections(t_token **token, t_command *cmd)
 {
+	t_redirection	*new_redir;
+	t_redirection	*last_redir;
 	t_token_type	type;
-	char			*temp_file;
 
-	if (!*token || !(*token) || !cmd)
+	if (!*token || !cmd)
 		return (0);
 	type = (*token)->type;
 	if (!(*token)->next || (*token)->next->type != TOKEN_WORD)
-		return (print_syntx_err("syntax error near unexpected token \
-		`newline'", NULL), 0);
+		return (print_syntx_err("syntax error near unexpected token `newline'",
+				NULL));
 	*token = (*token)->next;
-	temp_file = ft_strdup((*token)->value);
-	if (!temp_file)
-	{
-		print_syntx_err("malloc failed", NULL);
+	new_redir = create_redirec(type, (*token)->value);
+	if (!new_redir)
 		return (0);
-	}
-	if (!check_out_file(temp_file, type) || !check_in_file(temp_file, type))
+	if (!cmd->redirections)
+		cmd->redirections = new_redir;
+	else
 	{
-		free(temp_file);
-		return (0);
+		last_redir = cmd->redirections;
+		while (last_redir->next)
+			last_redir = last_redir->next;
+		last_redir->next = new_redir;
 	}
-	set_redirection(cmd, temp_file, type);
 	*token = (*token)->next;
 	return (1);
 }

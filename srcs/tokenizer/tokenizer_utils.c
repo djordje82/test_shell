@@ -3,14 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:58:51 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/20 13:03:54 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/09 16:07:44 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	handle_escape_sequence(t_quote_state *state, char quote_type)
+{
+	(void)quote_type;
+	state->pos++;
+	if (state->input[state->pos] == '"' || state->input[state->pos] == '$' 
+		|| state->input[state->pos] == '\\')
+		state->result[state->len++] = state->input[state->pos++];
+	else
+		state->result[state->len++] = '\\';
+	return (1);
+}
 
 t_token	*create_token(const char *value, t_token_type type)
 {

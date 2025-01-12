@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_external.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:39 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/20 15:49:57 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/12 12:24:46 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,6 @@
 void	execute_external_child(t_command *cmd, char *cmd_path, t_shell *shell)
 {
 	setup_child_signal();
-	if (!setup_redirections(cmd))
-	{
-		perror("redirection failed");
-		exit(1);
-	}
 	execve(cmd_path, cmd->args, shell->envp);
 	handle_command_errors(cmd_path, cmd->args[0]);
 	exit(g_exit_status);
