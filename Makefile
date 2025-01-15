@@ -6,7 +6,7 @@
 #    By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 14:34:50 by j                 #+#    #+#              #
-#    Updated: 2025/01/12 13:20:24 by dodordev         ###   ########.fr        #
+#    Updated: 2025/01/13 13:15:46 by dodordev         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,6 +55,7 @@ SRCS =	main.c \
 		utils/errors/print_errors.c \
 		utils/utils.c \
 		parser/heredoc.c \
+		parser/heredoc_utils.c \
 		parser/parser.c \
 		parser/parser_utils.c \
 		parser/parse_command.c \
@@ -69,6 +70,7 @@ SRCS =	main.c \
 		tokenizer/tokenizer_utils.c \
 		tokenizer/tokenize_operators.c \
 		tokenizer/tokenize_word.c \
+		tokenizer/tokenize_word_utils.c \
 		pipes/pipe_manager.c \
 		pipes/pipe_manager_utils.c
 # Object files

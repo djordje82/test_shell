@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/12 18:34:56 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/15 13:51:56 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,14 +109,6 @@ typedef enum e_token_type
 	TOKEN_ENV
 }								t_token_type;
 
-typedef struct s_quote_state
-{
-	const char					*input;
-	char						*result;
-	int							pos;
-	int							len;
-}								t_quote_state;
-
 /*STRUCTS*/
 typedef struct s_node
 {
@@ -171,6 +163,16 @@ typedef struct s_shell
 	bool						running;
 }								t_shell;
 
+typedef struct s_quote_state
+{
+	const char					*input;
+	char						*result;
+	int							pos;
+	int							len;
+	t_shell						*shell;
+	char						quote_type;
+}								t_quote_state;
+
 /*MAIN*/
 void							initialize_shell(t_shell *shell, char **envp);
 int								prevent_batch_and_init(t_shell *shell,
@@ -212,6 +214,8 @@ char							*process_quoted_content(const char *input,
 int								handle_escape_sequence(t_quote_state *state,
 									char quote_type);
 /*TOKENIZER /UTILS*/
+int								process_char_within_quotes(t_quote_state *state,
+									char quote_type);
 t_token							*tokenize_quotes(const char *input, int *pos,
 									t_shell *shell);
 t_token_type					get_operator_type(char c);
@@ -231,7 +235,7 @@ int								count_quote_pairs(const char *input);
 /*PIPES*/
 int								create_pipe(int pipe_fd[2], t_shell *shell);
 void							close_pipe_ends(int pipe_fd[2]);
-int								setup_pipe_io(int in_fd, int out_fd);
+int								setup_child_pipe_io(int in_fd, int out_fd);
 int								get_input_fd(int *prev_pipe);
 int								get_output_fd(int *pipe_fd);
 void							handle_pipe_io_error(int *prev_pipe,
@@ -261,6 +265,9 @@ char							**copy_existing_args(char **new_args,
 bool							setup_single_heredoc(t_redirection *redir,
 									int *heredoc_pipe);
 int								setup_heredoc(t_redirection *redir);
+int								process_heredoc_lines(int heredoc_pipe[2], 
+									t_redirection *redir, size_t len_delimiter);
+void							close_heredoc_end(int	*fd);
 
 /*PARSING /ENV_EXPANSION*/
 char							*extract_env_var_name(const char *str);
@@ -318,6 +325,7 @@ void							interactive_signal_handler(int signum);
 void							setup_exec_signals(struct sigaction *sa_old_int,
 									struct sigaction *sa_old_quit);
 int								setup_heredoc_signals(void);
+void							restore_exec_signals(struct sigaction *sa_old_int, struct sigaction *sa_old_quit);
 /*UTILS /SHELL*/
 void							run_shell_loop(t_shell *shell);
 void							initialize_shell(t_shell *shell, char **envp);
@@ -394,9 +402,6 @@ void							cleanup_pipeline_resources(int *prev_pipe,
 
 /*EXECUTOR /PROCESSES*/
 int								create_process(pid_t *pid, t_shell *shell);
-void							handle_pipeline_child(t_command *cmd,
-									int *prev_pipe, int *pipe_fd,
-									t_shell *shell);
 void							handle_parent_process(int *prev_pipe,
 									int *pipe_fd);
 void							wait_for_children(pid_t last_pid);

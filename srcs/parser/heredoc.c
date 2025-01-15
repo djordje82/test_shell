@@ -6,89 +6,40 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 14:31:34 by jadyar            #+#    #+#             */
-/*   Updated: 2025/01/12 13:36:40 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/15 12:37:17 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	handle_heredoc_line(char *line, const char *delimiter,
-		size_t len_delimiter)
-{
-	size_t	line_len;
-
-	if (!line)
-		return (-1);
-	line_len = ft_strlen(line);
-	if (line_len > 0 && line[line_len - 1] == '\n')
-		line[line_len - 1] = '\0';
-	if (ft_strlen(line) == len_delimiter && ft_strcmp(line, delimiter) == 0)
-		return (0);
-	return (1);
-}
-
-static int	write_to_heredoc(int fd, char *line)
-{
-	size_t	len;
-
-	if (!line)
-		return (0);
-	len = ft_strlen(line);
-	if (write(fd, line, len) == -1)
-		return (0);
-	if (write(fd, "\n", 1) == -1)
-		return (0);
-	return (1);
-}
-
 static int	cleanup_heredoc(int *heredoc_pipe, bool is_last)
 {
 	if (heredoc_pipe[1] != -1)
+	{
 		close(heredoc_pipe[1]);
+		heredoc_pipe[1] = -1;
+	}
 	if (is_last)
 	{
-		if (heredoc_pipe[0] != -1 && dup2(heredoc_pipe[0], STDIN_FILENO) == -1)
+		if (heredoc_pipe[0] != -1)
 		{
-			if (heredoc_pipe[0] != -1)
+			if (dup2(heredoc_pipe[0], STDIN_FILENO) == -1)
+			{
 				close(heredoc_pipe[0]);
-			return (0);
+				heredoc_pipe[0] = -1;
+				return (0);
+			}
 		}
 	}
 	if (heredoc_pipe[0] != -1)
-		close(heredoc_pipe[0]);
-	return (1);
-}
-
-static int	process_heredoc_lines(int heredoc_pipe[2], t_redirection *redir, 
-								size_t len_delimiter)
-{
-	char	*line;
-
-	while (1)
 	{
-		line = readline("> ");
-		if (!line)
-		{
-			close_pipe_ends(heredoc_pipe);
-			return (cleanup_heredoc(heredoc_pipe, false));
-		}
-		if (handle_heredoc_line(line, redir->filename, len_delimiter) == 0)
-		{
-			free(line);
-			break ;
-		}
-		if (!write_to_heredoc(heredoc_pipe[1], line))
-		{
-			free(line);
-			close_pipe_ends(heredoc_pipe);
-			return (0);
-		}
-		free(line);
+		close(heredoc_pipe[0]);
+		heredoc_pipe[0] = -1;
 	}
 	return (1);
 }
 
-int	setup_heredoc(t_redirection *redir)
+/* int	setup_heredoc(t_redirection *redir)
 {
 	int		heredoc_pipe[2];
 	size_t	len_delimiter;
@@ -99,7 +50,54 @@ int	setup_heredoc(t_redirection *redir)
 		return (0);
 	len_delimiter = ft_strlen(redir->filename);
 	setup_heredoc_signals();
-	process_heredoc_lines(heredoc_pipe, redir, len_delimiter);
+	if (!process_heredoc_lines(heredoc_pipe, redir, len_delimiter))
+		return (0);
 	redir->heredoc_processed = true;
 	return (cleanup_heredoc(heredoc_pipe, true));
+} */
+
+int setup_heredoc(t_redirection *redir)
+{
+    int     heredoc_pipe[2];
+    size_t  len_delimiter;
+
+    fprintf(stderr, "DEBUG: Starting heredoc setup for delimiter: %s\n", redir->filename);
+    
+    if (redir->heredoc_processed)
+    {
+        fprintf(stderr, "DEBUG: Heredoc already processed, skipping\n");
+        return (1);
+    }
+
+    if (!create_pipe(heredoc_pipe, NULL))
+    {
+        fprintf(stderr, "DEBUG: Failed to create heredoc pipe\n");
+        return (0);
+    }
+
+    fprintf(stderr, "DEBUG: Created heredoc pipe: [%d, %d]\n", 
+            heredoc_pipe[0], heredoc_pipe[1]);
+    
+    len_delimiter = ft_strlen(redir->filename);
+    setup_heredoc_signals();
+
+    int result = process_heredoc_lines(heredoc_pipe, redir, len_delimiter);
+    fprintf(stderr, "DEBUG: Heredoc processing %s\n", 
+            result ? "succeeded" : "failed");
+
+    if (!result)
+    {
+        fprintf(stderr, "DEBUG: Heredoc processing failed\n");
+        close_pipe_ends(heredoc_pipe);
+        return (0);
+    }
+
+    redir->heredoc_processed = true;
+    fprintf(stderr, "DEBUG: Heredoc setup complete\n");
+
+    result = cleanup_heredoc(heredoc_pipe, true);
+    fprintf(stderr, "DEBUG: Heredoc cleanup %s\n", 
+            result ? "succeeded" : "failed");
+    
+    return result;
 }

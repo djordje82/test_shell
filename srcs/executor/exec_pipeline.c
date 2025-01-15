@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/12 12:23:17 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/15 13:01:18 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,24 @@ int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 {
 	int		pipe_fd[2];
 	pid_t	pid;
+	t_redirection *redir;
+
+	fprintf(stderr, "DEBUG: Setting up pipeline step\n");
+    fprintf(stderr, "DEBUG: Command has redirections: %s\n", 
+            current->redirections ? "yes" : "no");
+	redir = current->redirections;
+    while (redir)
+    {
+        if (redir->type == TOKEN_HEREDOC && !redir->heredoc_processed)
+        {
+            if (!setup_heredoc(redir))
+            {
+                return 0;
+            }
+        }
+        redir = redir->next;
+    }
+	fprintf(stderr, "DEBUG: Heredoc processing completed, pipe setup starting\n");
 
 	pipe_fd[0] = -1;
 	pipe_fd[1] = -1;
@@ -33,6 +51,7 @@ int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 	{
 		handle_pipeline_child(current, prev_pipe, pipe_fd, shell);
 	}
+	fprintf(stderr, "DEBUG: Forked process with PID: %d\n", pid);
 	if (!current->next)
 	{
 		*last_pid = pid;
@@ -43,6 +62,10 @@ int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 
 void	execute_pipeline_cmd(t_command *cmd, char *cmd_path, t_shell *shell)
 {
+	fprintf(stderr, "DEBUG: Executing pipeline command (PID: %d) cmd: %s\n", 
+            getpid(), cmd_path);
+    fprintf(stderr, "DEBUG: FDs before execution - stdin: %d, stdout: %d\n",
+            STDIN_FILENO, STDOUT_FILENO);
 	setup_child_signal();
 	if (!setup_redirections(cmd))
 	{
