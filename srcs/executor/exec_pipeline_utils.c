@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipeline_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 14:20:10 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/19 19:40:36 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/15 17:26:43 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,33 @@ int	is_parent_only_builtin(char *cmd)
 		|| ft_strncmp(cmd, "unset", 6) == 0);
 }
 
-void	cleanup_pipeline_resources(int *prev_pipe, int *pipe_fd)
+void cleanup_pipeline_resources(int *prev_pipe, int *pipe_fd)
 {
-	if (prev_pipe)
-		close_pipe_ends(prev_pipe);
-	if (pipe_fd)
-		close_pipe_ends(pipe_fd);
+    if (prev_pipe)
+    {
+        if (prev_pipe[0] != -1)
+        {
+            close(prev_pipe[0]);
+            prev_pipe[0] = -1;
+        }
+        if (prev_pipe[1] != -1)
+        {
+            close(prev_pipe[1]);
+            prev_pipe[1] = -1;
+        }
+    }
+    
+    if (pipe_fd)
+    {
+        if (pipe_fd[0] != -1)
+        {
+            close(pipe_fd[0]);
+            pipe_fd[0] = -1;
+        }
+        if (pipe_fd[1] != -1)
+        {
+            close(pipe_fd[1]);
+            pipe_fd[1] = -1;
+        }
+    }
 }

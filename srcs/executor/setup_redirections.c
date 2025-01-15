@@ -6,14 +6,14 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:00 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/15 12:45:02 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/15 19:14:45 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	handle_heredoc_type(t_redirection *redir,
-		int stdin_backup, int stdout_backup)
+static int	handle_heredoc_type(t_redirection *redir, int stdin_backup,
+		int stdout_backup)
 {
 	if (redir->type == TOKEN_HEREDOC)
 	{
@@ -73,18 +73,16 @@ int	setup_redirections(t_command *cmd)
 	int				stdin_backup;
 	int				stdout_backup;
 
-	fprintf(stderr, "DEBUG: Setting up redirections for command\n");
 	if (!start_redirections(cmd, &stdin_backup, &stdout_backup, &redir))
+	{
 		return (0);
-	fprintf(stderr, "DEBUG: FD backup completed\n");
+	}
 	while (redir)
 	{
-		fprintf(stderr, "DEBUG: Processing redirection type: %d\n", redir->type);
 		if (!handle_redirection_type(cmd, redir, stdin_backup, stdout_backup))
 			return (0);
-		fprintf(stderr, "DEBUG: Redirection processed: %s\n", 
-                redir->filename);
 		redir = redir->next;
 	}
+	restore_std_fds(stdin_backup, stdout_backup);
 	return (1);
 }

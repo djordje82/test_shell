@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:39 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/15 12:52:16 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/15 17:40:47 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,10 @@ void	cleanup_envp(t_shell *shell)
 
 void	cleanup_shell_data(t_shell *shell)
 {
-	fprintf(stderr, "DEBUG: Starting shell cleanup\n");
 	if (!shell)
 		return ;
 	if (shell->cmnd_lst)
 	{
-		fprintf(stderr, "DEBUG: Cleaning up command list\n");
 		cleanup_cmd_list(shell->cmnd_lst);
 		shell->cmnd_lst = NULL;
 	}
@@ -96,5 +94,4 @@ void	cleanup_shell_data(t_shell *shell)
 	cleanup_execution_data(shell);
 	cleanup_envp(shell);
 	rl_clear_history();
-	fprintf(stderr, "DEBUG: Shell cleanup complete\n");
 }
