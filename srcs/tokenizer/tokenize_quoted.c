@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:36 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/12 13:19:43 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/16 16:20:48 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,5 +74,14 @@ t_token	*tokenize_quotes(const char *input, int *pos, t_shell *shell)
 		}
 		free(processed);
 	}
+
+	while (input[*pos] && !is_word_delimiter(input[*pos]))
+	{
+		if (len + 1 >= 1024)
+			return (NULL);
+		buffer[len++] = input[*pos];
+		(*pos)++;
+	}
+	buffer[len] = '\0';
 	return (create_token(buffer, TOKEN_WORD));
 }
