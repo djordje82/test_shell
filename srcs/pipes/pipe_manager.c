@@ -6,29 +6,31 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 14:43:39 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/15 18:09:14 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/12 12:22:27 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	setup_child_pipe_io(int input_fd, int output_fd)
+int	setup_pipe_io(int in_fd, int out_fd)
 {
-	if (input_fd != -1)
+	if (in_fd != -1)
 	{
-		if (dup2(input_fd, STDIN_FILENO) == -1)
+		if (dup2(in_fd, STDIN_FILENO) == -1)
 		{
 			perror("dup2 failed in_fd");
 			return (0);
 		}
+		close(in_fd);
 	}
-	if (output_fd != -1)
+	if (out_fd != -1)
 	{
-		if (dup2(output_fd, STDOUT_FILENO) == -1)
+		if (dup2(out_fd, STDOUT_FILENO) == -1)
 		{
 			perror("dup2 failed out_fd");
 			return (0);
 		}
+		close(out_fd);
 	}
 	return (1);
 }
@@ -54,7 +56,7 @@ void	handle_parent_process(int *prev_pipe, int *pipe_fd)
 static int	setup_pipeline_io(int input_fd, int output_fd, int *prev_pipe,
 		int *pipe_fd)
 {
-	if (!setup_child_pipe_io(input_fd, output_fd))
+	if (!setup_pipe_io(input_fd, output_fd))
 	{
 		handle_pipe_io_error(prev_pipe, pipe_fd);
 		return (0);
@@ -83,28 +85,21 @@ void	handle_pipeline_child(t_command *cmd, int *prev_pipe, int *pipe_fd,
 	int	status;
 	int	input_fd;
 	int	output_fd;
-	int	stdin_backup;
-	int	stdout_backup;
 
-	stdin_backup = dup(STDIN_FILENO);
-	stdout_backup = dup(STDOUT_FILENO);
 	input_fd = get_input_fd(prev_pipe);
 	output_fd = get_output_fd(pipe_fd);
 	if (!setup_pipeline_io(input_fd, output_fd, prev_pipe, pipe_fd))
 	{
-		close(stdin_backup);
-		close(stdout_backup);
+		handle_pipe_io_error(prev_pipe, pipe_fd);
 		exit(1);
 	}
 	if (!setup_redirections(cmd))
 	{
-		restore_std_fds(stdin_backup, stdout_backup);
-		cleanup_pipeline_resources(prev_pipe, pipe_fd);
+		close_pipe_ends(pipe_fd);
 		exit(1);
 	}
 	setup_child_signal();
 	status = execute_single_command(cmd, shell);
-	restore_std_fds(stdin_backup, stdout_backup);
-	cleanup_pipeline_resources(prev_pipe, pipe_fd);
+	close_pipe_ends(pipe_fd);
 	exit(status);
 }

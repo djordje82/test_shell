@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_single_cmd.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:09:35 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/15 19:02:51 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/12/19 15:30:35 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ int	execute_single_command(t_command *cmd, t_shell *shell)
 		return (0);
 	stdin_fd = dup(STDIN_FILENO);
 	stdout_fd = dup(STDOUT_FILENO);
-	
 	if (stdin_fd == -1 || stdout_fd == -1)
 	{
 		perror("dup fail");

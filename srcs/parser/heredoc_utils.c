@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 13:14:49 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/15 18:06:28 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/13 13:27:23 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,34 +34,46 @@ static int	write_to_heredoc(int fd, char *line)
 	return (1);
 }
 
-int process_heredoc_lines(int heredoc_pipe[2], t_redirection *redir, size_t len_delimiter)
+static int	handle_heredoc_line(char *line, const char *delimiter,
+		size_t len_delimiter)
 {
-    char *line;
+	size_t	line_len;
 
-    while (1)
-    {
+	if (!line)
+		return (-1);
+	line_len = ft_strlen(line);
+	if (line_len > 0 && line[line_len - 1] == '\n')
+		line[line_len - 1] = '\0';
+	if (ft_strlen(line) == len_delimiter && ft_strcmp(line, delimiter) == 0)
+		return (0);
+	return (1);
+}
+
+int	process_heredoc_lines(int heredoc_pipe[2], t_redirection *redir, 
+									size_t len_delimiter)
+{
+	char	*line;
+
+	while (1)
+	{
 		line = readline("> ");
-
-        if (!line)
-        {
-            close_heredoc_end(&heredoc_pipe[1]);
-            return (1);
-        }
-
-        if (ft_strlen(line) == len_delimiter && 
-            ft_strncmp(line, redir->filename, len_delimiter) == 0)
-        {
-            free(line);
-            close_heredoc_end(&heredoc_pipe[1]);
-            return (1);
-        }
-
-        if (!write_to_heredoc(heredoc_pipe[1], line))
-        {
-            free(line);
-            close_heredoc_end(&heredoc_pipe[1]);
-            return (0);
-        }
-        free(line);
-    }
+		if (!line)
+		{
+			close_heredoc_end(&heredoc_pipe[1]);
+			return (1);
+		}
+		if (handle_heredoc_line(line, redir->filename, len_delimiter) == 0)
+		{
+			free(line);
+			close_heredoc_end(&heredoc_pipe[1]);
+			return (1);
+		}
+		if (!write_to_heredoc(heredoc_pipe[1], line))
+		{
+			free(line);
+			close_heredoc_end(&heredoc_pipe[1]);
+			return (0);
+		}
+		free(line);
+	}
 }

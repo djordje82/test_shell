@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:42 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/15 18:03:45 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/12 13:30:07 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,17 @@ void	setup_signals(void)
 
 void	setup_child_signal(void)
 {
-	struct	sigaction sa;
+	struct sigaction	sa;
 
 	ft_memset(&sa, 0, sizeof(struct sigaction));
 	sa.sa_handler = SIG_DFL;
 	sa.sa_flags = 0;
 	sigemptyset(&sa.sa_mask);
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
 }
 
-/* void	setup_exec_signals(struct sigaction *sa_old_int,
+void	setup_exec_signals(struct sigaction *sa_old_int,
 		struct sigaction *sa_old_quit)
 {
 	struct sigaction	sa;
@@ -67,27 +69,4 @@ void	setup_child_signal(void)
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
-} */
-
-void setup_exec_signals(struct sigaction *sa_old_int,
-        struct sigaction *sa_old_quit)
-{
-    struct sigaction sa;
-
-    sigaction(SIGINT, NULL, sa_old_int);
-    sigaction(SIGQUIT, NULL, sa_old_quit);
-
-    ft_memset(&sa, 0, sizeof(struct sigaction));
-    sa.sa_flags = SA_RESTART;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_handler = SIG_IGN;
-    
-    sigaction(SIGINT, &sa, NULL);
-    sigaction(SIGQUIT, &sa, NULL);
-}
-
-void restore_exec_signals(struct sigaction *sa_old_int, struct sigaction *sa_old_quit)
-{
-    sigaction(SIGINT, sa_old_int, NULL);
-    sigaction(SIGQUIT, sa_old_quit, NULL);
 }

@@ -6,14 +6,14 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:00 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/15 19:14:45 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/12 13:43:37 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	handle_heredoc_type(t_redirection *redir, int stdin_backup,
-		int stdout_backup)
+static int	handle_heredoc_type(t_redirection *redir,
+		int stdin_backup, int stdout_backup)
 {
 	if (redir->type == TOKEN_HEREDOC)
 	{
@@ -74,15 +74,12 @@ int	setup_redirections(t_command *cmd)
 	int				stdout_backup;
 
 	if (!start_redirections(cmd, &stdin_backup, &stdout_backup, &redir))
-	{
 		return (0);
-	}
 	while (redir)
 	{
 		if (!handle_redirection_type(cmd, redir, stdin_backup, stdout_backup))
 			return (0);
 		redir = redir->next;
 	}
-	restore_std_fds(stdin_backup, stdout_backup);
 	return (1);
 }

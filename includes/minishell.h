@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/15 13:51:56 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/13 13:25:41 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,7 +235,7 @@ int								count_quote_pairs(const char *input);
 /*PIPES*/
 int								create_pipe(int pipe_fd[2], t_shell *shell);
 void							close_pipe_ends(int pipe_fd[2]);
-int								setup_child_pipe_io(int in_fd, int out_fd);
+int								setup_pipe_io(int in_fd, int out_fd);
 int								get_input_fd(int *prev_pipe);
 int								get_output_fd(int *pipe_fd);
 void							handle_pipe_io_error(int *prev_pipe,
@@ -325,7 +325,6 @@ void							interactive_signal_handler(int signum);
 void							setup_exec_signals(struct sigaction *sa_old_int,
 									struct sigaction *sa_old_quit);
 int								setup_heredoc_signals(void);
-void							restore_exec_signals(struct sigaction *sa_old_int, struct sigaction *sa_old_quit);
 /*UTILS /SHELL*/
 void							run_shell_loop(t_shell *shell);
 void							initialize_shell(t_shell *shell, char **envp);
@@ -402,6 +401,9 @@ void							cleanup_pipeline_resources(int *prev_pipe,
 
 /*EXECUTOR /PROCESSES*/
 int								create_process(pid_t *pid, t_shell *shell);
+void							handle_pipeline_child(t_command *cmd,
+									int *prev_pipe, int *pipe_fd,
+									t_shell *shell);
 void							handle_parent_process(int *prev_pipe,
 									int *pipe_fd);
 void							wait_for_children(pid_t last_pid);

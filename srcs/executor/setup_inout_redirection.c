@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 22:33:50 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/15 19:07:23 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:32:56 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,11 @@ int	handle_input_redirection(t_redirection *redir)
 	if (!validate_input_file(redir->filename, &st))
 		return (0);
 	fd = open(redir->filename, O_RDONLY);
-	printf("%s\n", redir->filename);
 	if (fd == -1)
 	{
 		print_file_error(redir->filename, strerror(errno));
 		return (0);
 	}
-
 	if (dup2(fd, STDIN_FILENO) == -1)
 	{
 		close(fd);
@@ -86,7 +84,7 @@ static int	process_single_output(t_redirection *redir, int *fd)
 	{
 		if (!redirect_output(*fd, redir->filename))
 		{
-			close(*fd);
+			close (*fd);
 			return (0);
 		}
 	}

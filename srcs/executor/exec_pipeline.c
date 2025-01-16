@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/15 18:05:02 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/16 15:02:42 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,17 @@ int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 	t_redirection *redir;
 
 	redir = current->redirections;
-    while (redir)
-    {
-        if (redir->type == TOKEN_HEREDOC && !redir->heredoc_processed)
-        {
-            if (!setup_heredoc(redir))
-            {
-                return 0;
-            }
-        }
-        redir = redir->next;
-    }
-
+	while (redir)
+	{
+		if (redir->type == TOKEN_HEREDOC && !redir->heredoc_processed)
+		{
+			if (!setup_heredoc(redir))
+			{
+				return 0;
+			}
+		}
+		redir = redir->next;
+	}
 	pipe_fd[0] = -1;
 	pipe_fd[1] = -1;
 	if (current->next && !create_pipe(pipe_fd, shell))
@@ -47,7 +46,6 @@ int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 	{
 		handle_pipeline_child(current, prev_pipe, pipe_fd, shell);
 	}
-
 	if (!current->next)
 	{
 		*last_pid = pid;
