@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:16 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/13 11:31:45 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/17 19:30:34 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,6 @@ t_token	*get_token_type(const char *input, int *pos, t_shell *shell)
 		if (input[*pos] == '<' && input[*pos + 1] == '<')
 			return (tokenize_double_operator(input, pos, "<<", TOKEN_HEREDOC));
 		return (tokenize_single_operator(input, pos));
-	}
-	if (type == TOKEN_SQUOTE || type == TOKEN_DQUOTE)
-	{
-		return (tokenize_quotes(input, pos, shell));
 	}
 	return (tokenize_word(input, pos, shell));
 }

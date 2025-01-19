@@ -6,50 +6,49 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/16 15:02:42 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/17 14:37:02 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
-		t_shell *shell)
+static int	process_redirections_sps(t_redirection *redir)
 {
-	int		pipe_fd[2];
-	pid_t	pid;
-	t_redirection *redir;
-
-	redir = current->redirections;
 	while (redir)
 	{
 		if (redir->type == TOKEN_HEREDOC && !redir->heredoc_processed)
 		{
 			if (!setup_heredoc(redir))
 			{
-				return 0;
+				return (0);
 			}
 		}
 		redir = redir->next;
 	}
+	return (1);
+}
+
+int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
+		t_shell *shell)
+{
+	int				pipe_fd[2];
+	pid_t			pid;
+
+	if (!process_redirections_sps(current->redirections))
+		return (0);
 	pipe_fd[0] = -1;
 	pipe_fd[1] = -1;
 	if (current->next && !create_pipe(pipe_fd, shell))
-	{
 		return (0);
-	}
 	if (!create_process(&pid, shell))
 	{
 		cleanup_pipeline_resources(prev_pipe, pipe_fd);
 		return (0);
 	}
 	if (pid == 0)
-	{
 		handle_pipeline_child(current, prev_pipe, pipe_fd, shell);
-	}
 	if (!current->next)
-	{
 		*last_pid = pid;
-	}
 	handle_parent_process(prev_pipe, pipe_fd);
 	return (1);
 }

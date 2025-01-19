@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/13 13:25:41 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/17 14:45:50 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,6 +196,10 @@ t_token							*tokenize_quoted_str(const char *input, int *i,
 t_token							*get_token_type(const char *input, int *pos,
 									t_shell *shell);
 void							skip_whitespace(const char *input, int *pos);
+int								append_unquoted_chars(const char *input, 
+									int *pos, char *buffer, int start_len);
+int								append_to_buffer(char *buffer, 
+									const char *processed, int len);
 
 /*TOKENIZER /EXTRACT WORD*/
 char							*append_word_part(char *result,

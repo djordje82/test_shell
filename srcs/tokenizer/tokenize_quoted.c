@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:36 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/16 16:20:48 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/17 14:50:01 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,6 @@ static char	*process_quote(const char *input, int *pos, t_shell *shell,
 	return (temp);
 }
 
-static int	append_to_buffer(char *buffer, const char *processed, int len)
-{
-	if (len + ft_strlen(processed) >= 1024)
-		return (0);
-	ft_strlcat(buffer + len, processed, 1024 - len);
-	return (len + ft_strlen(processed));
-}
-
 t_token	*tokenize_quotes(const char *input, int *pos, t_shell *shell)
 {
 	char	buffer[1024];
@@ -74,14 +66,8 @@ t_token	*tokenize_quotes(const char *input, int *pos, t_shell *shell)
 		}
 		free(processed);
 	}
-
-	while (input[*pos] && !is_word_delimiter(input[*pos]))
-	{
-		if (len + 1 >= 1024)
-			return (NULL);
-		buffer[len++] = input[*pos];
-		(*pos)++;
-	}
-	buffer[len] = '\0';
+	len = append_unquoted_chars(input, pos, buffer, len);
+	if (len == -1)
+		return (NULL);
 	return (create_token(buffer, TOKEN_WORD));
 }

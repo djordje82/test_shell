@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 17:46:45 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/13 13:10:10 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/16 16:47:23 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ static int	process_regular_char(t_quote_state *state)
 		ft_strlcpy(state->result + state->len, expanded, 
 			ft_strlen(expanded) + 1);
 		state->len += ft_strlen(expanded);
+		free(expanded);
 	}
 	else
 	{

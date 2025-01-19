@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:03:36 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/07 17:43:34 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/16 16:32:59 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,18 +49,18 @@ static int	validate_pipe_syntax(t_token *tokens)
 		return (0);
 	}
 	if (is_pipe_token(tokens))
-		return (print_syntx_err("syntax error near unexpected \
-			token `|'", NULL));
+		return (print_syntx_err("syntax error near unexpected token `|'", 
+				NULL));
 	while (tokens && tokens->next)
 	{
 		if (is_pipe_token(tokens) && is_pipe_token(tokens->next))
-			return (print_syntx_err("syntax error near \
-				unexpected token `|'", NULL));
+			return (print_syntx_err("syntax error near unexpected token `|'", 
+					NULL));
 		tokens = tokens->next;
 	}
 	if (is_pipe_token(tokens))
-		return (print_syntx_err("syntax error near \
-			unexpected token `|'", NULL));
+		return (print_syntx_err("syntax error near unexpected token `|'", 
+				NULL));
 	return (1);
 }
 

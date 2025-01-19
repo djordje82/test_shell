@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 13:19:20 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/12 13:23:51 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/17 14:45:22 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,29 @@ char	*extract_quoted(const char *input, int *pos, char quote_type)
 	if (!content)
 		return (NULL);
 	return (content);
+}
+
+int	append_to_buffer(char *buffer, const char *processed, int len)
+{
+	if (len + ft_strlen(processed) >= 1024)
+		return (0);
+	ft_strlcat(buffer + len, processed, 1024 - len);
+	return (len + ft_strlen(processed));
+}
+
+int	append_unquoted_chars(const char *input, int *pos, char *buffer, 
+				int start_len)
+{
+	int	len;
+
+	len = start_len;
+	while (input[*pos] && !is_word_delimiter(input[*pos]))
+	{
+		if (len + 1 >= 1024)
+			return (-1);
+		buffer[len++] = input[*pos];
+		(*pos)++;
+	}
+	buffer[len] = '\0';
+	return (len);
 }

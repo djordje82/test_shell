@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:32 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/16 15:01:59 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/16 18:05:49 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ static void	heredoc_signal_handler(int signum)
 	{
 		g_exit_status = 130;
 		write(STDERR_FILENO, "\n", 1);
-		//exit (130);
 		close(STDERR_FILENO);
 	}
 	else if (signum == SIGQUIT)
@@ -48,8 +47,11 @@ void	wait_for_children(pid_t last_pid)
 	int		status;
 	pid_t	wpid;
 
-	while ((wpid = waitpid(-1, &status, 0)) > 0)
+	while (1)
 	{
+		wpid = waitpid(-1, &status, 0);
+		if (wpid <= 0)
+			break ;
 		if (wpid == last_pid)
 		{
 			handle_wait_status(status);

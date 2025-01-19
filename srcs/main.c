@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:01:11 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/07 17:44:26 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/17 19:49:31 by jadyar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,13 @@ void	process_shell_input(char *input, t_shell *shell)
 				g_exit_status = 2;
 			reset_shell_state(shell);
 			shell->exit_status = 1;
+			return ;
+		}
+		if (shell->cmnd_lst->args && shell->cmnd_lst->args[0] 
+			&& shell->cmnd_lst->args[0][0] == 0)
+		{
+			g_exit_status = 0;
+			reset_shell_state(shell);
 			return ;
 		}
 		shell->exit_status = execute_commands(shell);
