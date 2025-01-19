@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:39 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/19 16:22:46 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 18:22:03 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	cleanup_cmd_list(t_command *cmd)
 		{
 			next_redir = redir->next;
 			if (redir->type == TOKEN_HEREDOC && redir->heredoc_fd > 0)
-                close(redir->heredoc_fd);
+				close(redir->heredoc_fd);
 			free(redir->filename);
 			free(redir);
 			redir = next_redir;
@@ -67,7 +67,7 @@ void	cleanup_execution_data(t_shell *shell)
 	}
 	if (shell->pipe)
 	{
-		ft_free_array((void **)shell->pipe, shell->n_cmnds + 1);
+		ft_free_array((void **)shell->pipe, shell->n_cmds + 1);
 		shell->pipe = NULL;
 	}
 }
@@ -83,10 +83,10 @@ void	cleanup_shell_data(t_shell *shell)
 {
 	if (!shell)
 		return ;
-	if (shell->cmnd_lst)
+	if (shell->cmd_lst)
 	{
-		cleanup_cmd_list(shell->cmnd_lst);
-		shell->cmnd_lst = NULL;
+		cleanup_cmd_list(shell->cmd_lst);
+		shell->cmd_lst = NULL;
 	}
 	if (shell->tokens)
 	{

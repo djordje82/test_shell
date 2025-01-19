@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:03:36 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/16 16:32:59 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 18:23:38 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,18 @@ static int	build_command_list(t_token *tokens, t_shell *shell)
 	t_token		*current;
 
 	current = tokens;
-	shell->cmnd_lst = NULL;
+	shell->cmd_lst = NULL;
 	while (current)
 	{
 		cmd = parse_command(&current);
 		if (!cmd)
 		{
-			if (shell->cmnd_lst)
-				cleanup_cmd_list(shell->cmnd_lst);
-			shell->cmnd_lst = NULL;
+			if (shell->cmd_lst)
+				cleanup_cmd_list(shell->cmd_lst);
+			shell->cmd_lst = NULL;
 			return (0);
 		}
-		add_cmd_node(&shell->cmnd_lst, cmd);
+		add_cmd_node(&shell->cmd_lst, cmd);
 		if (current && current->type == TOKEN_PIPE)
 			current = current->next;
 	}
@@ -49,17 +49,17 @@ static int	validate_pipe_syntax(t_token *tokens)
 		return (0);
 	}
 	if (is_pipe_token(tokens))
-		return (print_syntx_err("syntax error near unexpected token `|'", 
+		return (print_syntx_err("syntax error near unexpected token `|'",
 				NULL));
 	while (tokens && tokens->next)
 	{
 		if (is_pipe_token(tokens) && is_pipe_token(tokens->next))
-			return (print_syntx_err("syntax error near unexpected token `|'", 
+			return (print_syntx_err("syntax error near unexpected token `|'",
 					NULL));
 		tokens = tokens->next;
 	}
 	if (is_pipe_token(tokens))
-		return (print_syntx_err("syntax error near unexpected token `|'", 
+		return (print_syntx_err("syntax error near unexpected token `|'",
 				NULL));
 	return (1);
 }

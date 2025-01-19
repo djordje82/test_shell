@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 13:14:49 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/19 16:30:18 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 17:52:10 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ int	process_heredoc_lines(int heredoc_pipe[2], t_redirection *redir,
 {
 	char	*line;
 
-	// printf("DEBUG: Starting heredoc for delimiter: %s\n", redir->filename);
 	while (1)
 	{
 		line = readline("> ");
@@ -69,8 +68,6 @@ int	process_heredoc_lines(int heredoc_pipe[2], t_redirection *redir,
 			close_heredoc_end(&heredoc_pipe[1]);
 			return (1);
 		}
-		// printf("DEBUG: Read line: %s\n", line);
-		// printf("DEBUG: Writing to pipe fd: %d\n", heredoc_pipe[1]);
 		if (!write_to_heredoc(heredoc_pipe[1], line))
 		{
 			free(line);

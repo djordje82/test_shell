@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 14:43:39 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/19 17:17:50 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 18:06:49 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 int	setup_pipe_io(int in_fd, int out_fd)
 {
-	// printf("DEBUG: Setting up pipe IO in_fd=%d, out_fd=%d\n", in_fd, out_fd);
 	if (in_fd != -1)
 	{
 		if (dup2(in_fd, STDIN_FILENO) == -1)
@@ -22,7 +21,6 @@ int	setup_pipe_io(int in_fd, int out_fd)
 			perror("dup2 failed in_fd");
 			return (0);
 		}
-		// printf("DEBUG: Closing input fd %d\n", in_fd);
 		close(in_fd);
 	}
 	if (out_fd != -1)
@@ -32,7 +30,6 @@ int	setup_pipe_io(int in_fd, int out_fd)
 			perror("dup2 failed out_fd");
 			return (0);
 		}
-		// printf("DEBUG: Closing output fd %d\n", out_fd);
 		close(out_fd);
 	}
 	return (1);
@@ -90,32 +87,23 @@ void	handle_pipeline_child(t_command *cmd, int *prev_pipe, int *pipe_fd,
 	int	output_fd;
 
 	if (cmd->redirections && cmd->redirections->type == TOKEN_HEREDOC)
-        input_fd = cmd->redirections->heredoc_fd;
-    else
-        input_fd = get_input_fd(prev_pipe);
-
-    output_fd = get_output_fd(pipe_fd);
-
-	// printf("DEBUG: Pipeline child before setup, input_fd=%d, output_fd=%d\n", 
-    //        input_fd, output_fd);
-
-    if (!setup_pipeline_io(input_fd, output_fd, prev_pipe, pipe_fd))
-    {
-        handle_pipe_io_error(prev_pipe, pipe_fd);
-        exit(1);
-    }
-
-	// printf("DEBUG: Pipeline child after setup\n");
-
-    if (!setup_redirections(cmd))
-    {
-        close_pipe_ends(pipe_fd);
-        exit(1);
-    }
-	
+		input_fd = cmd->redirections->heredoc_fd;
+	else
+		input_fd = get_input_fd(prev_pipe);
+	output_fd = get_output_fd(pipe_fd);
+	if (!setup_pipeline_io(input_fd, output_fd, prev_pipe, pipe_fd))
+	{
+		handle_pipe_io_error(prev_pipe, pipe_fd);
+		exit(1);
+	}
+	if (!setup_redirections(cmd))
+	{
+		close_pipe_ends(pipe_fd);
+		exit(1);
+	}
 	setup_child_signal();
 	status = execute_single_command(cmd, shell);
 	if (pipe_fd)
-    	close_pipe_ends(pipe_fd);
+		close_pipe_ends(pipe_fd);
 	exit(status);
 }

@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:51:35 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/19 17:25:52 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 18:18:28 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,10 +94,7 @@ int	ft_cd(char **args, t_shell *shell)
 	else
 		path = expand_path(args[1], shell);
 	if (!path)
-	{
-		ft_putendl_fd("minishell: cd: HOME not set", STDERR_FILENO);
-		return (1);
-	}
+		return (ft_putendl_fd("minishell: cd: HOME not set", STDERR_FILENO), 1);
 	if (chdir(path) == -1)
 	{
 		print_cd_error(args[1]);
@@ -105,6 +102,6 @@ int	ft_cd(char **args, t_shell *shell)
 	}
 	else
 		ret = update_pwd_vars(shell);
-	free (path);
+	free(path);
 	return (ret);
 }

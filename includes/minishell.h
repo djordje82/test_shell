@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/19 16:17:12 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 18:21:00 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,11 +155,11 @@ typedef struct s_command
 typedef struct s_shell
 {
 	char						**envp;
-	t_command					*cmnd_lst;
+	t_command					*cmd_lst;
 	t_token						*tokens;
 	int							**pipe;
 	pid_t						*pid;
-	int							n_cmnds;
+	int							n_cmds;
 	int							exit_status;
 	bool						running;
 }								t_shell;
@@ -182,6 +182,7 @@ void							run_shell_loop(t_shell *shell);
 void							process_shell_input(char *input,
 									t_shell *shell);
 void							reset_shell_state(t_shell *shell);
+int								is_empty_cmd(t_shell *shell);
 
 /*TOKENIZER*/
 char							*ft_strjoin_free(char *s1, char *s2);
@@ -197,9 +198,9 @@ t_token							*tokenize_quoted_str(const char *input, int *i,
 t_token							*get_token_type(const char *input, int *pos,
 									t_shell *shell);
 void							skip_whitespace(const char *input, int *pos);
-int								append_unquoted_chars(const char *input, 
+int								append_unquoted_chars(const char *input,
 									int *pos, char *buffer, int start_len);
-int								append_to_buffer(char *buffer, 
+int								append_to_buffer(char *buffer,
 									const char *processed, int len);
 
 /*TOKENIZER /EXTRACT WORD*/
@@ -270,9 +271,9 @@ char							**copy_existing_args(char **new_args,
 bool							setup_single_heredoc(t_redirection *redir,
 									int *heredoc_pipe);
 int								setup_heredoc(t_redirection *redir);
-int								process_heredoc_lines(int heredoc_pipe[2], 
+int								process_heredoc_lines(int heredoc_pipe[2],
 									t_redirection *redir, size_t len_delimiter);
-void							close_heredoc_end(int	*fd);
+void							close_heredoc_end(int *fd);
 
 /*PARSING /ENV_EXPANSION*/
 char							*extract_env_var_name(const char *str);
@@ -356,7 +357,7 @@ char							**copy_env(char **envp);
 int								add_env_var(char *arg, t_shell *shell);
 void							update_shell_level(t_shell *shell);
 void							print_sorted_env(char **envp);
-char							*handle_dollar(const char *str, int *i, 
+char							*handle_dollar(const char *str, int *i,
 									t_shell *shell);
 
 /*BUILTINS /ENV*/

@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:57:58 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/08 21:15:46 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 18:18:02 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,16 @@ void	add_cmd_node(t_command **cmd_list, t_command *new_cmd)
 		current = current->next;
 	current->next = new_cmd;
 	new_cmd->prev = current;
+}
+
+int	is_empty_cmd(t_shell *shell)
+{
+	if (shell->cmd_lst->args && shell->cmd_lst->args[0]
+		&& shell->cmd_lst->args[0][0] == 0)
+	{
+		g_exit_status = 0;
+		reset_shell_state(shell);
+		return (1);
+	}
+	return (0);
 }

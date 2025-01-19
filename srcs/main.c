@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jadyar <jadyar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:01:11 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/17 19:49:31 by jadyar           ###   ########.fr       */
+/*   Updated: 2025/01/19 18:20:22 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 void	reset_shell_state(t_shell *shell)
 {
-	if (shell->cmnd_lst)
+	if (shell->cmd_lst)
 	{
-		cleanup_cmd_list(shell->cmnd_lst);
-		shell->cmnd_lst = NULL;
+		cleanup_cmd_list(shell->cmd_lst);
+		shell->cmd_lst = NULL;
 	}
 	if (shell->tokens)
 	{
@@ -47,13 +47,8 @@ void	process_shell_input(char *input, t_shell *shell)
 			shell->exit_status = 1;
 			return ;
 		}
-		if (shell->cmnd_lst->args && shell->cmnd_lst->args[0] 
-			&& shell->cmnd_lst->args[0][0] == 0)
-		{
-			g_exit_status = 0;
-			reset_shell_state(shell);
+		if (is_empty_cmd(shell))
 			return ;
-		}
 		shell->exit_status = execute_commands(shell);
 		g_exit_status = shell->exit_status;
 		reset_shell_state(shell);
@@ -82,12 +77,12 @@ void	run_shell_loop(t_shell *shell)
 
 void	initialize_shell(t_shell *shell, char **envp)
 {
-	shell->cmnd_lst = NULL;
+	shell->cmd_lst = NULL;
 	shell->tokens = NULL;
 	shell->pipe = NULL;
 	shell->pid = NULL;
 	shell->envp = NULL;
-	shell->n_cmnds = 0;
+	shell->n_cmds = 0;
 	shell->exit_status = 0;
 	shell->running = true;
 	shell->envp = copy_env(envp);

@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 15:32:53 by jadyar            #+#    #+#             */
-/*   Updated: 2025/01/17 14:25:26 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 18:21:32 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	execute_commands(t_shell *shell)
 	struct sigaction	sa_old_int;
 	struct sigaction	sa_old_quit;
 
-	current = shell->cmnd_lst;
+	current = shell->cmd_lst;
 	if (current && !current->is_valid)
 	{
 		print_command_not_found(current);
