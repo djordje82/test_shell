@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:00 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/19 18:13:00 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 20:21:51 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	handle_heredoc_type(t_redirection *redir, int stdin_backup,
 			return (0);
 		}
 	}
-	if (dup2(redir->heredoc_fd, STDIN_FILENO) == -1)
+	if (redir->is_last_heredoc && dup2(redir->heredoc_fd, STDIN_FILENO) == -1)
 	{
 		restore_std_fds(stdin_backup, stdout_backup);
 		return (0);
@@ -67,12 +67,31 @@ static int	start_redirections(t_command *cmd, int *stdin_backup,
 	return (1);
 }
 
+void	mark_last_heredoc(t_redirection *redir)
+{
+	t_redirection	*last_heredoc;
+
+	last_heredoc = NULL;
+	while (redir)
+	{
+		if (redir->type == TOKEN_HEREDOC)
+		{
+			redir->is_last_heredoc = 0;
+			last_heredoc = redir;
+			redir = redir->next;
+		}
+	}
+	if (last_heredoc)
+		last_heredoc->is_last_heredoc = 1;
+}
+
 int	setup_redirections(t_command *cmd)
 {
 	t_redirection	*redir;
 	int				stdin_backup;
 	int				stdout_backup;
 
+	mark_last_heredoc(cmd->redirections);
 	if (!start_redirections(cmd, &stdin_backup, &stdout_backup, &redir))
 		return (0);
 	while (redir)
