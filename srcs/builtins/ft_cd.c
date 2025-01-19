@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:51:35 by dodordev          #+#    #+#             */
-/*   Updated: 2024/12/04 18:13:22 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 17:25:52 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,5 +105,6 @@ int	ft_cd(char **args, t_shell *shell)
 	}
 	else
 		ret = update_pwd_vars(shell);
+	free (path);
 	return (ret);
 }
