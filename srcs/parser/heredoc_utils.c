@@ -6,13 +6,13 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 13:14:49 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/19 20:18:57 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 17:52:10 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	close_heredoc_end(int *fd)
+void	close_heredoc_end(int	*fd)
 {
 	if (*fd != -1)
 	{
@@ -49,8 +49,8 @@ static int	handle_heredoc_line(char *line, const char *delimiter,
 	return (1);
 }
 
-int	process_heredoc_lines(int heredoc_pipe[2], t_redirection *redir,
-		size_t len_delimiter)
+int	process_heredoc_lines(int heredoc_pipe[2], t_redirection *redir, 
+									size_t len_delimiter)
 {
 	char	*line;
 

@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/19 20:34:39 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 17:51:24 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 	int		pipe_fd[2];
 	pid_t	pid;
 
-	pipe_fd[0] = -1;
-	pipe_fd[1] = -1;
 	if (!process_redirections_sps(current->redirections))
 		return (0);
+	pipe_fd[0] = -1;
+	pipe_fd[1] = -1;
 	if (current->next && !create_pipe(pipe_fd, shell))
 		return (0);
 	if (!create_process(&pid, shell))

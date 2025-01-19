@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:45:14 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/19 20:06:10 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 18:21:00 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,6 @@ typedef struct s_redirection
 	int							type;
 	bool						heredoc_processed;
 	int							heredoc_fd;
-	int							is_last_heredoc;
 	struct s_redirection		*next;
 }								t_redirection;
 
