@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:00 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/19 18:13:00 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 21:16:50 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,10 @@ static int	handle_redirection_type(t_command *cmd, t_redirection *redir,
 		int stdin_backup, int stdout_backup)
 {
 	if (redir->type == TOKEN_HEREDOC)
-		handle_heredoc_type(redir, stdin_backup, stdout_backup);
-	if (handle_heredoc_type(redir, stdin_backup, stdout_backup))
-		return (1);
+	{
+		if (handle_heredoc_type(redir, stdin_backup, stdout_backup))
+			return (1);
+	}
 	if (redir->type == TOKEN_REDIR_IN)
 	{
 		if (!handle_input_redirection(redir))
