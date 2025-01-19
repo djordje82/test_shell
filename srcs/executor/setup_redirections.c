@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:05:00 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/12 13:43:37 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 16:30:05 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,15 @@ static int	handle_heredoc_type(t_redirection *redir,
 	{
 		if (!redir->heredoc_processed)
 		{
-			if (!setup_heredoc(redir))
+			/* if (!setup_heredoc(redir))
 			{
 				restore_std_fds(stdin_backup, stdout_backup);
 				g_exit_status = 1;
 				return (0);
-			}
+			} */
+			restore_std_fds(stdin_backup, stdout_backup);
+			g_exit_status = 1;
+			return (0);
 		}
 		return (1);
 	}
@@ -34,6 +37,22 @@ static int	handle_heredoc_type(t_redirection *redir,
 static int	handle_redirection_type(t_command *cmd, t_redirection *redir,
 		int stdin_backup, int stdout_backup)
 {
+	if (redir->type == TOKEN_HEREDOC) {
+        if (!redir->heredoc_processed) {
+            if (!setup_heredoc(redir)) {
+                restore_std_fds(stdin_backup, stdout_backup);
+                return (0);
+            }
+        }
+		// printf("DEBUG: Using heredoc FD %d for delimiter %s\n", 
+        //        redir->heredoc_fd, redir->filename);
+        // Use the stored heredoc fd
+        if (dup2(redir->heredoc_fd, STDIN_FILENO) == -1) {
+            restore_std_fds(stdin_backup, stdout_backup);
+            return (0);
+        }
+        return (1);
+    }
 	if (handle_heredoc_type(redir, stdin_backup, stdout_backup))
 	{
 		return (1);

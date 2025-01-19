@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:04:48 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/17 14:37:02 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 16:29:58 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,19 @@
 
 static int	process_redirections_sps(t_redirection *redir)
 {
-	while (redir)
-	{
-		if (redir->type == TOKEN_HEREDOC && !redir->heredoc_processed)
-		{
-			if (!setup_heredoc(redir))
-			{
-				return (0);
-			}
-		}
-		redir = redir->next;
-	}
-	return (1);
+	t_redirection *current;
+    
+    current = redir;
+    while (current)
+    {
+        if (current->type == TOKEN_HEREDOC && !current->heredoc_processed)
+        {
+            if (!setup_heredoc(current))
+                return (0);
+        }
+        current = current->next;
+    }
+    return (1);
 }
 
 int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
@@ -34,8 +35,10 @@ int	setup_pipeline_steps(t_command *current, int *prev_pipe, pid_t *last_pid,
 	int				pipe_fd[2];
 	pid_t			pid;
 
+	//printf("DEBUG: Processing command redirections\n");
 	if (!process_redirections_sps(current->redirections))
 		return (0);
+	//printf("DEBUG: Finished processing redirections\n");
 	pipe_fd[0] = -1;
 	pipe_fd[1] = -1;
 	if (current->next && !create_pipe(pipe_fd, shell))

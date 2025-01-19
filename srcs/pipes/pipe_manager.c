@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 14:43:39 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/12 12:22:27 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 16:21:40 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,18 +86,18 @@ void	handle_pipeline_child(t_command *cmd, int *prev_pipe, int *pipe_fd,
 	int	input_fd;
 	int	output_fd;
 
-	input_fd = get_input_fd(prev_pipe);
-	output_fd = get_output_fd(pipe_fd);
-	if (!setup_pipeline_io(input_fd, output_fd, prev_pipe, pipe_fd))
-	{
-		handle_pipe_io_error(prev_pipe, pipe_fd);
-		exit(1);
-	}
-	if (!setup_redirections(cmd))
-	{
-		close_pipe_ends(pipe_fd);
-		exit(1);
-	}
+	if (cmd->redirections && cmd->redirections->type == TOKEN_HEREDOC)
+        input_fd = cmd->redirections->heredoc_fd;
+    else
+        input_fd = get_input_fd(prev_pipe);
+
+    output_fd = get_output_fd(pipe_fd);
+
+    if (!setup_pipeline_io(input_fd, output_fd, prev_pipe, pipe_fd))
+    {
+        handle_pipe_io_error(prev_pipe, pipe_fd);
+        exit(1);
+    }
 	setup_child_signal();
 	status = execute_single_command(cmd, shell);
 	close_pipe_ends(pipe_fd);

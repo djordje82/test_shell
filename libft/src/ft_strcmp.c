@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dodordev <dodordev@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 17:56:04 by dodordev          #+#    #+#             */
-/*   Updated: 2023/11/07 15:37:46 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 16:29:51 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,3 @@ int	ft_strcmp(char *s1, char *s2)
 	}
 	return (0);
 }
-/*
-#include <stdio.h>
-#include <string.h>
-int	main()
-{
-	char	s1[] = "Hello World!";
-	char	s2[] = "No!";
-
-	printf("ft_strcmp:\n%d\n", ft_strcmp(s1, s2));
-	printf("strcmp:\n%d\n", strcmp(s1, s2));
-
-	return (0);
-}
-*/

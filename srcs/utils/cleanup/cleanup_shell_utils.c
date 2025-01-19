@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:59:39 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/08 21:18:05 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 16:22:46 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void	cleanup_cmd_list(t_command *cmd)
 		while (redir)
 		{
 			next_redir = redir->next;
+			if (redir->type == TOKEN_HEREDOC && redir->heredoc_fd > 0)
+                close(redir->heredoc_fd);
 			free(redir->filename);
 			free(redir);
 			redir = next_redir;
