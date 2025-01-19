@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 14:31:34 by jadyar            #+#    #+#             */
-/*   Updated: 2025/01/19 16:30:43 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 17:17:08 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,33 +58,41 @@
 
 int setup_heredoc(t_redirection *redir)
 {
-    int heredoc_pipe[2];
+    int heredoc_pipe[2] = {-1, -1};  // Initialize to invalid
     size_t len_delimiter;
-
-    // printf("DEBUG: Setting up heredoc for %s\n", redir->filename);
+    
+    // printf("DEBUG: Setup heredoc starting for %s (current fd: %d)\n", 
+    //        redir->filename, redir->heredoc_fd);
     
     if (redir->heredoc_processed)
         return (1);
         
     if (!create_pipe(heredoc_pipe, NULL)) {
-        // printf("DEBUG: Pipe creation failed\n");
         return (0);
     }
     
-    // printf("DEBUG: Created pipe: read=%d, write=%d\n", 
-    //        heredoc_pipe[0], heredoc_pipe[1]);
+    // printf("DEBUG: Created new pipe: [%d, %d]\n", heredoc_pipe[0], heredoc_pipe[1]);
            
     len_delimiter = ft_strlen(redir->filename);
     setup_heredoc_signals();
     
     if (!process_heredoc_lines(heredoc_pipe, redir, len_delimiter)) {
-        // printf("DEBUG: Processing heredoc lines failed\n");
-		close_pipe_ends(heredoc_pipe);
+        // printf("DEBUG: process_heredoc_lines failed, closing pipe: [%d, %d]\n", 
+        //        heredoc_pipe[0], heredoc_pipe[1]);
+        if (heredoc_pipe[0] >= 0)
+            close(heredoc_pipe[0]);
+        if (heredoc_pipe[1] >= 0)
+            close(heredoc_pipe[1]);
         return (0);
     }
     
+    // printf("DEBUG: Storing read end %d in redirection\n", heredoc_pipe[0]);
     redir->heredoc_fd = heredoc_pipe[0];  // Store the read end
-    close(heredoc_pipe[1]);  // Close write end
+    
+    if (heredoc_pipe[1] >= 0) {
+        // printf("DEBUG: Closing write end %d\n", heredoc_pipe[1]);
+        close(heredoc_pipe[1]);  // Close write end
+    }
     redir->heredoc_processed = true;
     return (1);
 }

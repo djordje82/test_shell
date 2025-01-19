@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 18:19:41 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/12 12:18:03 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 17:17:16 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,13 @@ void	close_pipe_ends(int pipe_fd[2])
 {
 	if (!pipe_fd)
 		return ;
-	if (pipe_fd[0] != -1)
+	// printf("DEBUG: Attempting to close pipe fds: [%d, %d]\n", pipe_fd[0], pipe_fd[1]);
+	if (pipe_fd[0] >= 0)
 	{
 		close(pipe_fd[0]);
 		pipe_fd[0] = -1;
 	}
-	if (pipe_fd[1] != -1)
+	if (pipe_fd[1] >= 0)
 	{
 		close(pipe_fd[1]);
 		pipe_fd[1] = -1;

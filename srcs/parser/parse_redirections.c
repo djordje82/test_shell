@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 15:20:05 by dodordev          #+#    #+#             */
-/*   Updated: 2025/01/10 13:25:55 by dodordev         ###   ########.fr       */
+/*   Updated: 2025/01/19 17:03:13 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static t_redirection	*create_redirec(t_token_type type, const char *filename)
 	new_redir->filename = ft_strdup(filename);
 	new_redir->type = type;
 	new_redir->heredoc_processed = false;
+	new_redir->heredoc_fd = -1;
 	new_redir->next = NULL;
 	return (new_redir);
 }
